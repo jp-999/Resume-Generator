@@ -15,6 +15,7 @@ def generate_resume():
         name = request.form.get('name', 'N/A').strip()
         email = request.form.get('email', 'N/A').strip()
         phone = request.form.get('phone', 'N/A').strip()
+        summary = request.form.get('summary', 'N/A').strip()
         skills = request.form.get('skills', 'N/A').strip()
         experience = request.form.get('experience', 'N/A').strip()
         education = request.form.get('education', 'N/A').strip()
@@ -34,19 +35,29 @@ def generate_resume():
         c.drawString(100, 710, f"Phone: {phone}")
         
         c.setFont("Helvetica-Bold", 14)
-        c.drawString(100, 680, "Skills:")
+        c.drawString(100, 680, "Professional Summary:")
         c.setFont("Helvetica", 12)
-        c.drawString(120, 660, skills)
+        # Split summary into multiple lines if needed
+        summary_lines = [summary[i:i+60] for i in range(0, len(summary), 60)]
+        y_position = 660
+        for line in summary_lines:
+            c.drawString(120, y_position, line)
+            y_position -= 20
         
         c.setFont("Helvetica-Bold", 14)
-        c.drawString(100, 630, "Experience:")
+        c.drawString(100, y_position - 20, "Skills:")
         c.setFont("Helvetica", 12)
-        c.drawString(120, 610, experience)
+        c.drawString(120, y_position - 40, skills)
         
         c.setFont("Helvetica-Bold", 14)
-        c.drawString(100, 580, "Education:")
+        c.drawString(100, y_position - 70, "Experience:")
         c.setFont("Helvetica", 12)
-        c.drawString(120, 560, education)
+        c.drawString(120, y_position - 90, experience)
+        
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(100, y_position - 120, "Education:")
+        c.setFont("Helvetica", 12)
+        c.drawString(120, y_position - 140, education)
         
         c.save()
         

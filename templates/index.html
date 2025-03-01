@@ -4,89 +4,427 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            padding-top: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            gap: 30px;
+            padding-top: 20px;
+        }
+
         .form-container {
+            flex: 1;
             background-color: white;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
         }
+
+        .preview-container {
+            flex: 1;
+            background-color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            animation: slideIn 0.5s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
         }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3436;
         }
+
         input[type="text"],
         input[type="email"],
         textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: #74b9ff;
+            box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.2);
+            outline: none;
+        }
+
         textarea {
-            height: 100px;
+            height: 120px;
             resize: vertical;
         }
+
         button {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a363d9 100%);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
+
         button:hover {
-            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
-        h1 {
-            text-align: center;
-            color: #333;
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .preview-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .preview-section h3 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .preview-content {
+            color: #636e72;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .required-field {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .preview-container {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar-logo {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2d3436;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-logo i {
+            color: #6c5ce7;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .navbar-links a {
+            color: #2d3436;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .navbar-links a:hover {
+            color: #6c5ce7;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            color: #2d3436;
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #2d3436;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .navbar-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .navbar-links.active {
+                display: flex;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="form-container">
-        <h1>Resume Generator</h1>
-        <form action="/generate" method="POST">
-            <div class="form-group">
-                <label for="name">Full Name *</label>
-                <input type="text" id="name" name="name" required>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-logo">
+                <i class="fas fa-file-alt"></i>
+                Resume Generator
+            </a>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="navbar-links">
+                <a href="/" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="#templates"><i class="fas fa-th-large"></i> Templates</a>
+                <a href="#examples"><i class="fas fa-book"></i> Examples</a>
+                <a href="#tips"><i class="fas fa-lightbulb"></i> Resume Tips</a>
+                <button class="theme-toggle" title="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
-            <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" required>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h1>Resume Generator</h1>
+            <form action="/generate" method="POST" id="resumeForm">
+                <div class="form-group" style="animation-delay: 0.1s;">
+                    <label for="name">Full Name<span class="required-field">*</span></label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group" style="animation-delay: 0.2s;">
+                    <label for="email">Email<span class="required-field">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group" style="animation-delay: 0.3s;">
+                    <label for="phone">Phone<span class="required-field">*</span></label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="form-group" style="animation-delay: 0.4s;">
+                    <label for="summary">Professional Summary</label>
+                    <textarea id="summary" name="summary" placeholder="e.g., Dedicated software engineer with 5+ years of experience in developing scalable web applications. Strong expertise in Python and JavaScript with a focus on creating efficient, maintainable code..."></textarea>
+                </div>
+                <div class="form-group" style="animation-delay: 0.5s;">
+                    <label for="skills">Skills</label>
+                    <textarea id="skills" name="skills" placeholder="e.g., Python, JavaScript, Project Management..."></textarea>
+                </div>
+                <div class="form-group" style="animation-delay: 0.6s;">
+                    <label for="experience">Experience</label>
+                    <textarea id="experience" name="experience" placeholder="e.g., Software Engineer at Tech Corp (2020-Present)..."></textarea>
+                </div>
+                <div class="form-group" style="animation-delay: 0.7s;">
+                    <label for="education">Education</label>
+                    <textarea id="education" name="education" placeholder="e.g., BS in Computer Science, University Name (2016-2020)..."></textarea>
+                </div>
+                <button type="submit" style="animation-delay: 0.8s;" class="form-group">Generate Resume</button>
+            </form>
+        </div>
+        <div class="preview-container">
+            <h1>Live Preview</h1>
+            <div class="preview-section">
+                <h3>Personal Information</h3>
+                <div class="preview-content" id="personalPreview">
+                    Enter your details to see the preview
+                </div>
             </div>
-            <div class="form-group">
-                <label for="phone">Phone *</label>
-                <input type="text" id="phone" name="phone" required>
+            <div class="preview-section">
+                <h3>Professional Summary</h3>
+                <div class="preview-content" id="summaryPreview">
+                    Your professional summary will appear here
+                </div>
             </div>
-            <div class="form-group">
-                <label for="skills">Skills</label>
-                <textarea id="skills" name="skills" placeholder="List your key skills..."></textarea>
+            <div class="preview-section">
+                <h3>Skills</h3>
+                <div class="preview-content" id="skillsPreview">
+                    Your skills will appear here
+                </div>
             </div>
-            <div class="form-group">
-                <label for="experience">Experience</label>
-                <textarea id="experience" name="experience" placeholder="Describe your work experience..."></textarea>
+            <div class="preview-section">
+                <h3>Experience</h3>
+                <div class="preview-content" id="experiencePreview">
+                    Your experience will appear here
+                </div>
             </div>
-            <div class="form-group">
-                <label for="education">Education</label>
-                <textarea id="education" name="education" placeholder="List your educational background..."></textarea>
+            <div class="preview-section">
+                <h3>Education</h3>
+                <div class="preview-content" id="educationPreview">
+                    Your education will appear here
+                </div>
             </div>
-            <button type="submit">Generate Resume</button>
-        </form>
+        </div>
     </div>
+
+    <script>
+        // Add this before the existing script content
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navbarLinks = document.querySelector('.navbar-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navbarLinks.classList.toggle('active');
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            body.style.background = body.style.background.includes('135deg') 
+                ? 'linear-gradient(135deg, #2d3436 0%, #2d3436 100%)'
+                : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+            
+            document.querySelectorAll('.form-container, .preview-container, .navbar, .navbar-links').forEach(el => {
+                el.style.background = body.style.background.includes('#2d3436') ? '#1a1a1a' : 'white';
+                el.style.color = body.style.background.includes('#2d3436') ? '#fff' : '#2d3436';
+            });
+
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        });
+
+        // Function to update preview
+        function updatePreview() {
+            const name = document.getElementById('name').value || 'Your Name';
+            const email = document.getElementById('email').value || 'your.email@example.com';
+            const phone = document.getElementById('phone').value || 'Your Phone';
+            const summary = document.getElementById('summary').value || 'Your professional summary will appear here';
+            const skills = document.getElementById('skills').value || 'Your skills will appear here';
+            const experience = document.getElementById('experience').value || 'Your experience will appear here';
+            const education = document.getElementById('education').value || 'Your education will appear here';
+
+            document.getElementById('personalPreview').innerHTML = `
+                <strong>${name}</strong><br>
+                ${email}<br>
+                ${phone}
+            `;
+            document.getElementById('summaryPreview').innerHTML = summary.replace(/\n/g, '<br>');
+            document.getElementById('skillsPreview').innerHTML = skills.replace(/\n/g, '<br>');
+            document.getElementById('experiencePreview').innerHTML = experience.replace(/\n/g, '<br>');
+            document.getElementById('educationPreview').innerHTML = education.replace(/\n/g, '<br>');
+        }
+
+        // Add event listeners to all form inputs
+        document.querySelectorAll('input, textarea').forEach(element => {
+            element.addEventListener('input', updatePreview);
+        });
+
+        // Initialize preview
+        updatePreview();
+
+        // Add loading animation on form submit
+        document.getElementById('resumeForm').addEventListener('submit', function() {
+            const button = this.querySelector('button');
+            button.innerHTML = 'Generating...';
+            button.style.opacity = '0.7';
+            button.disabled = true;
+        });
+    </script>
 </body>
 </html> 
