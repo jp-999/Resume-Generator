@@ -51,15 +51,15 @@ def index():
 
 @app.route('/templates')
 def templates():
-    return render_template('templates.html', templates=TEMPLATES)
+    return render_template('pages/templates.html', templates=TEMPLATES)
 
-@app.route('/tips')
+@app.route('/pages/tips')
 def tips():
-    return render_template('tips.html', templates=TEMPLATES)
+    return render_template('pages/tips.html', templates=TEMPLATES)
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('pages/about.html')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

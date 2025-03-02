@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Resume Generator{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            padding-top: 0;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            margin: -40px -20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,208C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .navbar-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            z-index: 999;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #6c5ce7;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: #6c5ce7;
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        {% block additional_styles %}{% endblock %}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
+    <!-- Add navbar trigger area -->
+    <div class="navbar-trigger"></div>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="relative px-4 py-3">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group">
+                    <i class="fas fa-file-alt text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span class="font-semibold text-lg group-hover:translate-x-1 transition-transform duration-300">Resume Generator</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center gap-6">
+                    <div class="flex items-center space-x-1">
+                        <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="/pages/templates" class="nav-link {% if active_page == 'templates' %}active{% endif %}">
+                            <i class="fas fa-th-large"></i>
+                            <span>Templates</span>
+                        </a>
+                        <a href="/pages/tips" class="nav-link {% if active_page == 'tips' %}active{% endif %}">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Tips</span>
+                        </a>
+                        <a href="/pages/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About</span>
+                        </a>
+                    </div>
+                    <div class="h-6 w-px bg-gray-200"></div>
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="lg:hidden mobile-menu-btn">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="flex flex-col p-2 gap-1">
+                    <a href="/" class="mobile-nav-link {% if active_page == 'home' %}active{% endif %}">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/pages/templates" class="mobile-nav-link {% if active_page == 'templates' %}active{% endif %}">
+                        <i class="fas fa-th-large"></i>
+                        <span>Templates</span>
+                    </a>
+                    <a href="/pages/tips" class="mobile-nav-link {% if active_page == 'tips' %}active{% endif %}">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Tips</span>
+                    </a>
+                    <a href="/pages/about" class="mobile-nav-link {% if active_page == 'about' %}active{% endif %}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    {% block hero %}{% endblock %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            themeIcon.classList.toggle('fa-moon');
+            themeIcon.classList.toggle('fa-sun');
+            
+            if (html.classList.contains('dark')) {
+                document.body.classList.remove('from-[#f5f7fa]', 'to-[#c3cfe2]');
+                document.body.classList.add('from-gray-900', 'to-gray-800');
+            } else {
+                document.body.classList.remove('from-gray-900', 'to-gray-800');
+                document.body.classList.add('from-[#f5f7fa]', 'to-[#c3cfe2]');
+            }
+        });
+
+        // Add navbar scroll and hover behavior
+        const navbar = document.querySelector('.navbar');
+        const navbarTrigger = document.querySelector('.navbar-trigger');
+        let lastScrollY = window.scrollY;
+        let isHovering = false;
+
+        // Handle scroll
+        window.addEventListener('scroll', () => {
+            if (!isHovering) {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    navbar.classList.add('hidden');
+                } else {
+                    navbar.classList.remove('hidden');
+                }
+                lastScrollY = currentScrollY;
+            }
+        });
+
+        // Handle hover
+        navbarTrigger.addEventListener('mouseenter', () => {
+            isHovering = true;
+            navbar.classList.remove('hidden');
+        });
+
+        navbar.addEventListener('mouseenter', () => {
+            isHovering = true;
+            navbar.classList.remove('hidden');
+        });
+
+        navbar.addEventListener('mouseleave', () => {
+            isHovering = false;
+            if (window.scrollY > 100) {
+                navbar.classList.add('hidden');
+            }
+        });
+
+        navbarTrigger.addEventListener('mouseleave', () => {
+            isHovering = false;
+            if (window.scrollY > 100) {
+                navbar.classList.add('hidden');
+            }
+        });
+    </script>
+    {% block additional_scripts %}{% endblock %}
+</body>
+</html> 

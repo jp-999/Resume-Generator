@@ -83,6 +83,7 @@
             display: flex;
             gap: 30px;
             padding-top: 20px;
+            transition: all 0.3s ease;
         }
 
         .form-container {
@@ -94,16 +95,7 @@
             animation: slideIn 0.5s ease-out;
             position: relative;
             overflow: hidden;
-        }
-
-        .form-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
         }
 
         .preview-container {
@@ -120,6 +112,65 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             color: #333;
+            transition: all 0.3s ease;
+        }
+
+        /* Update the preview container hidden state */
+        .preview-hidden .preview-container {
+            display: none;
+        }
+
+        .preview-hidden .form-container {
+            max-width: 100%;
+        }
+
+        .preview-toggle {
+            position: fixed;
+            right: 2rem;
+            bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+            border: none;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .preview-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .preview-toggle i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-hidden .preview-toggle i {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-container {
+                position: static;
+                max-height: none;
+            }
+
+            .preview-hidden .preview-container {
+                display: none;
+            }
         }
 
         .form-group {
@@ -1177,6 +1228,10 @@
         </div>
     </div>
 
+    <button class="preview-toggle" id="previewToggle" title="Toggle Preview">
+        <i class="fas fa-eye"></i>
+    </button>
+
     <script>
         let currentTemplate = 'classic';
 
@@ -1559,6 +1614,36 @@
             }
 
             lastScrollY = currentScrollY;
+        });
+
+        // Update the preview toggle functionality
+        const previewToggle = document.getElementById('previewToggle');
+        const container = document.querySelector('.container');
+        let isPreviewVisible = true;
+
+        previewToggle.addEventListener('click', () => {
+            isPreviewVisible = !isPreviewVisible;
+            container.classList.toggle('preview-hidden');
+            
+            // Update the icon
+            const icon = previewToggle.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+            
+            // Update the tooltip
+            previewToggle.title = isPreviewVisible ? 'Hide Preview' : 'Show Preview';
+
+            // Force re-layout to ensure smooth transition
+            window.dispatchEvent(new Event('resize'));
+        });
+
+        // Initialize the preview toggle state
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial state
+            container.classList.remove('preview-hidden');
+            const icon = previewToggle.querySelector('i');
+            icon.className = 'fas fa-eye';
+            previewToggle.title = 'Hide Preview';
         });
     </script>
     {% include 'includes/footer.html' %}

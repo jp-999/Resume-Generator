@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Writing Tips - Resume Generator{% endblock %}
+
+{% block hero %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Resume Writing Tips</h1>
+        <p class="hero-subtitle">Expert advice to help you create a compelling resume that stands out</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <!-- Tips Categories -->
+    <div class="flex flex-wrap gap-4 mb-8">
+        <button class="category-btn active" data-category="all">All Tips</button>
+        <button class="category-btn" data-category="structure">Structure</button>
+        <button class="category-btn" data-category="content">Content</button>
+        <button class="category-btn" data-category="formatting">Formatting</button>
+    </div>
+
+    <!-- Tips Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Structure Tips -->
+        <div class="tip-card" data-category="structure">
+            <div class="tip-icon">
+                <i class="fas fa-layer-group text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Organize Your Content</h3>
+            <p class="text-gray-600">Start with your contact information, followed by a professional summary. Then list your experience, education, and skills in order of relevance to the position.</p>
+        </div>
+
+        <div class="tip-card" data-category="structure">
+            <div class="tip-icon">
+                <i class="fas fa-bullseye text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Keep it Focused</h3>
+            <p class="text-gray-600">Limit your resume to 1-2 pages. Focus on relevant experience and achievements that match the job requirements.</p>
+        </div>
+
+        <!-- Content Tips -->
+        <div class="tip-card" data-category="content">
+            <div class="tip-icon">
+                <i class="fas fa-chart-line text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Highlight Achievements</h3>
+            <p class="text-gray-600">Use action verbs and quantify your achievements. Instead of listing duties, showcase results and specific contributions.</p>
+        </div>
+
+        <div class="tip-card" data-category="content">
+            <div class="tip-icon">
+                <i class="fas fa-key text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Use Keywords</h3>
+            <p class="text-gray-600">Include industry-specific keywords from the job description to pass Applicant Tracking Systems (ATS) and catch the recruiter's attention.</p>
+        </div>
+
+        <!-- Formatting Tips -->
+        <div class="tip-card" data-category="formatting">
+            <div class="tip-icon">
+                <i class="fas fa-text-height text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Consistent Formatting</h3>
+            <p class="text-gray-600">Maintain consistent font sizes, spacing, and bullet points throughout your resume. Use clear headings to separate sections.</p>
+        </div>
+
+        <div class="tip-card" data-category="formatting">
+            <div class="tip-icon">
+                <i class="fas fa-eye text-3xl text-purple-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Make it Scannable</h3>
+            <p class="text-gray-600">Use white space effectively and break up text into bullet points. Recruiters often scan resumes in seconds before deciding to read further.</p>
+        </div>
+    </div>
+
+    <!-- Additional Resources -->
+    <div class="mt-12 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl">
+        <h2 class="text-2xl font-semibold mb-4">Additional Resources</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <button class="resource-card resource-btn" data-resource="guide">
+                <i class="fas fa-book text-purple-600 mb-2"></i>
+                <h4 class="font-semibold">Resume Writing Guide</h4>
+                <p class="text-sm text-gray-600">Comprehensive guide to crafting the perfect resume</p>
+            </button>
+            <button class="resource-card resource-btn" data-resource="checklist">
+                <i class="fas fa-list-check text-purple-600 mb-2"></i>
+                <h4 class="font-semibold">Resume Checklist</h4>
+                <p class="text-sm text-gray-600">Essential items to include in your resume</p>
+            </button>
+            <button class="resource-card resource-btn" data-resource="samples">
+                <i class="fas fa-file-lines text-purple-600 mb-2"></i>
+                <h4 class="font-semibold">Sample Resumes</h4>
+                <p class="text-sm text-gray-600">Examples of successful resumes by industry</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- Resource Content Sections -->
+    <div class="resource-sections mt-8">
+        <!-- Resume Writing Guide -->
+        <div id="guide-section" class="resource-content hidden">
+            <h3 class="text-2xl font-semibold mb-6">Resume Writing Guide</h3>
+            <div class="space-y-6">
+                <div class="guide-item">
+                    <h4 class="text-xl font-semibold mb-3 text-purple-600">1. Start with a Strong Summary</h4>
+                    <p class="text-gray-600">Your professional summary should be a compelling 2-3 sentence paragraph that highlights your key achievements, skills, and career goals. Think of it as your elevator pitch.</p>
+                </div>
+                <div class="guide-item">
+                    <h4 class="text-xl font-semibold mb-3 text-purple-600">2. Craft Your Experience Section</h4>
+                    <p class="text-gray-600">List your work experience in reverse chronological order. Use action verbs and focus on achievements rather than duties. Quantify results whenever possible.</p>
+                </div>
+                <div class="guide-item">
+                    <h4 class="text-xl font-semibold mb-3 text-purple-600">3. Highlight Your Skills</h4>
+                    <p class="text-gray-600">Include a mix of hard skills (technical abilities) and soft skills (interpersonal qualities). Ensure they're relevant to the position you're applying for.</p>
+                </div>
+                <div class="guide-item">
+                    <h4 class="text-xl font-semibold mb-3 text-purple-600">4. Education and Certifications</h4>
+                    <p class="text-gray-600">List your highest degree first. Include relevant certifications, training, and professional development courses.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Checklist -->
+        <div id="checklist-section" class="resource-content hidden">
+            <h3 class="text-2xl font-semibold mb-6">Resume Checklist</h3>
+            <div class="space-y-4">
+                <div class="checklist-item flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold">Contact Information</h4>
+                        <p class="text-gray-600">Full name, phone number, professional email, location, LinkedIn profile</p>
+                    </div>
+                </div>
+                <div class="checklist-item flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold">Professional Summary</h4>
+                        <p class="text-gray-600">2-3 sentences highlighting key qualifications and career goals</p>
+                    </div>
+                </div>
+                <div class="checklist-item flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold">Work Experience</h4>
+                        <p class="text-gray-600">Company names, dates, job titles, key achievements with metrics</p>
+                    </div>
+                </div>
+                <div class="checklist-item flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold">Education</h4>
+                        <p class="text-gray-600">Degrees, institutions, graduation dates, relevant coursework</p>
+                    </div>
+                </div>
+                <div class="checklist-item flex items-start gap-3">
+                    <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold">Skills</h4>
+                        <p class="text-gray-600">Technical skills, soft skills, language proficiencies</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Resumes -->
+        <div id="samples-section" class="resource-content hidden">
+            <h3 class="text-2xl font-semibold mb-6">Sample Resumes by Industry</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="sample-resume p-4 border border-purple-200 rounded-lg hover:border-purple-400 transition-all">
+                    <h4 class="font-semibold text-purple-600 mb-2">Technology</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Software Developer Resume</li>
+                        <li>Data Scientist Resume</li>
+                        <li>IT Project Manager Resume</li>
+                    </ul>
+                </div>
+                <div class="sample-resume p-4 border border-purple-200 rounded-lg hover:border-purple-400 transition-all">
+                    <h4 class="font-semibold text-purple-600 mb-2">Business</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Marketing Manager Resume</li>
+                        <li>Financial Analyst Resume</li>
+                        <li>Business Consultant Resume</li>
+                    </ul>
+                </div>
+                <div class="sample-resume p-4 border border-purple-200 rounded-lg hover:border-purple-400 transition-all">
+                    <h4 class="font-semibold text-purple-600 mb-2">Healthcare</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Registered Nurse Resume</li>
+                        <li>Medical Doctor Resume</li>
+                        <li>Healthcare Administrator Resume</li>
+                    </ul>
+                </div>
+                <div class="sample-resume p-4 border border-purple-200 rounded-lg hover:border-purple-400 transition-all">
+                    <h4 class="font-semibold text-purple-600 mb-2">Creative</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Graphic Designer Resume</li>
+                        <li>Content Writer Resume</li>
+                        <li>UX/UI Designer Resume</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .category-btn {
+        padding: 0.5rem 1.5rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        background: white;
+        color: #4a5568;
+    }
+
+    .category-btn:hover {
+        background: rgba(108, 92, 231, 0.1);
+        color: #6c5ce7;
+    }
+
+    .category-btn.active {
+        background: #6c5ce7;
+        color: white;
+    }
+
+    .tip-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .tip-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .tip-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(108, 92, 231, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .resource-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: block;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .resource-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .resource-content.hidden {
+        display: none;
+    }
+
+    .resource-content.active {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .guide-item {
+        padding: 1.5rem;
+        background: rgba(108, 92, 231, 0.05);
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .guide-item:hover {
+        background: rgba(108, 92, 231, 0.1);
+        transform: translateX(5px);
+    }
+
+    .checklist-item {
+        padding: 1rem;
+        background: white;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .checklist-item:hover {
+        background: rgba(108, 92, 231, 0.05);
+        transform: translateX(5px);
+    }
+
+    .sample-resume {
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .sample-resume:hover {
+        background: rgba(108, 92, 231, 0.05);
+        transform: translateY(-5px);
+    }
+
+    .tip-card:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .tip-card:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .tip-card:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .tip-card:nth-child(5) {
+        animation-delay: 0.4s;
+    }
+
+    .tip-card:nth-child(6) {
+        animation-delay: 0.5s;
+    }
+</style>
+{% endblock %}
+
+{% block additional_scripts %}
+<script>
+    // Category filtering
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const tipCards = document.querySelectorAll('.tip-card');
+
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active button
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filter cards
+            const category = btn.dataset.category;
+            tipCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        });
+    });
+
+    // Resource section toggling
+    const resourceBtns = document.querySelectorAll('.resource-btn');
+    const resourceSections = document.querySelectorAll('.resource-content');
+
+    resourceBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const resourceType = btn.dataset.resource;
+            const targetSection = document.getElementById(`${resourceType}-section`);
+
+            // Hide all sections first
+            resourceSections.forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active');
+            });
+
+            // Show the target section
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                setTimeout(() => targetSection.classList.add('active'), 10);
+
+                // Scroll to the section
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Update active state of buttons
+            resourceBtns.forEach(b => b.classList.remove('bg-purple-100'));
+            btn.classList.add('bg-purple-100');
+        });
+    });
+</script>
+{% endblock %} 

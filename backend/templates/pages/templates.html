@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Templates - Resume Generator{% endblock %}
+
+{% block hero %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Resume Templates</h1>
+        <p class="hero-subtitle">Choose from our professionally designed templates to create your perfect resume</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Classic Template -->
+        <div class="template-card">
+            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/classic-template.png') }}" alt="Classic Template" class="object-cover w-full h-full">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Classic Template</h3>
+                <p class="text-gray-600 mb-4">A timeless design suitable for all industries. Clean layout with traditional formatting.</p>
+                <a href="/?template=classic" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+            </div>
+        </div>
+
+        <!-- Modern Template -->
+        <div class="template-card">
+            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/modern-template.png') }}" alt="Modern Template" class="object-cover w-full h-full">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Modern Template</h3>
+                <p class="text-gray-600 mb-4">Contemporary design with a creative touch. Perfect for tech and creative industries.</p>
+                <a href="/?template=modern" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+            </div>
+        </div>
+
+        <!-- Minimal Template -->
+        <div class="template-card">
+            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/minimal-template.png') }}" alt="Minimal Template" class="object-cover w-full h-full">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Minimal Template</h3>
+                <p class="text-gray-600 mb-4">Clean and minimalist design focusing on essential information.</p>
+                <a href="/?template=minimal" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+            </div>
+        </div>
+
+        <!-- Executive Template -->
+        <div class="template-card">
+            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/executive-template.png') }}" alt="Executive Template" class="object-cover w-full h-full">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Executive Template</h3>
+                <p class="text-gray-600 mb-4">Professional design ideal for senior positions and corporate roles.</p>
+                <a href="/?template=executive" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .template-card {
+        animation: fadeInUp 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .template-card:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .template-card:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .template-card:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .aspect-w-8\.5 {
+        position: relative;
+        padding-bottom: 129.41%; /* 11/8.5 aspect ratio */
+    }
+
+    .aspect-w-8\.5 > * {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+{% endblock %} 
