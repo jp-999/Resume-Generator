@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Templates - Resume Generator</title>
+    <title>Templates - Resume Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,15 +17,28 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            padding-top: 0;
+        }
+
         /* Navbar Styles */
         .navbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             padding: 0;
-            position: sticky;
-            top: 0;
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
             z-index: 1000;
             transition: all 0.3s ease;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .nav-link {
@@ -184,26 +199,40 @@
 
         .template-card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .template-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         .template-preview {
+            position: relative;
+            padding-top: 141%; /* Aspect ratio 1:1.41 (A4) */
+            overflow: hidden;
+        }
+
+        .template-preview img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 400px;
+            height: 100%;
             object-fit: cover;
-            border-bottom: 1px solid #eee;
+            transition: transform 0.3s ease;
+        }
+
+        .template-card:hover .template-preview img {
+            transform: scale(1.05);
         }
 
         .template-info {
             padding: 1.5rem;
+            border-top: 1px solid #eee;
         }
 
         .template-title {
@@ -244,11 +273,50 @@
             margin-right: 0.5rem;
             margin-bottom: 1rem;
         }
+
+        /* Dark mode styles */
+        .dark body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+
+        .dark .template-card {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+
+        .dark .template-info {
+            border-color: #4a5568;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/static/images/templates-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            margin: -40px -20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(108, 92, 231, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen">
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
     <!-- Updated Navbar Structure -->
-    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300">
+    <nav class="navbar">
         <div class="relative px-4 py-3">
             <div class="flex items-center justify-between">
                 <!-- Logo with animation -->
@@ -308,65 +376,41 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 pt-24">
-        <h1 class="text-3xl font-bold text-center mb-8">Choose Your Resume Template</h1>
-        
-        <div class="template-grid">
-            <!-- Modern Template -->
-            <div class="template-card">
-                <img src="/static/templates/modern.png" alt="Modern Template" class="template-preview">
-                <div class="template-info">
-                    <h3 class="template-title">Modern</h3>
-                    <div>
-                        <span class="template-tag">Professional</span>
-                        <span class="template-tag">Clean</span>
-                    </div>
-                    <p class="template-description">A clean and modern design perfect for tech and creative professionals.</p>
-                    <a href="/?template=modern" class="template-button">Use Template</a>
-                </div>
-            </div>
+    <!-- Hero Section -->
+    <section class="hero-section" data-aos="fade-down">
+        <h1 class="text-5xl font-bold mb-6">Professional Resume Templates</h1>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">Choose from our collection of professionally designed templates to create your perfect resume.</p>
+    </section>
 
-            <!-- Classic Template -->
-            <div class="template-card">
-                <img src="/static/templates/classic.png" alt="Classic Template" class="template-preview">
-                <div class="template-info">
-                    <h3 class="template-title">Classic</h3>
-                    <div>
-                        <span class="template-tag">Traditional</span>
-                        <span class="template-tag">Elegant</span>
-                    </div>
-                    <p class="template-description">A timeless design suitable for all industries and experience levels.</p>
-                    <a href="/?template=classic" class="template-button">Use Template</a>
-                </div>
-            </div>
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Template Categories -->
+        <div class="flex justify-center gap-4 mb-12" data-aos="fade-up">
+            <button class="px-6 py-2 rounded-full bg-purple-600 text-white hover:bg-purple-700 transition-all">All Templates</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Professional</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Creative</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Modern</button>
+        </div>
 
-            <!-- Minimal Template -->
-            <div class="template-card">
-                <img src="/static/templates/minimal.png" alt="Minimal Template" class="template-preview">
+        <!-- Templates Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {% for template_id, template in templates.items() %}
+            <div class="template-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="template-preview">
+                    <img src="{{ template.preview }}" alt="{{ template.name }} Template">
+                    {% if template.popular %}
+                    <div class="template-badge">Popular</div>
+                    {% endif %}
+                </div>
                 <div class="template-info">
-                    <h3 class="template-title">Minimal</h3>
-                    <div>
-                        <span class="template-tag">Simple</span>
-                        <span class="template-tag">Focused</span>
-                    </div>
-                    <p class="template-description">A minimalist design that puts your content first.</p>
-                    <a href="/?template=minimal" class="template-button">Use Template</a>
+                    <h3 class="text-xl font-semibold mb-2">{{ template.name }}</h3>
+                    <p class="text-gray-600 mb-4">{{ template.description }}</p>
+                    <a href="/?template={{ template_id }}" class="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all">
+                        <span>Use Template</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-
-            <!-- Executive Template -->
-            <div class="template-card">
-                <img src="/static/templates/executive.png" alt="Executive Template" class="template-preview">
-                <div class="template-info">
-                    <h3 class="template-title">Executive</h3>
-                    <div>
-                        <span class="template-tag">Professional</span>
-                        <span class="template-tag">Senior</span>
-                    </div>
-                    <p class="template-description">An executive-style template perfect for senior positions.</p>
-                    <a href="/?template=executive" class="template-button">Use Template</a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -409,6 +453,13 @@
                 document.body.classList.add('from-[#f5f7fa]', 'to-[#c3cfe2]');
             }
         });
+
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
     </script>
+    {% include 'includes/footer.html' %}
 </body>
 </html> 

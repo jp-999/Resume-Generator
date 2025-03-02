@@ -233,9 +233,9 @@
                 <ul class="skills-list">
                     {% for skill in skills %}
                     <li class="skill-item">
-                        <div class="skill-name">{{ skill.name }}</div>
+                        <div class="skill-name">{{ skill }}</div>
                         <div class="skill-bar">
-                            <div class="skill-level" style="width: {{ skill.level }}%"></div>
+                            <div class="skill-level" style="width: 80%"></div>
                         </div>
                     </li>
                     {% endfor %}
@@ -293,89 +293,6 @@
             </div>
             {% endif %}
         </div>
-            .section-title {
-                break-after: avoid;
-            }
-
-            .experience-item, .education-item {
-                break-inside: avoid;
-            }
-
-            hr {
-                break-after: avoid;
-            }
-        }
-    }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1 class="name">{{ name }}</h1>
-        <div class="contact-info">
-            <span>{{ email }}</span>
-            <span>{{ phone }}</span>
-            {% if location %}<span>{{ location }}</span>{% endif %}
-            {% if website %}<span>{{ website }}</span>{% endif %}
-        </div>
     </div>
-
-    {% if summary %}
-    <div class="section">
-        <div class="summary">{{ summary }}</div>
-    </div>
-    <hr>
-    {% endif %}
-
-    {% if skills %}
-    <div class="section">
-        <h2 class="section-title">Skills</h2>
-        <div class="skills-list">
-            {% for skill in skills %}
-            <div class="skill-item">{{ skill }}</div>
-            {% if not loop.last %}<span style="color: #95a5a6">•</span>{% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <hr>
-    {% endif %}
-
-    {% if experience %}
-    <div class="section">
-        <h2 class="section-title">Experience</h2>
-        {% for exp in experience %}
-        <div class="experience-item">
-            <div class="item-meta">
-                {{ exp.date }}
-            </div>
-            <div class="item-content">
-                <div class="item-title">{{ exp.title }}</div>
-                <div class="item-subtitle">{{ exp.company }}</div>
-                <div class="item-description">{{ exp.description }}</div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <hr>
-    {% endif %}
-
-    {% if education %}
-    <div class="section">
-        <h2 class="section-title">Education</h2>
-        {% for edu in education %}
-        <div class="education-item">
-            <div class="item-meta">
-                {{ edu.date }}
-            </div>
-            <div class="item-content">
-                <div class="item-title">{{ edu.degree }}</div>
-                <div class="item-subtitle">{{ edu.school }}</div>
-                {% if edu.description %}
-                <div class="item-description">{{ edu.description }}</div>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 </body>
 </html>
