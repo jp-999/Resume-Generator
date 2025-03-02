@@ -124,5 +124,9 @@ def generate_resume():
 def get_templates():
     return jsonify(TEMPLATES)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('pages/404.html'), 404
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
