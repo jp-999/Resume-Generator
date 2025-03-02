@@ -47,7 +47,7 @@ TEMPLATES = {
 @app.route('/')
 def index():
     template = request.args.get('template', 'modern')
-    return render_template('index.html', selected_template=template, templates=TEMPLATES)
+    return render_template('index.html', active_page='home', selected_template=template, templates=TEMPLATES)
 
 @app.route('/templates')
 def templates():
@@ -60,6 +60,10 @@ def tips():
 @app.route('/about')
 def about():
     return render_template('pages/about.html', active_page='about', templates=TEMPLATES)
+
+@app.route('/ats-checker')
+def ats_checker():
+    return render_template('pages/ats-checker.html', active_page='ats-checker', templates=TEMPLATES)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

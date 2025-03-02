@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}ATS Checker - Resume Generator{% endblock %}
+
+{% block hero %}
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">ATS Resume Checker</h1>
+        <p class="hero-subtitle">Optimize your resume for Applicant Tracking Systems and increase your chances of getting hired</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="max-w-4xl mx-auto">
+        <!-- File Upload Section -->
+        <div class="mb-8 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Upload Your Resume</h2>
+            <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center transition-all duration-300 relative">
+                <input type="file" id="resumeUpload" class="hidden" accept=".pdf,.doc,.docx">
+                <label for="resumeUpload" class="cursor-pointer block">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-purple-600 mb-4"></i>
+                    <p class="text-lg text-gray-600">Drag and drop your resume here or click to browse</p>
+                    <p class="text-sm text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX</p>
+                </label>
+                <div id="uploadProgress" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                    <div class="text-white">
+                        <i class="fas fa-spinner fa-spin text-2xl"></i>
+                        <p class="mt-2">Processing...</p>
+                    </div>
+                </div>
+            </div>
+            <div id="uploadedFile" class="hidden mt-4 p-4 bg-purple-50 rounded-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-alt text-purple-600 mr-3"></i>
+                        <span class="text-purple-700 font-medium" id="fileName"></span>
+                    </div>
+                    <button id="removeFile" class="text-red-500 hover:text-red-700 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Description Section -->
+        <div class="mb-8 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Job Description</h2>
+            <textarea 
+                id="jobDescription"
+                class="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                placeholder="Paste the job description here to compare with your resume..."></textarea>
+            <div class="flex justify-end mt-4">
+                <button id="analyzeBtn" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-search"></i>
+                    Analyze Resume
+                </button>
+            </div>
+        </div>
+
+        <!-- Analysis Results Section -->
+        <div id="resultsSection" class="mb-8 p-6 bg-white rounded-lg shadow-md hidden">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800">ATS Analysis Results</h2>
+            
+            <!-- Score Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="p-4 bg-purple-50 rounded-lg">
+                    <h3 class="font-semibold text-purple-700 mb-2">Match Score</h3>
+                    <div class="flex items-end gap-2">
+                        <p id="matchScore" class="text-3xl font-bold text-purple-600">-</p>
+                        <span class="text-purple-600 mb-1">%</span>
+                    </div>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg">
+                    <h3 class="font-semibold text-green-700 mb-2">Keywords Found</h3>
+                    <div class="flex items-end gap-2">
+                        <p id="keywordsFound" class="text-3xl font-bold text-green-600">-</p>
+                        <span id="totalKeywords" class="text-green-600 mb-1">/0</span>
+                    </div>
+                </div>
+                <div class="p-4 bg-blue-50 rounded-lg">
+                    <h3 class="font-semibold text-blue-700 mb-2">Format Score</h3>
+                    <div class="flex items-end gap-2">
+                        <p id="formatScore" class="text-3xl font-bold text-blue-600">-</p>
+                        <span class="text-blue-600 mb-1">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="space-y-6">
+                <!-- Missing Keywords -->
+                <div class="p-4 border border-red-200 rounded-lg bg-red-50">
+                    <h3 class="font-semibold text-red-700 mb-3 flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Missing Keywords
+                    </h3>
+                    <div id="missingKeywords" class="flex flex-wrap gap-2">
+                        <!-- Keywords will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Found Keywords -->
+                <div class="p-4 border border-green-200 rounded-lg bg-green-50">
+                    <h3 class="font-semibold text-green-700 mb-3 flex items-center gap-2">
+                        <i class="fas fa-check-circle"></i>
+                        Found Keywords
+                    </h3>
+                    <div id="foundKeywords" class="flex flex-wrap gap-2">
+                        <!-- Keywords will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Format Suggestions -->
+                <div class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+                    <h3 class="font-semibold text-blue-700 mb-3 flex items-center gap-2">
+                        <i class="fas fa-list-check"></i>
+                        Format Suggestions
+                    </h3>
+                    <ul id="formatSuggestions" class="space-y-2 text-blue-700">
+                        <!-- Suggestions will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .content-container {
+        margin-top: -2rem;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #resultsSection {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .keyword-chip {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .missing-keyword {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: rgb(185, 28, 28);
+    }
+
+    .found-keyword {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: rgb(21, 128, 61);
+    }
+
+    #dropZone.drag-over {
+        border-color: #8b5cf6;
+        background-color: rgba(139, 92, 246, 0.05);
+    }
+
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+        transition: stroke-dashoffset 0.35s;
+        transform-origin: 50% 50%;
+    }
+</style>
+{% endblock %}
+
+{% block additional_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('resumeUpload');
+        const uploadedFile = document.getElementById('uploadedFile');
+        const fileName = document.getElementById('fileName');
+        const removeFile = document.getElementById('removeFile');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const jobDescription = document.getElementById('jobDescription');
+        const resultsSection = document.getElementById('resultsSection');
+
+        let currentFile = null;
+
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('drag-over');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('drag-over');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        fileInput.addEventListener('change', function(e) {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (validateFile(file)) {
+                    currentFile = file;
+                    showUploadedFile(file);
+                    checkAnalyzeButtonState();
+                }
+            }
+        }
+
+        function validateFile(file) {
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please upload a PDF or Word document');
+                return false;
+            }
+            return true;
+        }
+
+        function showUploadedFile(file) {
+            fileName.textContent = file.name;
+            uploadedFile.classList.remove('hidden');
+        }
+
+        removeFile.addEventListener('click', function() {
+            currentFile = null;
+            uploadedFile.classList.add('hidden');
+            fileInput.value = '';
+            checkAnalyzeButtonState();
+        });
+
+        jobDescription.addEventListener('input', checkAnalyzeButtonState);
+
+        function checkAnalyzeButtonState() {
+            analyzeBtn.disabled = !currentFile || !jobDescription.value.trim();
+        }
+
+        analyzeBtn.addEventListener('click', async function() {
+            if (!currentFile || !jobDescription.value.trim()) return;
+
+            // Show progress
+            uploadProgress.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+
+            try {
+                // Simulate file processing and analysis
+                await simulateProcessing();
+                
+                // Perform analysis
+                const analysis = analyzeResume(jobDescription.value.trim());
+                
+                // Update UI with results
+                displayResults(analysis);
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                alert('An error occurred during analysis. Please try again.');
+            } finally {
+                uploadProgress.classList.add('hidden');
+            }
+        });
+
+        async function simulateProcessing() {
+            // Simulate file processing delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+
+        function analyzeResume(jobDescription) {
+            // Extract keywords from job description
+            const keywords = extractKeywords(jobDescription);
+            
+            // Simulate finding matches (this would normally compare against actual resume content)
+            const foundKeywords = keywords.filter(() => Math.random() > 0.3);
+            const missingKeywords = keywords.filter(k => !foundKeywords.includes(k));
+            
+            // Calculate scores
+            const matchScore = Math.round((foundKeywords.length / keywords.length) * 100);
+            const formatScore = Math.round(70 + Math.random() * 30);
+
+            return {
+                matchScore,
+                formatScore,
+                foundKeywords,
+                missingKeywords,
+                totalKeywords: keywords.length,
+                formatSuggestions: generateFormatSuggestions()
+            };
+        }
+
+        function extractKeywords(text) {
+            // Simple keyword extraction (this would be more sophisticated in production)
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const stopWords = new Set(['and', 'the', 'is', 'in', 'to', 'for', 'of', 'with', 'a', 'an']);
+            const uniqueWords = new Set(words.filter(word => !stopWords.has(word) && word.length > 3));
+            return Array.from(uniqueWords).slice(0, 15); // Limit to 15 keywords
+        }
+
+        function generateFormatSuggestions() {
+            const suggestions = [
+                'Use a professional font like Arial or Calibri',
+                'Ensure consistent spacing throughout the document',
+                'Use bullet points for better readability',
+                'Keep resume length to 1-2 pages',
+                'Include a clear section hierarchy'
+            ];
+            return suggestions.filter(() => Math.random() > 0.3);
+        }
+
+        function displayResults(analysis) {
+            // Update score displays
+            document.getElementById('matchScore').textContent = analysis.matchScore;
+            document.getElementById('keywordsFound').textContent = analysis.foundKeywords.length;
+            document.getElementById('totalKeywords').textContent = `/${analysis.totalKeywords}`;
+            document.getElementById('formatScore').textContent = analysis.formatScore;
+
+            // Update keywords
+            const missingKeywordsContainer = document.getElementById('missingKeywords');
+            const foundKeywordsContainer = document.getElementById('foundKeywords');
+
+            missingKeywordsContainer.innerHTML = analysis.missingKeywords
+                .map(keyword => `<span class="keyword-chip missing-keyword">${keyword}</span>`)
+                .join('');
+
+            foundKeywordsContainer.innerHTML = analysis.foundKeywords
+                .map(keyword => `<span class="keyword-chip found-keyword">${keyword}</span>`)
+                .join('');
+
+            // Update format suggestions
+            const suggestionsContainer = document.getElementById('formatSuggestions');
+            suggestionsContainer.innerHTML = analysis.formatSuggestions
+                .map(suggestion => `<li class="flex items-center gap-2">
+                    <i class="fas fa-check text-sm"></i>
+                    <span>${suggestion}</span>
+                </li>`)
+                .join('');
+
+            // Show results
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+</script>
+{% endblock %} 

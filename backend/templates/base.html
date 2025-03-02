@@ -165,17 +165,17 @@
     <nav class="navbar">
         <div class="relative px-4 py-3">
             <div class="flex items-center justify-between">
-                <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group">
-                    <i class="fas fa-file-alt text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
-                    <span class="font-semibold text-lg group-hover:translate-x-1 transition-transform duration-300">Resume Generator</span>
+                <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group {% if active_page == 'home' %}text-purple-700{% endif %}">
+                    <i class="fas fa-file-alt text-2xl group-hover:rotate-12 transition-transform duration-300 {% if active_page == 'home' %}rotate-12{% endif %}"></i>
+                    <span class="font-semibold text-lg group-hover:translate-x-1 transition-transform duration-300 {% if active_page == 'home' %}translate-x-1{% endif %}">Resume Generator</span>
                 </a>
 
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center gap-6">
                     <div class="flex items-center space-x-1">
-                        <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">
-                            <i class="fas fa-home"></i>
-                            <span>Home</span>
+                        <a href="/ats-checker" class="nav-link {% if active_page == 'ats-checker' %}active{% endif %}">
+                            <i class="fas fa-check-circle"></i>
+                            <span>ATS Checker</span>
                         </a>
                         <a href="/templates" class="nav-link {% if active_page == 'templates' %}active{% endif %}">
                             <i class="fas fa-th-large"></i>
@@ -205,9 +205,9 @@
             <!-- Mobile Navigation -->
             <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="flex flex-col p-2 gap-1">
-                    <a href="/" class="mobile-nav-link {% if active_page == 'home' %}active{% endif %}">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
+                    <a href="/ats-checker" class="mobile-nav-link {% if active_page == 'ats-checker' %}active{% endif %}">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ATS Checker</span>
                     </a>
                     <a href="/templates" class="mobile-nav-link {% if active_page == 'templates' %}active{% endif %}">
                         <i class="fas fa-th-large"></i>
