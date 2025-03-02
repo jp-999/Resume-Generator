@@ -3,222 +3,274 @@
 {% block title %}About - Resume Generator{% endblock %}
 
 {% block hero %}
-<div class="hero-section">
-    <div class="hero-content">
-        <h1 class="hero-title">About Resume Generator</h1>
-        <p class="hero-subtitle">Learn about our mission to help you create professional resumes</p>
+<section class="hero-section" data-aos="fade-down">
+    <h1 class="text-5xl font-bold mb-6">Building the Future of Resume Creation</h1>
+    <p class="text-xl mb-8 max-w-2xl mx-auto">We're a team of passionate developers dedicated to making professional resume creation accessible to everyone.</p>
+    <div class="flex justify-center gap-4">
+        <a href="/templates" class="bg-purple-600 text-white px-8 py-3 rounded-full hover:bg-purple-700 transition-all duration-300 transform hover:scale-105">
+            View Templates
+        </a>
+        <a href="#team" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-purple-600 transition-all duration-300">
+            Meet the Team
+        </a>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block content %}
 <div class="content-container">
-    <!-- Mission Section -->
-    <section class="mb-16">
-        <div class="flex flex-col md:flex-row items-center gap-8">
-            <div class="md:w-1/2">
-                <h2 class="text-3xl font-semibold mb-4">Our Mission</h2>
-                <p class="text-gray-600 leading-relaxed mb-6">
-                    Resume Generator was created with a simple goal: to help job seekers create professional, 
-                    eye-catching resumes without the complexity of traditional word processors or expensive 
-                    resume builders.
-                </p>
-                <p class="text-gray-600 leading-relaxed">
-                    We believe that everyone deserves access to tools that can help them showcase their 
-                    skills and experience effectively, regardless of their design expertise or technical background.
-                </p>
-            </div>
-            <div class="md:w-1/2">
-                <div class="bg-gradient-to-r from-purple-100 to-indigo-100 p-8 rounded-xl">
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-purple-600 mb-2">4+</div>
-                            <div class="text-gray-600">Professional Templates</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-purple-600 mb-2">100%</div>
-                            <div class="text-gray-600">Free to Use</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-purple-600 mb-2">ATS</div>
-                            <div class="text-gray-600">Friendly Formats</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-purple-600 mb-2">24/7</div>
-                            <div class="text-gray-600">Available</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Stats Section -->
+    <div class="stats-section" data-aos="fade-up">
+        <div class="stat-item floating">
+            <div class="stat-number" id="resumeCount">0</div>
+            <div class="stat-label">Resumes Generated</div>
         </div>
-    </section>
+        <div class="stat-item floating" style="animation-delay: 0.2s">
+            <div class="stat-number" id="templateCount">0</div>
+            <div class="stat-label">Templates Available</div>
+        </div>
+        <div class="stat-item floating" style="animation-delay: 0.4s">
+            <div class="stat-number" id="userCount">0</div>
+            <div class="stat-label">Happy Users</div>
+        </div>
+    </div>
 
-    <!-- Features Section -->
-    <section class="mb-16">
-        <h2 class="text-3xl font-semibold mb-8 text-center">Why Choose Us</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Easy to Use</h3>
-                <p class="text-gray-600">
-                    Our intuitive interface makes it simple to create and customize your resume. 
-                    No design skills required.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Real-time Preview</h3>
-                <p class="text-gray-600">
-                    See your changes instantly with our live preview feature. 
-                    What you see is what you get.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-download"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Export Options</h3>
-                <p class="text-gray-600">
-                    Download your resume in multiple formats including PDF, 
-                    ready to send to employers.
-                </p>
-            </div>
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="feature-card" data-aos="fade-right">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-magic text-purple-600 mr-2"></i>
+                Smart Features
+            </h3>
+            <p class="text-gray-600">
+                Leverage our intelligent resume builder with real-time preview, multiple templates, and professional formatting.
+            </p>
         </div>
-    </section>
+
+        <div class="feature-card" data-aos="fade-left">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-shield-alt text-purple-600 mr-2"></i>
+                Privacy First
+            </h3>
+            <p class="text-gray-600">
+                Your data stays private. We don't store any personal information on our servers.
+            </p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-right" data-aos-delay="200">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-bolt text-purple-600 mr-2"></i>
+                Lightning Fast
+            </h3>
+            <p class="text-gray-600">
+                Generate your professional resume in seconds with our optimized PDF generation system.
+            </p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-left" data-aos-delay="200">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-paint-brush text-purple-600 mr-2"></i>
+                Beautiful Design
+            </h3>
+            <p class="text-gray-600">
+                Choose from our collection of professionally designed templates that stand out.
+            </p>
+        </div>
+    </div>
 
     <!-- Team Section -->
-    <section class="mb-16">
-        <h2 class="text-3xl font-semibold mb-8 text-center">Meet the Team</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="team-card">
-                <div class="team-avatar">
-                    <i class="fas fa-user text-4xl text-purple-300"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">John Doe</h3>
-                <p class="text-purple-600 mb-3">Lead Developer</p>
-                <p class="text-gray-600">
-                    Full-stack developer with a passion for creating user-friendly applications.
-                </p>
+    <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Meet Our Team</h2>
+    <div class="team-section" id="team">
+        <div class="team-member" data-aos="fade-up">
+            <div class="relative group">
+                <img src="{{ url_for('static', filename='images/jayanth-peddi.jpg') }}" alt="Jayanth Peddi" class="w-40 h-40 rounded-full object-cover mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div class="absolute inset-0 bg-purple-600 bg-opacity-0 group-hover:bg-opacity-20 rounded-full transition-all duration-300"></div>
             </div>
-            <div class="team-card">
-                <div class="team-avatar">
-                    <i class="fas fa-user text-4xl text-purple-300"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Jane Smith</h3>
-                <p class="text-purple-600 mb-3">UI/UX Designer</p>
-                <p class="text-gray-600">
-                    Creative designer focused on crafting beautiful and intuitive user experiences.
-                </p>
-            </div>
-            <div class="team-card">
-                <div class="team-avatar">
-                    <i class="fas fa-user text-4xl text-purple-300"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2">Mike Johnson</h3>
-                <p class="text-purple-600 mb-3">Career Expert</p>
-                <p class="text-gray-600">
-                    HR professional with extensive experience in resume optimization.
-                </p>
+            <h3 class="text-2xl font-semibold mt-6 mb-2">Jayanth Peddi</h3>
+            <p class="text-purple-600 font-medium mb-4">Lead Developer</p>
+            <p class="text-gray-600 mb-6">Full-stack developer passionate about creating efficient and scalable solutions.</p>
+            <div class="flex justify-center gap-6">
+                <a href="https://github.com/jp-999" class="text-gray-600 hover:text-purple-600 transition-all duration-300 transform hover:scale-110" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/jayanth-peddi/" class="text-gray-600 hover:text-purple-600 transition-all duration-300 transform hover:scale-110" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
             </div>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section>
-        <h2 class="text-3xl font-semibold mb-8 text-center">Get in Touch</h2>
-        <div class="max-w-2xl mx-auto">
-            <div class="bg-white p-8 rounded-xl shadow-sm">
-                <form class="space-y-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2" for="name">Name</label>
-                        <input type="text" id="name" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2" for="email">Email</label>
-                        <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2" for="message">Message</label>
-                        <textarea id="message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-6 rounded-lg hover:shadow-lg transition-all duration-300">
-                        Send Message
-                    </button>
-                </form>
+        <div class="team-member" data-aos="fade-up" data-aos-delay="200">
+            <div class="relative group">
+                <img src="{{ url_for('static', filename='images/chetan-kumar.jpg') }}" alt="Chetan Kumar" class="w-40 h-40 rounded-full object-cover mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div class="absolute inset-0 bg-purple-600 bg-opacity-0 group-hover:bg-opacity-20 rounded-full transition-all duration-300"></div>
+            </div>
+            <h3 class="text-2xl font-semibold mt-6 mb-2">Chetan Kumar</h3>
+            <p class="text-purple-600 font-medium mb-4">Frontend Developer</p>
+            <p class="text-gray-600 mb-6">UI/UX specialist focused on creating beautiful and intuitive user experiences.</p>
+            <div class="flex justify-center gap-6">
+                <a href="https://github.com/ChetanKumar4u" class="text-gray-600 hover:text-purple-600 transition-all duration-300 transform hover:scale-110" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/chetankumar21/" class="text-gray-600 hover:text-purple-600 transition-all duration-300 transform hover:scale-110" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
             </div>
         </div>
-    </section>
+    </div>
 </div>
 {% endblock %}
 
 {% block additional_styles %}
 <style>
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        margin: 4rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #6c5ce7;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
     .feature-card {
         background: white;
+        border-radius: 16px;
         padding: 2rem;
-        border-radius: 1rem;
-        text-align: center;
         transition: all 0.3s ease;
-        animation: fadeInUp 0.5s ease-out;
-        animation-fill-mode: both;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: #6c5ce7;
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
     }
 
     .feature-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
-    .feature-icon {
-        width: 60px;
-        height: 60px;
-        background: rgba(108, 92, 231, 0.1);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        font-size: 1.5rem;
-        color: #6c5ce7;
+    .feature-card:hover::before {
+        transform: scaleY(1);
     }
 
-    .team-card {
+    .team-member {
         background: white;
+        border-radius: 20px;
         padding: 2rem;
-        border-radius: 1rem;
         text-align: center;
         transition: all 0.3s ease;
-        animation: fadeInUp 0.5s ease-out;
-        animation-fill-mode: both;
+        position: relative;
+        overflow: hidden;
     }
 
-    .team-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    .team-member::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #6c5ce7, #a363d9);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
     }
 
-    .team-avatar {
-        width: 100px;
-        height: 100px;
-        background: rgba(108, 92, 231, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
 
-    .feature-card:nth-child(2),
-    .team-card:nth-child(2) {
-        animation-delay: 0.1s;
+    .team-member:hover::after {
+        transform: scaleX(1);
     }
 
-    .feature-card:nth-child(3),
-    .team-card:nth-child(3) {
-        animation-delay: 0.2s;
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .floating {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @media (max-width: 768px) {
+        .team-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-section {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 </style>
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+
+    // Animated counter function
+    function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        
+        function updateCount() {
+            start += increment;
+            if (start < target) {
+                element.textContent = Math.floor(start);
+                requestAnimationFrame(updateCount);
+            } else {
+                element.textContent = target;
+            }
+        }
+        
+        updateCount();
+    }
+
+    // Start counting when elements are in view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(document.getElementById('resumeCount'), 5000);
+                animateCounter(document.getElementById('templateCount'), 4);
+                animateCounter(document.getElementById('userCount'), 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    observer.observe(document.querySelector('.stats-section'));
+</script>
 {% endblock %} 

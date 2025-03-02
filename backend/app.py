@@ -59,7 +59,7 @@ def tips():
 
 @app.route('/about')
 def about():
-    return render_template('pages/about.html')
+    return render_template('pages/about.html', active_page='about', templates=TEMPLATES)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

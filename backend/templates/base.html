@@ -78,28 +78,19 @@
         }
 
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            z-index: 1000;
-        }
-
-        .navbar.hidden {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
-
-        .navbar-trigger {
+            padding: 0;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 20px;
-            z-index: 999;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .nav-link {
@@ -166,14 +157,10 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             animation: slideIn 0.5s ease-out;
         }
-
-        {% block additional_styles %}{% endblock %}
     </style>
+    {% block additional_styles %}{% endblock %}
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
-    <!-- Add navbar trigger area -->
-    <div class="navbar-trigger"></div>
-    
     <!-- Navbar -->
     <nav class="navbar">
         <div class="relative px-4 py-3">
@@ -190,7 +177,7 @@
                             <i class="fas fa-home"></i>
                             <span>Home</span>
                         </a>
-                        <a href="/pages/templates" class="nav-link {% if active_page == 'templates' %}active{% endif %}">
+                        <a href="/templates" class="nav-link {% if active_page == 'templates' %}active{% endif %}">
                             <i class="fas fa-th-large"></i>
                             <span>Templates</span>
                         </a>
@@ -198,7 +185,7 @@
                             <i class="fas fa-lightbulb"></i>
                             <span>Tips</span>
                         </a>
-                        <a href="/pages/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">
+                        <a href="/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">
                             <i class="fas fa-info-circle"></i>
                             <span>About</span>
                         </a>
@@ -222,7 +209,7 @@
                         <i class="fas fa-home"></i>
                         <span>Home</span>
                     </a>
-                    <a href="/pages/templates" class="mobile-nav-link {% if active_page == 'templates' %}active{% endif %}">
+                    <a href="/templates" class="mobile-nav-link {% if active_page == 'templates' %}active{% endif %}">
                         <i class="fas fa-th-large"></i>
                         <span>Templates</span>
                     </a>
@@ -230,7 +217,7 @@
                         <i class="fas fa-lightbulb"></i>
                         <span>Tips</span>
                     </a>
-                    <a href="/pages/about" class="mobile-nav-link {% if active_page == 'about' %}active{% endif %}">
+                    <a href="/about" class="mobile-nav-link {% if active_page == 'about' %}active{% endif %}">
                         <i class="fas fa-info-circle"></i>
                         <span>About</span>
                     </a>
@@ -276,50 +263,6 @@
             } else {
                 document.body.classList.remove('from-gray-900', 'to-gray-800');
                 document.body.classList.add('from-[#f5f7fa]', 'to-[#c3cfe2]');
-            }
-        });
-
-        // Add navbar scroll and hover behavior
-        const navbar = document.querySelector('.navbar');
-        const navbarTrigger = document.querySelector('.navbar-trigger');
-        let lastScrollY = window.scrollY;
-        let isHovering = false;
-
-        // Handle scroll
-        window.addEventListener('scroll', () => {
-            if (!isHovering) {
-                const currentScrollY = window.scrollY;
-                if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                    navbar.classList.add('hidden');
-                } else {
-                    navbar.classList.remove('hidden');
-                }
-                lastScrollY = currentScrollY;
-            }
-        });
-
-        // Handle hover
-        navbarTrigger.addEventListener('mouseenter', () => {
-            isHovering = true;
-            navbar.classList.remove('hidden');
-        });
-
-        navbar.addEventListener('mouseenter', () => {
-            isHovering = true;
-            navbar.classList.remove('hidden');
-        });
-
-        navbar.addEventListener('mouseleave', () => {
-            isHovering = false;
-            if (window.scrollY > 100) {
-                navbar.classList.add('hidden');
-            }
-        });
-
-        navbarTrigger.addEventListener('mouseleave', () => {
-            isHovering = false;
-            if (window.scrollY > 100) {
-                navbar.classList.add('hidden');
             }
         });
     </script>
