@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Tips - Resume Generator</title>
+    <title>Resume Writing Tips - Resume Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -225,6 +225,92 @@
         .dark .text-gray-600 {
             color: #a0aec0;
         }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/static/images/tips-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        /* Tips Categories */
+        .tips-category {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .tips-category:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-icon {
+            font-size: 2.5em;
+            color: #6c5ce7;
+            margin-bottom: 15px;
+        }
+
+        .tip-item {
+            border-left: 3px solid #6c5ce7;
+            padding: 10px 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+        }
+
+        .tip-item h4 {
+            color: #2d3436;
+            margin-bottom: 8px;
+        }
+
+        .do-dont {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .do, .dont {
+            flex: 1;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .do {
+            background: #e3ffe3;
+            border: 1px solid #90ee90;
+        }
+
+        .dont {
+            background: #ffe3e3;
+            border: 1px solid #ee9090;
+        }
+
+        /* Resources Section */
+        .resources {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #6c5ce7;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
@@ -287,43 +373,140 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section" data-aos="fade-down">
-        <h1 class="text-5xl font-bold mb-6">Resume Writing Tips</h1>
-        <p class="text-xl mb-8 max-w-2xl mx-auto">Expert advice to help you create a compelling resume that stands out.</p>
-    </section>
-
-    <div class="max-w-7xl mx-auto px-4">
-        <!-- Tips Categories -->
-        <div class="flex justify-center gap-4 mb-12" data-aos="fade-up">
-            <button class="px-6 py-2 rounded-full bg-purple-600 text-white hover:bg-purple-700 transition-all">All Tips</button>
-            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Formatting</button>
-            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Content</button>
-            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Strategy</button>
+    <div class="hero">
+        <div class="container">
+            <h1>Expert Resume Writing Tips</h1>
+            <p>Learn how to create a compelling resume that gets you noticed</p>
         </div>
+    </div>
 
-        <!-- Tips Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <!-- Formatting Tips -->
-            <div class="tip-card" data-aos="fade-up">
-                <span class="category-badge formatting">Formatting</span>
-                <h3 class="text-xl font-semibold mb-4">Keep It Clean and Consistent</h3>
-                <p class="text-gray-600">Use consistent formatting throughout your resume. Stick to one or two professional fonts and maintain consistent spacing and alignment.</p>
+    <div class="container">
+        <!-- Quick Tips Section -->
+        <section class="tips-category">
+            <i class="fas fa-bolt category-icon"></i>
+            <h2>Quick Tips for Success</h2>
+            <div class="tip-item">
+                <h4>1. Tailor Your Resume</h4>
+                <p>Customize your resume for each job application by matching keywords from the job description.</p>
             </div>
-
-            <div class="tip-card" data-aos="fade-up" data-aos-delay="100">
-                <span class="category-badge content">Content</span>
-                <h3 class="text-xl font-semibold mb-4">Highlight Achievements</h3>
-                <p class="text-gray-600">Focus on quantifiable achievements rather than just listing job duties. Use numbers and metrics to demonstrate your impact.</p>
+            <div class="tip-item">
+                <h4>2. Use Action Verbs</h4>
+                <p>Start bullet points with strong action verbs like "Achieved," "Implemented," "Led," or "Developed."</p>
             </div>
-
-            <div class="tip-card" data-aos="fade-up" data-aos-delay="200">
-                <span class="category-badge strategy">Strategy</span>
-                <h3 class="text-xl font-semibold mb-4">Tailor Your Resume</h3>
-                <p class="text-gray-600">Customize your resume for each job application. Match your skills and experiences to the job requirements.</p>
+            <div class="tip-item">
+                <h4>3. Quantify Achievements</h4>
+                <p>Include specific numbers and percentages to demonstrate your impact (e.g., "Increased sales by 45%").</p>
             </div>
+        </section>
 
-            <!-- Add more tip cards as needed -->
-        </div>
+        <!-- Format & Structure Section -->
+        <section class="tips-category">
+            <i class="fas fa-layer-group category-icon"></i>
+            <h2>Format & Structure</h2>
+            <div class="do-dont">
+                <div class="do">
+                    <h3><i class="fas fa-check"></i> Do</h3>
+                    <ul>
+                        <li>Keep it to 1-2 pages</li>
+                        <li>Use consistent formatting</li>
+                        <li>Include white space</li>
+                        <li>Use clear section headings</li>
+                        <li>Choose readable fonts (10-12pt)</li>
+                    </ul>
+                </div>
+                <div class="dont">
+                    <h3><i class="fas fa-times"></i> Don't</h3>
+                    <ul>
+                        <li>Use fancy fonts or colors</li>
+                        <li>Include personal photos (unless requested)</li>
+                        <li>Make it too dense</li>
+                        <li>Use complex layouts</li>
+                        <li>Include irrelevant information</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Tips Section -->
+        <section class="tips-category">
+            <i class="fas fa-pen-fancy category-icon"></i>
+            <h2>Content Writing Tips</h2>
+            <div class="tip-item">
+                <h4>Professional Summary</h4>
+                <p>Write a compelling 3-4 line summary highlighting your key qualifications and career goals.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Work Experience</h4>
+                <p>Focus on achievements rather than duties. Use the PAR format: Problem, Action, Result.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Skills Section</h4>
+                <p>Include both hard skills (technical) and soft skills (interpersonal) relevant to the position.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Education</h4>
+                <p>List your most recent education first. Include relevant coursework, honors, and GPA if above 3.5.</p>
+            </div>
+        </section>
+
+        <!-- ATS Tips Section -->
+        <section class="tips-category">
+            <i class="fas fa-robot category-icon"></i>
+            <h2>ATS (Applicant Tracking System) Tips</h2>
+            <div class="tip-item">
+                <h4>Use Standard Section Headings</h4>
+                <p>Use clear, standard section headings like "Work Experience" instead of creative alternatives.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Include Keywords</h4>
+                <p>Incorporate relevant keywords from the job description naturally throughout your resume.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Avoid Graphics</h4>
+                <p>Use simple formatting and avoid images, tables, or graphics that ATS might not process correctly.</p>
+            </div>
+        </section>
+
+        <!-- Common Mistakes Section -->
+        <section class="tips-category">
+            <i class="fas fa-exclamation-triangle category-icon"></i>
+            <h2>Common Mistakes to Avoid</h2>
+            <div class="tip-item">
+                <h4>Spelling and Grammar</h4>
+                <p>Always proofread carefully and use spell check. Consider having someone else review your resume.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Generic Statements</h4>
+                <p>Avoid clichés like "team player" or "hard worker" without supporting evidence.</p>
+            </div>
+            <div class="tip-item">
+                <h4>Outdated Information</h4>
+                <p>Remove outdated experiences and skills that aren't relevant to your current career goals.</p>
+            </div>
+        </section>
+
+        <!-- Additional Resources -->
+        <section class="resources">
+            <h2>Additional Resources</h2>
+            <div class="resource-links">
+                <a href="#" class="resource-link">
+                    <i class="fas fa-book"></i>
+                    Resume Writing Guide
+                </a><br>
+                <a href="#" class="resource-link">
+                    <i class="fas fa-file-alt"></i>
+                    Sample Resumes
+                </a><br>
+                <a href="#" class="resource-link">
+                    <i class="fas fa-list-ul"></i>
+                    Action Verbs List
+                </a><br>
+                <a href="#" class="resource-link">
+                    <i class="fas fa-industry"></i>
+                    Industry-Specific Tips
+                </a>
+            </div>
+        </section>
     </div>
 
     <script>
@@ -363,5 +546,6 @@
             }
         });
     </script>
+    {% include 'includes/footer.html' %}
 </body>
 </html> 
