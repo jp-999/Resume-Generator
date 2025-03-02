@@ -34,8 +34,51 @@
             padding-top: 0;
         }
 
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            margin: -40px -20px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,208C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             gap: 30px;
@@ -47,8 +90,20 @@
             background-color: white;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             animation: slideIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
 
         .preview-container {
@@ -56,7 +111,7 @@
             background-color: white;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
@@ -65,6 +120,165 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3436;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+            outline: none;
+            background: white;
+        }
+
+        .form-group input:focus + label,
+        .form-group textarea:focus + label {
+            color: #667eea;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .template-option {
+            background: #f8fafc;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-option:hover {
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+
+        .template-option.selected {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .preview-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        .preview-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .preview-container {
+                position: static;
+                max-height: none;
+            }
+
+            .hero-title {
+                font-size: 2em;
+            }
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102,126,234,0.4);
         }
 
         .preview-container h1 {
@@ -156,17 +370,6 @@
             }
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         h1 {
             text-align: center;
             color: #2d3436;
@@ -175,86 +378,9 @@
             font-weight: 600;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-            opacity: 0;
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2d3436;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #dfe6e9;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        textarea:focus {
-            border-color: #74b9ff;
-            box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.2);
-            outline: none;
-        }
-
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-
-        button {
-            background: linear-gradient(135deg, #6c5ce7 0%, #a363d9 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            width: 100%;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
         .required-field {
             color: #e74c3c;
             margin-left: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .preview-container {
-                position: static;
-                max-height: none;
-            }
         }
 
         /* Updated Navbar Styles */
@@ -761,6 +887,127 @@
         .preview-container[data-template="classic"] .social-link:hover {
             color: #333;
         }
+
+        /* Modern Template Styles */
+        .preview-container.modern {
+            font-family: 'Inter', sans-serif;
+        }
+        .modern .modern-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Minimal Template Styles */
+        .preview-container.minimal {
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .minimal .minimal-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Executive Template Styles */
+        .preview-container.executive {
+            font-family: 'Georgia', serif;
+        }
+        .executive .executive-skills {
+            font-size: 15px;
+        }
+
+        /* Template Selection Styles */
+        .template-option {
+            position: relative;
+            overflow: hidden;
+        }
+        .template-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        .template-option:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Add these new styles for section management */
+        .section-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #dfe6e9;
+        }
+
+        .add-section-btn {
+            background: #4ade80;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-section-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.2);
+        }
+
+        .section-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .delete-section-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #fee2e2;
+            color: #ef4444;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .section-wrapper:hover .delete-section-btn {
+            opacity: 1;
+        }
+
+        .delete-section-btn:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .section-type-select {
+            padding: 0.5rem;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-right: 1rem;
+            min-width: 150px;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
@@ -833,122 +1080,97 @@
         </div>
     </nav>
 
+    <!-- Add this section right after the navbar -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Create Your Professional Resume</h1>
+            <p class="hero-subtitle">Choose from multiple templates, customize your content, and generate a polished resume in minutes</p>
+        </div>
+    </div>
+
     <div class="container">
         <div class="form-container">
-            <h1>Resume Generator</h1>
-            <form action="/generate" method="POST" id="resumeForm">
-                <div class="form-group" style="animation-delay: 0.05s;">
-                    <label for="template">Template Style</label>
-                    <div class="template-selector">
-                        <select id="template" name="template" class="template-select">
-                            {% for template_id, template in templates.items() %}
-                            <option value="{{ template_id }}" {% if template_id == selected_template %}selected{% endif %}>
-                                {{ template.name }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <a href="/templates" class="view-templates-btn">View All Templates</a>
-                    </div>
+            <div class="template-selector">
+                <div class="template-option selected" onclick="selectTemplate('classic')">
+                    <i class="fas fa-file-alt mb-2"></i>
+                    <h3>Classic</h3>
                 </div>
-                <div class="form-group" style="animation-delay: 0.1s;">
-                    <label for="name">Full Name<span class="required-field">*</span></label>
-                    <input type="text" id="name" name="name" required>
+                <div class="template-option" onclick="selectTemplate('modern')">
+                    <i class="fas fa-laptop-code mb-2"></i>
+                    <h3>Modern</h3>
                 </div>
-                <div class="form-group" style="animation-delay: 0.2s;">
-                    <label for="email">Email<span class="required-field">*</span></label>
-                    <input type="email" id="email" name="email" required>
+                <div class="template-option" onclick="selectTemplate('minimal')">
+                    <i class="fas fa-feather mb-2"></i>
+                    <h3>Minimal</h3>
                 </div>
-                <div class="form-group" style="animation-delay: 0.3s;">
-                    <label for="phone">Phone<span class="required-field">*</span></label>
-                    <input type="text" id="phone" name="phone" required>
+                <div class="template-option" onclick="selectTemplate('executive')">
+                    <i class="fas fa-briefcase mb-2"></i>
+                    <h3>Executive</h3>
                 </div>
-                <div class="form-group" style="animation-delay: 0.35s;">
-                    <label for="github">GitHub Profile</label>
-                    <div class="input-with-icon">
-                        <i class="fab fa-github text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
-                        <input type="text" id="github" name="github" placeholder="e.g., https://github.com/username" class="pl-10">
-                    </div>
+            </div>
+
+            <form id="resumeForm">
+                <!-- Personal Information -->
+                <div class="form-group">
+                    <label>Full Name <span class="required-field">*</span></label>
+                    <input type="text" id="fullName" required placeholder="e.g., John Doe" onkeyup="updatePreview()">
                 </div>
-                <div class="form-group" style="animation-delay: 0.35s;">
-                    <label for="linkedin">LinkedIn Profile</label>
-                    <div class="input-with-icon">
-                        <i class="fab fa-linkedin text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
-                        <input type="text" id="linkedin" name="linkedin" placeholder="e.g., https://linkedin.com/in/username" class="pl-10">
-                    </div>
+
+                <div class="form-group">
+                    <label>Email <span class="required-field">*</span></label>
+                    <input type="email" id="email" required placeholder="e.g., john@example.com" onkeyup="updatePreview()">
                 </div>
-                <div class="form-group" style="animation-delay: 0.4s;">
-                    <label for="summary">Professional Summary</label>
-                    <textarea id="summary" name="summary" placeholder="e.g., Dedicated software engineer with 5+ years of experience in developing scalable web applications. Strong expertise in Python and JavaScript with a focus on creating efficient, maintainable code..."></textarea>
+
+                <div class="form-group">
+                    <label>Professional Summary</label>
+                    <textarea id="summary" placeholder="Brief overview of your professional background and goals" onkeyup="updatePreview()"></textarea>
                 </div>
-                <div class="form-group" style="animation-delay: 0.5s;">
-                    <label for="skills">Skills</label>
-                    <textarea id="skills" name="skills" placeholder="e.g., Python, JavaScript, Project Management..."></textarea>
+
+                <!-- Dynamic Sections Container -->
+                <div id="dynamicSections"></div>
+
+                <!-- Section Controls -->
+                <div class="section-controls">
+                    <select class="section-type-select" id="sectionType">
+                        <option value="experience">Work Experience</option>
+                        <option value="education">Education</option>
+                        <option value="skills">Skills</option>
+                        <option value="projects">Projects</option>
+                        <option value="certifications">Certifications</option>
+                        <option value="awards">Awards & Achievements</option>
+                        <option value="languages">Languages</option>
+                        <option value="interests">Interests</option>
+                    </select>
+                    <button type="button" class="add-section-btn" onclick="addSection()">
+                        <i class="fas fa-plus"></i>
+                        Add Section
+                    </button>
                 </div>
-                <div class="form-group" style="animation-delay: 0.6s;">
-                    <label for="experience">Experience</label>
-                    <textarea id="experience" name="experience" placeholder="e.g., Software Engineer at Tech Corp (2020-Present)..."></textarea>
-                </div>
-                <div class="form-group" style="animation-delay: 0.7s;">
-                    <label for="education">Education</label>
-                    <textarea id="education" name="education" placeholder="e.g., BS in Computer Science, University Name (2016-2020)..."></textarea>
-                </div>
-                <div class="form-group" style="animation-delay: 0.75s;">
-                    <label for="certifications">Certifications</label>
-                    <textarea id="certifications" name="certifications" placeholder="e.g., AWS Certified Solutions Architect (2023)&#10;Google Cloud Professional Developer (2022)..."></textarea>
-                </div>
-                <button type="submit" style="animation-delay: 0.8s;" class="form-group">Generate Resume</button>
+
+                <button type="submit" class="generate-btn">
+                    Generate Resume
+                    <i class="fas fa-file-download ml-2"></i>
+                </button>
             </form>
         </div>
-        <div class="preview-container" data-template="{{ selected_template }}">
-            <!-- Classic Template Preview Structure -->
-            <div class="preview-header">
-                <div class="preview-profile-image">
-                    <i class="fas fa-user"></i>
+
+        <div class="preview-container">
+            <div id="resumePreview">
+                <h1 id="previewName">Your Name</h1>
+                <div class="contact-info" id="previewContact">
+                    your.email@example.com
                 </div>
-                <div class="preview-name" id="namePreview">Your Name</div>
-                <div class="preview-title" id="titlePreview">Professional Title</div>
-            </div>
-            
-            <div class="preview-left">
+                
                 <div class="preview-section">
-                    <h3>Summary</h3>
-                    <div class="preview-content" id="summaryPreview">
-                        Your professional summary will appear here
+                    <h3>Professional Summary</h3>
+                    <div class="preview-content" id="previewSummary">
+                        Your professional summary will appear here...
                     </div>
                 </div>
-                <div class="preview-section">
-                    <h3>Experience</h3>
-                    <div class="preview-content" id="experiencePreview">
-                        Your experience will appear here
-                    </div>
-                </div>
+
                 <div class="preview-section">
                     <h3>Skills</h3>
-                    <div class="preview-content" id="skillsPreview">
-                        Your skills will appear here
-                    </div>
-                </div>
-            </div>
-
-            <div class="preview-separator"></div>
-
-            <div class="preview-right">
-                <div class="preview-section">
-                    <h3>Contact</h3>
-                    <div class="preview-content" id="contactPreview">
-                        Your contact information will appear here
-                    </div>
-                </div>
-                <div class="preview-section">
-                    <h3>Education</h3>
-                    <div class="preview-content" id="educationPreview">
-                        Your education will appear here
-                    </div>
-                </div>
-                <div class="preview-section certifications-section" style="display: none;">
-                    <h3>Certifications</h3>
-                    <div class="preview-content" id="certificationsPreview">
-                        Your certifications will appear here
+                    <div class="skills-preview-list" id="previewSkills">
                     </div>
                 </div>
             </div>
@@ -956,6 +1178,263 @@
     </div>
 
     <script>
+        let currentTemplate = 'classic';
+
+        function selectTemplate(template) {
+            document.querySelectorAll('.template-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            currentTemplate = template;
+            updatePreview();
+        }
+
+        // Rename the sections variable used for DOM elements to avoid conflict
+        const sectionElements = document.querySelectorAll('section');
+
+        function setActiveLink() {
+            const currentScroll = window.scrollY;
+            sectionElements.forEach((section, index) => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (currentScroll >= sectionTop && currentScroll < sectionBottom) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[index].classList.add('active');
+                }
+            });
+        }
+
+        function getTemplateStructure(template, data) {
+            let baseStructure = '';
+            switch(template) {
+                case 'modern':
+                    baseStructure = `
+                        <div class="modern-header bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-t-lg">
+                            <h1 id="previewName" class="text-3xl font-bold mb-2">${data.name}</h1>
+                            <div class="contact-info text-sm opacity-90">${data.email}</div>
+                        </div>
+                        <div class="modern-content p-8">
+                            <div class="preview-section">
+                                <h3 class="text-xl font-semibold text-purple-600 mb-4">Professional Summary</h3>
+                                <div class="preview-content" id="previewSummary">${data.summary}</div>
+                            </div>
+                            ${data.sectionsContent}
+                        </div>
+                    `;
+                    break;
+                case 'minimal':
+                    baseStructure = `
+                        <div class="minimal-container p-8">
+                            <div class="minimal-header border-b-2 border-gray-200 pb-6 mb-6">
+                                <h1 id="previewName" class="text-3xl font-light mb-2">${data.name}</h1>
+                                <div class="contact-info text-gray-600">${data.email}</div>
+                            </div>
+                            <div class="minimal-content grid grid-cols-1 gap-8">
+                                <div class="preview-section">
+                                    <h3 class="text-lg uppercase tracking-wider text-gray-700 mb-4">Professional Summary</h3>
+                                    <div class="preview-content text-gray-600" id="previewSummary">${data.summary}</div>
+                                </div>
+                                ${data.sectionsContent}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'executive':
+                    baseStructure = `
+                        <div class="executive-container p-8 border-t-8 border-gray-800">
+                            <div class="executive-header mb-8">
+                                <h1 id="previewName" class="text-4xl font-serif mb-2">${data.name}</h1>
+                                <div class="contact-info text-gray-700 font-serif">${data.email}</div>
+                            </div>
+                            <div class="executive-content">
+                                <div class="preview-section mb-8">
+                                    <h3 class="text-2xl font-serif text-gray-800 mb-4 border-b border-gray-300 pb-2">Professional Summary</h3>
+                                    <div class="preview-content font-serif text-gray-700 leading-relaxed" id="previewSummary">${data.summary}</div>
+                                </div>
+                                ${data.sectionsContent}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                default: // classic
+                    baseStructure = `
+                        <div class="classic-container p-8">
+                            <h1 id="previewName" class="text-2xl font-bold mb-2">${data.name}</h1>
+                            <div class="contact-info mb-6 text-gray-600" id="previewContact">${data.email}</div>
+                            <div class="preview-section mb-6">
+                                <h3 class="text-lg font-semibold border-b-2 border-gray-200 pb-2 mb-4">Professional Summary</h3>
+                                <div class="preview-content" id="previewSummary">${data.summary}</div>
+                            </div>
+                            ${data.sectionsContent}
+                        </div>
+                    `;
+            }
+            return baseStructure;
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('fullName').value || 'Your Name';
+            const email = document.getElementById('email').value || 'your.email@example.com';
+            const summary = document.getElementById('summary').value || 'Your professional summary will appear here...';
+
+            // Get all dynamic sections content
+            const sectionsContent = dynamicSections.map(section => getSectionContent(section)).join('');
+
+            const previewContainer = document.querySelector('.preview-container');
+            const data = {
+                name,
+                email,
+                summary,
+                sectionsContent
+            };
+
+            previewContainer.innerHTML = getTemplateStructure(currentTemplate, data);
+            previewContainer.className = 'preview-container ' + currentTemplate;
+        }
+
+        // Add these new functions for section management
+        let dynamicSections = [];
+        let sectionCounter = 0;
+
+        function addSection() {
+            const sectionType = document.getElementById('sectionType').value;
+            const sectionTitle = document.getElementById('sectionType').options[document.getElementById('sectionType').selectedIndex].text;
+            const sectionId = `section-${sectionCounter++}`;
+            
+            const section = {
+                id: sectionId,
+                type: sectionType,
+                title: sectionTitle
+            };
+            
+            dynamicSections.push(section);
+            
+            const sectionHtml = createSectionHtml(section);
+            document.getElementById('dynamicSections').insertAdjacentHTML('beforeend', sectionHtml);
+            updatePreview();
+        }
+
+        function createSectionHtml(section) {
+            let inputHtml = '';
+            
+            switch(section.type) {
+                case 'experience':
+                    inputHtml = `
+                        <input type="text" class="mb-2" placeholder="Company Name" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Position" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2020 - Present)" onkeyup="updatePreview()">
+                        <textarea placeholder="Description of your responsibilities and achievements" onkeyup="updatePreview()"></textarea>
+                    `;
+                    break;
+                case 'education':
+                    inputHtml = `
+                        <input type="text" class="mb-2" placeholder="Institution Name" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Degree/Certificate" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2016 - 2020)" onkeyup="updatePreview()">
+                        <input type="text" placeholder="GPA/Achievements (optional)" onkeyup="updatePreview()">
+                    `;
+                    break;
+                case 'skills':
+                    inputHtml = `
+                        <input type="text" placeholder="Skills (comma-separated)" onkeyup="updatePreview()">
+                    `;
+                    break;
+                case 'projects':
+                    inputHtml = `
+                        <input type="text" class="mb-2" placeholder="Project Name" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Technologies Used" onkeyup="updatePreview()">
+                        <textarea placeholder="Project Description" onkeyup="updatePreview()"></textarea>
+                    `;
+                    break;
+                default:
+                    inputHtml = `
+                        <textarea placeholder="Enter details for ${section.title}" onkeyup="updatePreview()"></textarea>
+                    `;
+            }
+
+            return `
+                <div class="section-wrapper" id="${section.id}">
+                    <div class="form-group">
+                        <label>${section.title}</label>
+                        ${inputHtml}
+                        <button type="button" class="delete-section-btn" onclick="deleteSection('${section.id}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function deleteSection(sectionId) {
+            const sectionElement = document.getElementById(sectionId);
+            sectionElement.style.animation = 'fadeOut 0.3s ease-out';
+            
+            setTimeout(() => {
+                sectionElement.remove();
+                dynamicSections = dynamicSections.filter(section => section.id !== sectionId);
+                updatePreview();
+            }, 300);
+        }
+
+        function getSectionContent(section) {
+            const sectionElement = document.getElementById(section.id);
+            if (!sectionElement) return '';
+
+            let content = '';
+            switch(section.type) {
+                case 'experience':
+                    const company = sectionElement.querySelector('input:nth-child(1)').value;
+                    const position = sectionElement.querySelector('input:nth-child(2)').value;
+                    const duration = sectionElement.querySelector('input:nth-child(3)').value;
+                    const description = sectionElement.querySelector('textarea').value;
+                    
+                    content = `
+                        <div class="mb-4">
+                            <div class="font-bold">${company}</div>
+                            <div class="text-gray-600">${position}</div>
+                            <div class="text-sm text-gray-500">${duration}</div>
+                            <p class="mt-2">${description}</p>
+                        </div>
+                    `;
+                    break;
+                case 'skills':
+                    const skills = sectionElement.querySelector('input').value;
+                    const skillsArray = skills.split(',').map(skill => skill.trim());
+                    
+                    content = `
+                        <div class="skills-preview-list">
+                            ${skillsArray.map(skill => `
+                                <div class="skill-preview-item">${skill}</div>
+                            `).join('')}
+                        </div>
+                    `;
+                    break;
+                default:
+                    const text = sectionElement.querySelector('textarea').value;
+                    content = `<p>${text}</p>`;
+            }
+
+            return `
+                <div class="preview-section">
+                    <h3>${section.title}</h3>
+                    ${content}
+                </div>
+            `;
+        }
+
+        // Add this keyframe animation
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // Initialize preview
+        document.addEventListener('DOMContentLoaded', updatePreview);
+
         // Add this before the existing script content
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -1014,153 +1493,6 @@
             }
         });
 
-        // Function to update preview
-        function updatePreview() {
-            const template = document.getElementById('template').value;
-            const previewContainer = document.querySelector('.preview-container');
-            previewContainer.dataset.template = template;
-            
-            const name = document.getElementById('name').value || 'Your Name';
-            const email = document.getElementById('email').value || 'your.email@example.com';
-            const phone = document.getElementById('phone').value || 'Your Phone';
-            const github = document.getElementById('github').value;
-            const linkedin = document.getElementById('linkedin').value;
-            const summary = document.getElementById('summary').value || 'Your professional summary will appear here';
-            const skills = document.getElementById('skills').value || '';
-            const experience = document.getElementById('experience').value || 'Your experience will appear here';
-            const education = document.getElementById('education').value || 'Your education will appear here';
-            const certifications = document.getElementById('certifications').value;
-
-            // Update name and title
-            document.getElementById('namePreview').textContent = name;
-            document.getElementById('titlePreview').textContent = 'Professional Title';
-
-            // Update contact info with template-specific styling
-            let contactHtml = '';
-            if (template === 'minimal') {
-                contactHtml = `
-                    <p><i class="fas fa-envelope"></i>${email}</p>
-                    <p><i class="fas fa-phone"></i>${phone}</p>
-                `;
-
-                if (github || linkedin) {
-                    contactHtml += '<div class="social-links">';
-                    if (github) {
-                        contactHtml += `
-                            <a href="${github}" target="_blank" class="social-link">
-                                <i class="fab fa-github"></i>GitHub
-                            </a>
-                        `;
-                    }
-                    if (linkedin) {
-                        contactHtml += `
-                            <a href="${linkedin}" target="_blank" class="social-link">
-                                <i class="fab fa-linkedin"></i>LinkedIn
-                            </a>
-                        `;
-                    }
-                    contactHtml += '</div>';
-                }
-            } else {
-                contactHtml = `
-                    <p><i class="fas fa-envelope"></i> ${email}</p>
-                    <p><i class="fas fa-phone"></i> ${phone}</p>
-                `;
-
-                if (github || linkedin) {
-                    contactHtml += '<div class="social-links">';
-                    if (github) {
-                        contactHtml += `
-                            <a href="${github}" target="_blank" class="social-link">
-                                <i class="fab fa-github"></i>
-                                <span>GitHub</span>
-                            </a>
-                        `;
-                    }
-                    if (linkedin) {
-                        contactHtml += `
-                            <a href="${linkedin}" target="_blank" class="social-link">
-                                <i class="fab fa-linkedin"></i>
-                                <span>LinkedIn</span>
-                            </a>
-                        `;
-                    }
-                    contactHtml += '</div>';
-                }
-            }
-            document.getElementById('contactPreview').innerHTML = contactHtml;
-
-            // Update summary
-            document.getElementById('summaryPreview').innerHTML = summary.replace(/\n/g, '<br>');
-
-            // Update skills with template-specific styling
-            const skillsArray = skills.split('\n').filter(skill => skill.trim());
-            let skillsHtml = '';
-            if (template === 'minimal') {
-                skillsHtml = skillsArray
-                    .map(skill => `
-                        <div class="skill-preview-item">
-                            ${skill.trim()}
-                            <div class="skill-preview-bar">
-                                <div class="skill-preview-level" style="width: 80%"></div>
-                            </div>
-                        </div>
-                    `).join('');
-            } else {
-                skillsHtml = skillsArray
-                    .map(skill => `
-                        <div class="skill-preview-item">
-                            ${skill.trim()}
-                            <div class="skill-preview-bar">
-                                <div class="skill-preview-level" style="width: 80%"></div>
-                            </div>
-                        </div>
-                    `).join('');
-            }
-            document.getElementById('skillsPreview').innerHTML = skillsHtml;
-
-            // Update experience with template-specific formatting
-            const experienceHtml = experience
-                .split('\n')
-                .filter(exp => exp.trim())
-                .map(exp => `<p class="preview-content">${exp.trim()}</p>`)
-                .join('');
-            document.getElementById('experiencePreview').innerHTML = experienceHtml;
-
-            // Update education with template-specific formatting
-            const educationHtml = education
-                .split('\n')
-                .filter(edu => edu.trim())
-                .map(edu => `<p class="preview-content">${edu.trim()}</p>`)
-                .join('');
-            document.getElementById('educationPreview').innerHTML = educationHtml;
-
-            // Update certifications section
-            const certificationsSection = document.querySelector('.certifications-section');
-            if (certifications && certifications.trim()) {
-                certificationsSection.style.display = 'block';
-                const certificationsHtml = certifications
-                    .split('\n')
-                    .filter(cert => cert.trim())
-                    .map(cert => `
-                        <div class="certification-item">
-                            <i class="fas fa-certificate"></i>${cert.trim()}
-                        </div>
-                    `).join('');
-                document.getElementById('certificationsPreview').innerHTML = certificationsHtml;
-            } else {
-                certificationsSection.style.display = 'none';
-            }
-        }
-
-        // Add event listeners to all form inputs
-        document.querySelectorAll('input, textarea').forEach(element => {
-            element.addEventListener('input', updatePreview);
-        });
-
-        // Initialize preview
-        updatePreview();
-
         // Add loading animation on form submit
         document.getElementById('resumeForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1186,7 +1518,7 @@
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `resume_${document.getElementById('name').value.toLowerCase().replace(' ', '_')}.pdf`;
+                a.download = `resume_${document.getElementById('fullName').value.toLowerCase().replace(' ', '_')}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -1203,14 +1535,6 @@
                 button.disabled = false;
                 alert('An error occurred while generating the PDF. Please try again.');
             });
-        });
-
-        // Add template change handler
-        document.getElementById('template').addEventListener('change', function() {
-            const selectedTemplate = this.value;
-            const previewContainer = document.querySelector('.preview-container');
-            previewContainer.dataset.template = selectedTemplate;
-            updatePreview(); // Update preview with new template style
         });
 
         // Add this at the beginning of your script section
