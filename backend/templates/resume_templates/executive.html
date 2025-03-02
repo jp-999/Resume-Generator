@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: white;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 3px double #1a1a1a;
+            padding-bottom: 1.5rem;
+        }
+
+        .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            color: #4a4a4a;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info {
+            font-size: 0.95rem;
+            color: #4a4a4a;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1.25rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #1a1a1a;
+        }
+
+        .section-title::before {
+            left: 0;
+        }
+
+        .section-title::after {
+            right: 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-category {
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .skill-category-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #1a1a1a;
+        }
+
+        .skill-items {
+            font-size: 0.95rem;
+            color: #4a4a4a;
+            line-height: 1.8;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .item-header {
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-subtitle {
+            font-weight: 400;
+            color: #4a4a4a;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-date {
+            font-style: italic;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .item-description {
+            font-size: 0.95rem;
+            color: #4a4a4a;
+            margin: 0 auto;
+            max-width: 42em;
+            text-align: justify;
+            line-height: 1.8;
+        }
+
+        .summary {
+            font-size: 1rem;
+            color: #4a4a4a;
+            margin: 0 auto;
+            margin-bottom: 2.5rem;
+            max-width: 42em;
+            text-align: justify;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .divider {
+            width: 50px;
+            height: 1px;
+            background: #1a1a1a;
+            margin: 2rem auto;
+        }
+
+        @media print {
+            body {
+                padding: 0.5in;
+                background: none;
+            }
+
+            .section-title {
+                break-after: avoid;
+            }
+
+            .experience-item, .education-item {
+                break-inside: avoid;
+            }
+
+            .divider {
+                break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="name">{{ name }}</h1>
+        {% if title %}<div class="title">{{ title }}</div>{% endif %}
+        <div class="contact-info">
+            <span>{{ email }}</span>
+            <span>{{ phone }}</span>
+            {% if location %}<span>{{ location }}</span>{% endif %}
+            {% if website %}<span>{{ website }}</span>{% endif %}
+        </div>
+    </div>
+
+    {% if summary %}
+    <div class="section">
+        <div class="summary">{{ summary }}</div>
+    </div>
+    <div class="divider"></div>
+    {% endif %}
+
+    {% if skills %}
+    <div class="section">
+        <h2 class="section-title">Areas of Expertise</h2>
+        <div class="skills-grid">
+            {% for category, items in skills|groupby(2) %}
+            <div class="skill-category">
+                <div class="skill-items">
+                    {% for skill in items %}
+                    {{ skill }}{% if not loop.last %} • {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="divider"></div>
+    {% endif %}
+
+    {% if experience %}
+    <div class="section">
+        <h2 class="section-title">Professional Experience</h2>
+        {% for exp in experience %}
+        <div class="experience-item">
+            <div class="item-header">
+                <div class="item-title">{{ exp.title }}</div>
+                <div class="item-subtitle">{{ exp.company }}</div>
+                <div class="item-date">{{ exp.date }}</div>
+            </div>
+            <div class="item-description">{{ exp.description }}</div>
+        </div>
+        {% if not loop.last %}<div class="divider"></div>{% endif %}
+        {% endfor %}
+    </div>
+    <div class="divider"></div>
+    {% endif %}
+
+    {% if education %}
+    <div class="section">
+        <h2 class="section-title">Education</h2>
+        {% for edu in education %}
+        <div class="education-item">
+            <div class="item-header">
+                <div class="item-title">{{ edu.degree }}</div>
+                <div class="item-subtitle">{{ edu.school }}</div>
+                <div class="item-date">{{ edu.date }}</div>
+            </div>
+            {% if edu.description %}
+            <div class="item-description">{{ edu.description }}</div>
+            {% endif %}
+        </div>
+        {% if not loop.last %}<div class="divider"></div>{% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html>

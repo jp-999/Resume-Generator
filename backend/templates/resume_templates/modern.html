@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #6c5ce7;
+            padding-bottom: 1rem;
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            color: #6c5ce7;
+            font-weight: 500;
+        }
+
+        .contact-info {
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.25rem;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #6c5ce7;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+            margin-left: 0.5rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-item {
+            background: #f7f7ff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .item-subtitle {
+            color: #6c5ce7;
+            font-weight: 500;
+        }
+
+        .item-date {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .item-description {
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .summary {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        @media print {
+            body {
+                padding: 0.5in;
+                background: none;
+            }
+
+            .section-title {
+                break-after: avoid;
+            }
+
+            .experience-item, .education-item {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1 class="name">{{ name }}</h1>
+            {% if title %}<div class="title">{{ title }}</div>{% endif %}
+        </div>
+        <div class="contact-info">
+            <p>{{ email }}</p>
+            <p>{{ phone }}</p>
+            {% if location %}<p>{{ location }}</p>{% endif %}
+            {% if website %}<p>{{ website }}</p>{% endif %}
+        </div>
+    </div>
+
+    {% if summary %}
+    <div class="section">
+        <div class="summary">{{ summary }}</div>
+    </div>
+    {% endif %}
+
+    {% if skills %}
+    <div class="section">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid">
+            {% for skill in skills %}
+            <div class="skill-item">{{ skill }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if experience %}
+    <div class="section">
+        <h2 class="section-title">Professional Experience</h2>
+        {% for exp in experience %}
+        <div class="experience-item">
+            <div class="item-header">
+                <div>
+                    <div class="item-title">{{ exp.title }}</div>
+                    <div class="item-subtitle">{{ exp.company }}</div>
+                </div>
+                <div class="item-date">{{ exp.date }}</div>
+            </div>
+            <div class="item-description">{{ exp.description }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if education %}
+    <div class="section">
+        <h2 class="section-title">Education</h2>
+        {% for edu in education %}
+        <div class="education-item">
+            <div class="item-header">
+                <div>
+                    <div class="item-title">{{ edu.degree }}</div>
+                    <div class="item-subtitle">{{ edu.school }}</div>
+                </div>
+                <div class="item-date">{{ edu.date }}</div>
+            </div>
+            {% if edu.description %}
+            <div class="item-description">{{ edu.description }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+</html> 
