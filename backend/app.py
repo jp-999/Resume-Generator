@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -6,12 +6,19 @@ import os
 import json
 from datetime import datetime
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+app = Flask(__name__,
+    template_folder='templates',    # Point to the templates folder
+    static_folder='static'         # Point to the static folder
+)
+CORS(app)
 
 # Directory for storing generated PDFs
 UPLOAD_FOLDER = 'static/generated'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
