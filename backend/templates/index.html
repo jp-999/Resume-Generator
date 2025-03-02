@@ -62,6 +62,98 @@
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             animation: slideIn 0.5s ease-out 0.2s backwards;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .preview-container h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 24px;
+            text-align: left;
+            border-bottom: none;
+        }
+
+        .preview-container .contact-info {
+            margin-bottom: 20px;
+            color: #636e72;
+            font-size: 14px;
+        }
+
+        .preview-section {
+            margin-bottom: 20px;
+            padding: 0;
+            background: none;
+        }
+
+        .preview-section h3 {
+            color: #636e72;
+            border-bottom: 2px solid #dfe6e9;
+            padding-bottom: 5px;
+            font-size: 18px;
+            margin-top: 20px;
+            font-weight: normal;
+        }
+
+        .preview-content {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        .skills-preview-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .skill-preview-item {
+            background: #f1f2f6;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .preview-footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Page simulation in preview */
+        .preview-container {
+            position: relative;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 0.75in;
+            width: 8.5in;
+            min-height: 11in;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+
+        .preview-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .preview-container {
+                width: 100%;
+                padding: 20px;
+                min-height: auto;
+            }
         }
 
         @keyframes slideIn {
@@ -149,25 +241,6 @@
             transform: translateY(0);
         }
 
-        .preview-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-        }
-
-        .preview-section h3 {
-            color: #2d3436;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .preview-content {
-            color: #636e72;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
         .required-field {
             color: #e74c3c;
             margin-left: 4px;
@@ -184,185 +257,571 @@
             }
         }
 
-        /* Navbar Styles */
+        /* Updated Navbar Styles */
         .navbar {
-            background: white;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .navbar-container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
             max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        .navbar-logo {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: #2d3436;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .navbar.hidden {
+            transform: translate(-50%, -100%);
+            box-shadow: none;
         }
 
-        .navbar-logo i {
-            color: #6c5ce7;
-        }
-
-        .navbar-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .navbar-links a {
-            color: #2d3436;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            font-size: 0.95em;
-        }
-
-        .navbar-links a:hover {
-            color: #6c5ce7;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            color: #2d3436;
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(180deg);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #2d3436;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .navbar-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-
-            .navbar-links.active {
-                display: flex;
-            }
+        .navbar.floating {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         .nav-link {
-            @apply flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors px-3 py-2 rounded-lg hover:bg-purple-50;
-        }
-        .nav-link.active {
-            @apply text-purple-600 bg-purple-50;
-        }
-        .mobile-nav-link {
-            @apply flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors px-4 py-2 rounded-lg hover:bg-purple-50;
-        }
-        .mobile-nav-link.active {
-            @apply text-purple-600 bg-purple-50;
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* Scroll behavior for navbar */
-        nav {
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #6c5ce7;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: #6c5ce7;
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        .nav-link i {
             transition: transform 0.3s ease;
         }
-        nav.nav-hidden {
-            transform: translate(-50%, -100%);
+
+        .nav-link:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(108, 92, 231, 0.1);
+            transform: rotate(0deg);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: #6c5ce7;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover i {
+            animation: spin 0.5s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        #mobile-menu {
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            visibility: hidden;
+        }
+
+        #mobile-menu.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(108, 92, 231, 0.1);
+            color: #6c5ce7;
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-link.active {
+            background: rgba(108, 92, 231, 0.1);
+            color: #6c5ce7;
+        }
+
+        /* Scroll Progress Indicator */
+        .scroll-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: #6c5ce7;
+            width: 0;
+            transition: width 0.1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .template-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .template-select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            appearance: none;
+            background: url("data:image/svg+xml,...") no-repeat right 1rem center;
+            background-size: 1em;
+        }
+
+        .view-templates-btn {
+            padding: 12px 20px;
+            background: rgba(108, 92, 231, 0.1);
+            color: #6c5ce7;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .view-templates-btn:hover {
+            background: rgba(108, 92, 231, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Template-specific preview styles */
+        .preview-container[data-template="modern"] {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .preview-container[data-template="classic"] {
+            font-family: 'Roboto', sans-serif;
+            display: grid;
+            grid-template-columns: 45% 1px 55%;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+
+        .preview-container[data-template="classic"] .preview-header {
+            grid-column: 1;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .preview-container[data-template="classic"] .preview-profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #ddd;
+        }
+
+        .preview-container[data-template="classic"] .preview-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-container[data-template="classic"] .preview-title {
+            font-size: 1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-container[data-template="classic"] .preview-left {
+            grid-column: 1;
+        }
+
+        .preview-container[data-template="classic"] .preview-separator {
+            grid-column: 2;
+            width: 1px;
+            background-color: #333;
+            height: 100%;
+        }
+
+        .preview-container[data-template="classic"] .preview-right {
+            grid-column: 3;
+            padding-left: 2rem;
+        }
+
+        .preview-container[data-template="classic"] .preview-section {
+            margin-bottom: 2rem;
+            padding: 0;
+            background: none;
+        }
+
+        .preview-container[data-template="classic"] .preview-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            border-bottom: none;
+        }
+
+        .preview-container[data-template="classic"] .preview-content {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .preview-container[data-template="classic"] .skills-preview-list {
+            display: block;
+            gap: 0;
+            margin-top: 0;
+        }
+
+        .preview-container[data-template="classic"] .skill-preview-item {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .preview-container[data-template="classic"] .skill-preview-bar {
+            width: 100%;
+            height: 1px;
+            background-color: #ddd;
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+        .preview-container[data-template="classic"] .skill-preview-level {
+            height: 100%;
+            background-color: #333;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 80%;
+        }
+
+        .preview-container[data-template="minimal"] {
+            font-family: 'Inter', sans-serif;
+            display: grid;
+            grid-template-columns: 45% 55%;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .preview-container[data-template="minimal"] .preview-header {
+            grid-column: 1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .preview-container[data-template="minimal"] .preview-profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #ddd;
+        }
+
+        .preview-container[data-template="minimal"] .preview-name {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .preview-container[data-template="minimal"] .preview-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .preview-container[data-template="minimal"] .preview-left {
+            grid-column: 1;
+        }
+
+        .preview-container[data-template="minimal"] .preview-right {
+            grid-column: 2;
+        }
+
+        .preview-container[data-template="minimal"] .preview-section {
+            margin-bottom: 30px;
+            padding: 0;
+            background: none;
+        }
+
+        .preview-container[data-template="minimal"] .preview-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #000;
+            border-bottom: none;
+        }
+
+        .preview-container[data-template="minimal"] .preview-content {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .preview-container[data-template="minimal"] .skill-preview-item {
+            background: none;
+            padding: 0;
+            margin-bottom: 15px;
+            border-radius: 0;
+        }
+
+        .preview-container[data-template="minimal"] .skill-preview-bar {
+            height: 1px;
+            background-color: #eee;
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .preview-container[data-template="minimal"] .skill-preview-level {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #333;
+        }
+
+        .preview-container[data-template="minimal"] .contact-info {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .preview-container[data-template="minimal"] .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .preview-container[data-template="minimal"] .contact-info i {
+            width: 20px;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .preview-container[data-template="minimal"] .social-links {
+            margin-top: 15px;
+        }
+
+        .preview-container[data-template="minimal"] .social-link {
+            display: inline-flex;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .preview-container[data-template="minimal"] .social-link i {
+            margin-right: 5px;
+        }
+
+        .preview-container[data-template="executive"] {
+            font-family: 'Georgia', serif;
+        }
+
+        /* Add these new styles */
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 12px;
+            padding-left: 40px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-with-icon input:focus {
+            border-color: #74b9ff;
+            box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.2);
+            outline: none;
+        }
+
+        .preview-container[data-template="classic"] .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .preview-container[data-template="classic"] .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .preview-container[data-template="classic"] .social-link:hover {
+            color: #333;
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
-    <!-- New Floating Navbar -->
-    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300 hover:shadow-xl">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <a href="/" class="flex items-center space-x-2 text-purple-600 hover:text-purple-700 transition-colors">
-                    <i class="fas fa-file-alt text-2xl"></i>
-                    <span class="font-semibold text-xl">Resume Generator</span>
+    <!-- Updated Navbar Structure -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300">
+        <div class="relative px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo with animation -->
+                <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group">
+                    <i class="fas fa-file-alt text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span class="font-semibold text-lg group-hover:translate-x-1 transition-transform duration-300">Resume Generator</span>
                 </a>
 
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-button" class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-
                 <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="/" class="nav-link active">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                    <a href="#templates" class="nav-link">
-                        <i class="fas fa-th-large"></i>
-                        <span>Templates</span>
-                    </a>
-                    <a href="#examples" class="nav-link">
-                        <i class="fas fa-book"></i>
-                        <span>Examples</span>
-                    </a>
-                    <a href="#tips" class="nav-link">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Tips</span>
-                    </a>
-                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-moon text-gray-600"></i>
+                <div class="hidden lg:flex items-center gap-6">
+                    <div class="flex items-center space-x-1">
+                        <a href="/" class="nav-link active">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="/templates" class="nav-link">
+                            <i class="fas fa-th-large"></i>
+                            <span>Templates</span>
+                        </a>
+                        <a href="/tips" class="nav-link">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Tips</span>
+                        </a>
+                    </div>
+                    <div class="h-6 w-px bg-gray-200"></div>
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
                     </button>
                 </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="lg:hidden mobile-menu-btn">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
             </div>
 
             <!-- Mobile Navigation -->
-            <div id="mobile-menu" class="lg:hidden hidden pb-4">
-                <div class="flex flex-col space-y-4">
+            <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="flex flex-col p-2 gap-1">
                     <a href="/" class="mobile-nav-link active">
                         <i class="fas fa-home"></i>
                         <span>Home</span>
                     </a>
-                    <a href="#templates" class="mobile-nav-link">
+                    <a href="/templates" class="mobile-nav-link">
                         <i class="fas fa-th-large"></i>
                         <span>Templates</span>
                     </a>
-                    <a href="#examples" class="mobile-nav-link">
-                        <i class="fas fa-book"></i>
-                        <span>Examples</span>
-                    </a>
-                    <a href="#tips" class="mobile-nav-link">
+                    <a href="/tips" class="mobile-nav-link">
                         <i class="fas fa-lightbulb"></i>
                         <span>Tips</span>
                     </a>
                 </div>
             </div>
+
+            <!-- Scroll Progress Indicator -->
+            <div class="scroll-progress"></div>
         </div>
     </nav>
 
@@ -370,6 +829,19 @@
         <div class="form-container">
             <h1>Resume Generator</h1>
             <form action="/generate" method="POST" id="resumeForm">
+                <div class="form-group" style="animation-delay: 0.05s;">
+                    <label for="template">Template Style</label>
+                    <div class="template-selector">
+                        <select id="template" name="template" class="template-select">
+                            {% for template_id, template in templates.items() %}
+                            <option value="{{ template_id }}" {% if template_id == selected_template %}selected{% endif %}>
+                                {{ template.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <a href="/templates" class="view-templates-btn">View All Templates</a>
+                    </div>
+                </div>
                 <div class="form-group" style="animation-delay: 0.1s;">
                     <label for="name">Full Name<span class="required-field">*</span></label>
                     <input type="text" id="name" name="name" required>
@@ -381,6 +853,20 @@
                 <div class="form-group" style="animation-delay: 0.3s;">
                     <label for="phone">Phone<span class="required-field">*</span></label>
                     <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="form-group" style="animation-delay: 0.35s;">
+                    <label for="github">GitHub Profile</label>
+                    <div class="input-with-icon">
+                        <i class="fab fa-github text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+                        <input type="text" id="github" name="github" placeholder="e.g., https://github.com/username" class="pl-10">
+                    </div>
+                </div>
+                <div class="form-group" style="animation-delay: 0.35s;">
+                    <label for="linkedin">LinkedIn Profile</label>
+                    <div class="input-with-icon">
+                        <i class="fab fa-linkedin text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+                        <input type="text" id="linkedin" name="linkedin" placeholder="e.g., https://linkedin.com/in/username" class="pl-10">
+                    </div>
                 </div>
                 <div class="form-group" style="animation-delay: 0.4s;">
                     <label for="summary">Professional Summary</label>
@@ -398,39 +884,64 @@
                     <label for="education">Education</label>
                     <textarea id="education" name="education" placeholder="e.g., BS in Computer Science, University Name (2016-2020)..."></textarea>
                 </div>
+                <div class="form-group" style="animation-delay: 0.75s;">
+                    <label for="certifications">Certifications</label>
+                    <textarea id="certifications" name="certifications" placeholder="e.g., AWS Certified Solutions Architect (2023)&#10;Google Cloud Professional Developer (2022)..."></textarea>
+                </div>
                 <button type="submit" style="animation-delay: 0.8s;" class="form-group">Generate Resume</button>
             </form>
         </div>
-        <div class="preview-container">
-            <h1>Live Preview</h1>
-            <div class="preview-section">
-                <h3>Personal Information</h3>
-                <div class="preview-content" id="personalPreview">
-                    Enter your details to see the preview
+        <div class="preview-container" data-template="{{ selected_template }}">
+            <!-- Classic Template Preview Structure -->
+            <div class="preview-header">
+                <div class="preview-profile-image">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="preview-name" id="namePreview">Your Name</div>
+                <div class="preview-title" id="titlePreview">Professional Title</div>
+            </div>
+            
+            <div class="preview-left">
+                <div class="preview-section">
+                    <h3>Summary</h3>
+                    <div class="preview-content" id="summaryPreview">
+                        Your professional summary will appear here
+                    </div>
+                </div>
+                <div class="preview-section">
+                    <h3>Experience</h3>
+                    <div class="preview-content" id="experiencePreview">
+                        Your experience will appear here
+                    </div>
+                </div>
+                <div class="preview-section">
+                    <h3>Skills</h3>
+                    <div class="preview-content" id="skillsPreview">
+                        Your skills will appear here
+                    </div>
                 </div>
             </div>
-            <div class="preview-section">
-                <h3>Professional Summary</h3>
-                <div class="preview-content" id="summaryPreview">
-                    Your professional summary will appear here
+
+            <div class="preview-separator"></div>
+
+            <div class="preview-right">
+                <div class="preview-section">
+                    <h3>Contact</h3>
+                    <div class="preview-content" id="contactPreview">
+                        Your contact information will appear here
+                    </div>
                 </div>
-            </div>
-            <div class="preview-section">
-                <h3>Skills</h3>
-                <div class="preview-content" id="skillsPreview">
-                    Your skills will appear here
+                <div class="preview-section">
+                    <h3>Education</h3>
+                    <div class="preview-content" id="educationPreview">
+                        Your education will appear here
+                    </div>
                 </div>
-            </div>
-            <div class="preview-section">
-                <h3>Experience</h3>
-                <div class="preview-content" id="experiencePreview">
-                    Your experience will appear here
-                </div>
-            </div>
-            <div class="preview-section">
-                <h3>Education</h3>
-                <div class="preview-content" id="educationPreview">
-                    Your education will appear here
+                <div class="preview-section certifications-section" style="display: none;">
+                    <h3>Certifications</h3>
+                    <div class="preview-content" id="certificationsPreview">
+                        Your certifications will appear here
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,31 +954,38 @@
         const mobileMenu = document.getElementById('mobile-menu');
 
         mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('show');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
         });
 
-        // Navbar scroll behavior
-        let lastScroll = 0;
-        const navbar = document.querySelector('nav');
-        
+        // Scroll progress indicator
+        const scrollProgress = document.querySelector('.scroll-progress');
         window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll <= 0) {
-                navbar.classList.remove('nav-hidden');
-                return;
-            }
-            
-            if (currentScroll > lastScroll && !navbar.classList.contains('nav-hidden')) {
-                // Scrolling down
-                navbar.classList.add('nav-hidden');
-            } else if (currentScroll < lastScroll && navbar.classList.contains('nav-hidden')) {
-                // Scrolling up
-                navbar.classList.remove('nav-hidden');
-            }
-            
-            lastScroll = currentScroll;
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            scrollProgress.style.width = scrolled + '%';
         });
+
+        // Active link highlighting
+        const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        const sections = document.querySelectorAll('section');
+
+        function setActiveLink() {
+            const currentScroll = window.scrollY;
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (currentScroll >= sectionTop && currentScroll < sectionBottom) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[index].classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveLink);
 
         // Theme toggle with Tailwind Dark Mode
         const themeToggle = document.getElementById('theme-toggle');
@@ -490,23 +1008,141 @@
 
         // Function to update preview
         function updatePreview() {
+            const template = document.getElementById('template').value;
+            const previewContainer = document.querySelector('.preview-container');
+            previewContainer.dataset.template = template;
+            
             const name = document.getElementById('name').value || 'Your Name';
             const email = document.getElementById('email').value || 'your.email@example.com';
             const phone = document.getElementById('phone').value || 'Your Phone';
+            const github = document.getElementById('github').value;
+            const linkedin = document.getElementById('linkedin').value;
             const summary = document.getElementById('summary').value || 'Your professional summary will appear here';
-            const skills = document.getElementById('skills').value || 'Your skills will appear here';
+            const skills = document.getElementById('skills').value || '';
             const experience = document.getElementById('experience').value || 'Your experience will appear here';
             const education = document.getElementById('education').value || 'Your education will appear here';
+            const certifications = document.getElementById('certifications').value;
 
-            document.getElementById('personalPreview').innerHTML = `
-                <strong>${name}</strong><br>
-                ${email}<br>
-                ${phone}
-            `;
+            // Update name and title
+            document.getElementById('namePreview').textContent = name;
+            document.getElementById('titlePreview').textContent = 'Professional Title';
+
+            // Update contact info with template-specific styling
+            let contactHtml = '';
+            if (template === 'minimal') {
+                contactHtml = `
+                    <p><i class="fas fa-envelope"></i>${email}</p>
+                    <p><i class="fas fa-phone"></i>${phone}</p>
+                `;
+
+                if (github || linkedin) {
+                    contactHtml += '<div class="social-links">';
+                    if (github) {
+                        contactHtml += `
+                            <a href="${github}" target="_blank" class="social-link">
+                                <i class="fab fa-github"></i>GitHub
+                            </a>
+                        `;
+                    }
+                    if (linkedin) {
+                        contactHtml += `
+                            <a href="${linkedin}" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin"></i>LinkedIn
+                            </a>
+                        `;
+                    }
+                    contactHtml += '</div>';
+                }
+            } else {
+                contactHtml = `
+                    <p><i class="fas fa-envelope"></i> ${email}</p>
+                    <p><i class="fas fa-phone"></i> ${phone}</p>
+                `;
+
+                if (github || linkedin) {
+                    contactHtml += '<div class="social-links">';
+                    if (github) {
+                        contactHtml += `
+                            <a href="${github}" target="_blank" class="social-link">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub</span>
+                            </a>
+                        `;
+                    }
+                    if (linkedin) {
+                        contactHtml += `
+                            <a href="${linkedin}" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                        `;
+                    }
+                    contactHtml += '</div>';
+                }
+            }
+            document.getElementById('contactPreview').innerHTML = contactHtml;
+
+            // Update summary
             document.getElementById('summaryPreview').innerHTML = summary.replace(/\n/g, '<br>');
-            document.getElementById('skillsPreview').innerHTML = skills.replace(/\n/g, '<br>');
-            document.getElementById('experiencePreview').innerHTML = experience.replace(/\n/g, '<br>');
-            document.getElementById('educationPreview').innerHTML = education.replace(/\n/g, '<br>');
+
+            // Update skills with template-specific styling
+            const skillsArray = skills.split('\n').filter(skill => skill.trim());
+            let skillsHtml = '';
+            if (template === 'minimal') {
+                skillsHtml = skillsArray
+                    .map(skill => `
+                        <div class="skill-preview-item">
+                            ${skill.trim()}
+                            <div class="skill-preview-bar">
+                                <div class="skill-preview-level" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+            } else {
+                skillsHtml = skillsArray
+                    .map(skill => `
+                        <div class="skill-preview-item">
+                            ${skill.trim()}
+                            <div class="skill-preview-bar">
+                                <div class="skill-preview-level" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+            document.getElementById('skillsPreview').innerHTML = skillsHtml;
+
+            // Update experience with template-specific formatting
+            const experienceHtml = experience
+                .split('\n')
+                .filter(exp => exp.trim())
+                .map(exp => `<p class="preview-content">${exp.trim()}</p>`)
+                .join('');
+            document.getElementById('experiencePreview').innerHTML = experienceHtml;
+
+            // Update education with template-specific formatting
+            const educationHtml = education
+                .split('\n')
+                .filter(edu => edu.trim())
+                .map(edu => `<p class="preview-content">${edu.trim()}</p>`)
+                .join('');
+            document.getElementById('educationPreview').innerHTML = educationHtml;
+
+            // Update certifications section
+            const certificationsSection = document.querySelector('.certifications-section');
+            if (certifications && certifications.trim()) {
+                certificationsSection.style.display = 'block';
+                const certificationsHtml = certifications
+                    .split('\n')
+                    .filter(cert => cert.trim())
+                    .map(cert => `
+                        <div class="certification-item">
+                            <i class="fas fa-certificate"></i>${cert.trim()}
+                        </div>
+                    `).join('');
+                document.getElementById('certificationsPreview').innerHTML = certificationsHtml;
+            } else {
+                certificationsSection.style.display = 'none';
+            }
         }
 
         // Add event listeners to all form inputs
@@ -518,11 +1154,79 @@
         updatePreview();
 
         // Add loading animation on form submit
-        document.getElementById('resumeForm').addEventListener('submit', function() {
+        document.getElementById('resumeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const button = this.querySelector('button');
-            button.innerHTML = 'Generating...';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
             button.style.opacity = '0.7';
             button.disabled = true;
+
+            // Submit form
+            fetch('/generate', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `resume_${document.getElementById('name').value.toLowerCase().replace(' ', '_')}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                // Reset button
+                button.innerHTML = 'Generate Resume';
+                button.style.opacity = '1';
+                button.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.innerHTML = 'Generate Resume';
+                button.style.opacity = '1';
+                button.disabled = false;
+                alert('An error occurred while generating the PDF. Please try again.');
+            });
+        });
+
+        // Add template change handler
+        document.getElementById('template').addEventListener('change', function() {
+            const selectedTemplate = this.value;
+            const previewContainer = document.querySelector('.preview-container');
+            previewContainer.dataset.template = selectedTemplate;
+            updatePreview(); // Update preview with new template style
+        });
+
+        // Add this at the beginning of your script section
+        let lastScrollY = window.scrollY;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // Add floating effect when scrolled
+            if (currentScrollY > 10) {
+                navbar.classList.add('floating');
+            } else {
+                navbar.classList.remove('floating');
+            }
+
+            // Hide/show based on scroll direction
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+
+            lastScrollY = currentScrollY;
         });
     </script>
 </body>

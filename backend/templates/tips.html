@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Writing Tips - Resume Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #6c5ce7;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: #6c5ce7;
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* Tips Content Styles */
+        .tip-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+            color: #6c5ce7;
+            margin-bottom: 1rem;
+        }
+
+        .tip-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 1rem;
+        }
+
+        .tip-content {
+            color: #636e72;
+            line-height: 1.8;
+        }
+
+        .tip-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .tip-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .tip-list li::before {
+            content: '•';
+            color: #6c5ce7;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #636e72;
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen">
+    <!-- Navbar -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300">
+        <div class="relative px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo with animation -->
+                <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group">
+                    <i class="fas fa-file-alt text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span class="font-semibold text-lg group-hover:translate-x-1 transition-transform duration-300">Resume Generator</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center gap-6">
+                    <div class="flex items-center space-x-1">
+                        <a href="/" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="/templates" class="nav-link">
+                            <i class="fas fa-th-large"></i>
+                            <span>Templates</span>
+                        </a>
+                        <a href="/tips" class="nav-link active">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Tips</span>
+                        </a>
+                    </div>
+                    <div class="h-6 w-px bg-gray-200"></div>
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="lg:hidden mobile-menu-btn">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="flex flex-col p-2 gap-1">
+                    <a href="/" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/templates" class="mobile-nav-link">
+                        <i class="fas fa-th-large"></i>
+                        <span>Templates</span>
+                    </a>
+                    <a href="/tips" class="mobile-nav-link active">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Tips</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 pt-24 pb-12">
+        <h1 class="section-title">Resume Writing Tips</h1>
+        <p class="section-subtitle">Create a compelling resume that stands out and effectively showcases your professional journey.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Format and Structure -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.1s">
+                <i class="fas fa-layer-group tip-icon"></i>
+                <h2 class="tip-title">Format and Structure</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Keep your resume to 1-2 pages maximum</li>
+                        <li>Use clear, professional fonts (Arial, Calibri, or similar)</li>
+                        <li>Maintain consistent formatting throughout</li>
+                        <li>Include clear section headings</li>
+                        <li>Use bullet points for better readability</li>
+                        <li>Ensure adequate white space</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content Tips -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.2s">
+                <i class="fas fa-edit tip-icon"></i>
+                <h2 class="tip-title">Content Writing</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Use action verbs to begin bullet points</li>
+                        <li>Quantify achievements when possible</li>
+                        <li>Tailor content to the job description</li>
+                        <li>Focus on relevant experience</li>
+                        <li>Proofread thoroughly for errors</li>
+                        <li>Keep descriptions concise and impactful</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Essential Sections -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.3s">
+                <i class="fas fa-list-alt tip-icon"></i>
+                <h2 class="tip-title">Essential Sections</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Contact information at the top</li>
+                        <li>Professional summary or objective</li>
+                        <li>Work experience in reverse chronological order</li>
+                        <li>Education and certifications</li>
+                        <li>Relevant skills and competencies</li>
+                        <li>Optional: achievements, volunteer work, projects</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ATS Optimization -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.4s">
+                <i class="fas fa-robot tip-icon"></i>
+                <h2 class="tip-title">ATS Optimization</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Use standard section headings</li>
+                        <li>Include keywords from the job description</li>
+                        <li>Avoid tables and complex formatting</li>
+                        <li>Use standard file formats (PDF, DOCX)</li>
+                        <li>Spell out acronyms at least once</li>
+                        <li>Keep the design simple and readable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Mistakes -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.5s">
+                <i class="fas fa-exclamation-triangle tip-icon"></i>
+                <h2 class="tip-title">Common Mistakes to Avoid</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Including personal information (age, marital status)</li>
+                        <li>Using generic objectives</li>
+                        <li>Including irrelevant experience</li>
+                        <li>Making spelling or grammar errors</li>
+                        <li>Using an unprofessional email address</li>
+                        <li>Including references on the resume</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Professional Branding -->
+            <div class="tip-card animate-fade-in" style="animation-delay: 0.6s">
+                <i class="fas fa-star tip-icon"></i>
+                <h2 class="tip-title">Professional Branding</h2>
+                <div class="tip-content">
+                    <ul class="tip-list">
+                        <li>Maintain a consistent personal brand</li>
+                        <li>Link to relevant professional profiles</li>
+                        <li>Highlight unique value proposition</li>
+                        <li>Include industry-specific keywords</li>
+                        <li>Show career progression</li>
+                        <li>Emphasize relevant achievements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            themeIcon.classList.toggle('fa-moon');
+            themeIcon.classList.toggle('fa-sun');
+            
+            if (html.classList.contains('dark')) {
+                document.body.classList.remove('from-[#f5f7fa]', 'to-[#c3cfe2]');
+                document.body.classList.add('from-gray-900', 'to-gray-800');
+            } else {
+                document.body.classList.remove('from-gray-900', 'to-gray-800');
+                document.body.classList.add('from-[#f5f7fa]', 'to-[#c3cfe2]');
+            }
+        });
+    </script>
+</body>
+</html> 

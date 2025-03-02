@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify, send_file, render_template
+from flask import Flask, request, jsonify, send_file, render_template, redirect, url_for
 from flask_cors import CORS
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+import pdfkit
 import os
 import json
 from datetime import datetime
+from io import BytesIO
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
@@ -12,83 +12,101 @@ app = Flask(__name__,
 )
 CORS(app)
 
+# Configure pdfkit to use wkhtmltopdf
+WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
+
 # Directory for storing generated PDFs
 UPLOAD_FOLDER = 'static/generated'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Available templates
+TEMPLATES = {
+    'modern': {
+        'name': 'Modern',
+        'description': 'A clean and modern design perfect for tech and creative professionals.',
+        'preview': '/static/templates/modern.png'
+    },
+    'classic': {
+        'name': 'Classic',
+        'description': 'A timeless design suitable for all industries and experience levels.',
+        'preview': '/static/templates/classic.png'
+    },
+    'minimal': {
+        'name': 'Minimal',
+        'description': 'A minimalist design that puts your content first.',
+        'preview': '/static/templates/minimal.png'
+    },
+    'executive': {
+        'name': 'Executive',
+        'description': 'An executive-style template perfect for senior positions.',
+        'preview': '/static/templates/executive.png'
+    }
+}
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    template = request.args.get('template', 'modern')
+    return render_template('index.html', selected_template=template, templates=TEMPLATES)
+
+@app.route('/templates')
+def templates():
+    return render_template('templates.html', templates=TEMPLATES)
+
+@app.route('/tips')
+def tips():
+    return render_template('tips.html', templates=TEMPLATES)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
 
-@app.route('/api/generate', methods=['POST'])
+@app.route('/generate', methods=['POST'])
 def generate_resume():
     try:
-        data = request.get_json()
+        # Get form data
+        data = {
+            'name': request.form.get('name'),
+            'email': request.form.get('email'),
+            'phone': request.form.get('phone'),
+            'summary': request.form.get('summary'),
+            'skills': request.form.get('skills'),
+            'experience': request.form.get('experience'),
+            'education': request.form.get('education'),
+            'date': datetime.now().strftime("%B %d, %Y")
+        }
+
+        # Get selected template
+        template_name = request.form.get('template', 'modern')
         
-        if not all(key in data for key in ['name', 'email', 'phone']):
-            return jsonify({'error': 'Missing required fields'}), 400
+        # Convert skills, experience and education to lists if they contain newlines
+        data['skills'] = data['skills'].split('\n') if data['skills'] else []
+        data['experience'] = data['experience'].split('\n') if data['experience'] else []
+        data['education'] = data['education'].split('\n') if data['education'] else []
 
-        # Generate unique filename
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{data['name'].replace(' ', '_')}_{timestamp}.pdf"
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        # Generate HTML from template
+        html_content = render_template(f'resume_templates/{template_name}.html', **data)
 
-        # Create PDF
-        doc = canvas.Canvas(filepath, pagesize=letter)
+        # PDF options
+        options = {
+            'page-size': 'Letter',
+            'margin-top': '0.75in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None,
+            'enable-local-file-access': None
+        }
+
+        # Generate PDF
+        pdf = pdfkit.from_string(html_content, False, options=options, configuration=config)
         
-        # Add content to PDF
-        y_position = 750
-        
-        # Header
-        doc.setFont("Helvetica-Bold", 16)
-        doc.drawString(100, y_position, data['name'])
-        y_position -= 20
-        
-        doc.setFont("Helvetica", 12)
-        doc.drawString(100, y_position, f"Email: {data['email']}")
-        y_position -= 20
-        doc.drawString(100, y_position, f"Phone: {data['phone']}")
-        y_position -= 40
-
-        # Sections
-        sections = [
-            ('Professional Summary', data.get('summary', '')),
-            ('Skills', data.get('skills', '')),
-            ('Experience', data.get('experience', '')),
-            ('Education', data.get('education', ''))
-        ]
-
-        for title, content in sections:
-            if content:
-                doc.setFont("Helvetica-Bold", 14)
-                doc.drawString(100, y_position, title)
-                y_position -= 20
-                
-                doc.setFont("Helvetica", 12)
-                # Split content into lines to avoid text overflow
-                words = content.split()
-                line = []
-                for word in words:
-                    line.append(word)
-                    if len(' '.join(line)) > 60:  # Approximate characters per line
-                        doc.drawString(100, y_position, ' '.join(line[:-1]))
-                        line = [line[-1]]
-                        y_position -= 15
-                if line:
-                    doc.drawString(100, y_position, ' '.join(line))
-                y_position -= 30
-
-        doc.save()
-
+        # Create response
         return send_file(
-            filepath,
-            mimetype='application/pdf',
-            as_attachment=True,
-            download_name=filename
+            BytesIO(pdf),
+            download_name=f"resume_{data['name'].lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+            mimetype='application/pdf'
         )
 
     except Exception as e:
@@ -96,33 +114,7 @@ def generate_resume():
 
 @app.route('/api/templates', methods=['GET'])
 def get_templates():
-    templates = [
-        {
-            'id': 1,
-            'name': 'Professional',
-            'description': 'Clean and modern design suitable for any industry',
-            'preview': '/templates/professional.png'
-        },
-        {
-            'id': 2,
-            'name': 'Creative',
-            'description': 'Stand out with a unique and artistic layout',
-            'preview': '/templates/creative.png'
-        },
-        {
-            'id': 3,
-            'name': 'Minimal',
-            'description': 'Simple and elegant design focusing on content',
-            'preview': '/templates/minimal.png'
-        },
-        {
-            'id': 4,
-            'name': 'Executive',
-            'description': 'Sophisticated design for senior positions',
-            'preview': '/templates/executive.png'
-        }
-    ]
-    return jsonify(templates)
+    return jsonify(TEMPLATES)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
