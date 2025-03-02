@@ -57,6 +57,10 @@ def templates():
 def tips():
     return render_template('tips.html', templates=TEMPLATES)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})

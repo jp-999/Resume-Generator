@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Writing Tips - Resume Generator</title>
+    <title>Resume Tips - Resume Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,15 +17,28 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            padding-top: 0;
+        }
+
         /* Navbar Styles */
         .navbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             padding: 0;
-            position: sticky;
-            top: 0;
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
             z-index: 1000;
             transition: all 0.3s ease;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .nav-link {
@@ -74,16 +89,32 @@
         /* Tips Content Styles */
         .tip-card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 20px;
             padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #6c5ce7;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
         }
 
         .tip-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .tip-card:hover::before {
+            transform: scaleY(1);
         }
 
         .tip-icon {
@@ -155,11 +186,50 @@
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .category-badge.formatting {
+            background: rgba(108, 92, 231, 0.1);
+            color: #6c5ce7;
+        }
+
+        .category-badge.content {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .category-badge.strategy {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        /* Dark mode styles */
+        .dark body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+
+        .dark .tip-card {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+
+        .dark .text-gray-600 {
+            color: #a0aec0;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen">
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
     <!-- Navbar -->
-    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300">
+    <nav class="navbar">
         <div class="relative px-4 py-3">
             <div class="flex items-center justify-between">
                 <!-- Logo with animation -->
@@ -216,111 +286,53 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 pt-24 pb-12">
-        <h1 class="section-title">Resume Writing Tips</h1>
-        <p class="section-subtitle">Create a compelling resume that stands out and effectively showcases your professional journey.</p>
+    <!-- Hero Section -->
+    <section class="hero-section" data-aos="fade-down">
+        <h1 class="text-5xl font-bold mb-6">Resume Writing Tips</h1>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">Expert advice to help you create a compelling resume that stands out.</p>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Format and Structure -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.1s">
-                <i class="fas fa-layer-group tip-icon"></i>
-                <h2 class="tip-title">Format and Structure</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Keep your resume to 1-2 pages maximum</li>
-                        <li>Use clear, professional fonts (Arial, Calibri, or similar)</li>
-                        <li>Maintain consistent formatting throughout</li>
-                        <li>Include clear section headings</li>
-                        <li>Use bullet points for better readability</li>
-                        <li>Ensure adequate white space</li>
-                    </ul>
-                </div>
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Tips Categories -->
+        <div class="flex justify-center gap-4 mb-12" data-aos="fade-up">
+            <button class="px-6 py-2 rounded-full bg-purple-600 text-white hover:bg-purple-700 transition-all">All Tips</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Formatting</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Content</button>
+            <button class="px-6 py-2 rounded-full bg-white text-gray-700 hover:bg-purple-100 transition-all">Strategy</button>
+        </div>
+
+        <!-- Tips Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Formatting Tips -->
+            <div class="tip-card" data-aos="fade-up">
+                <span class="category-badge formatting">Formatting</span>
+                <h3 class="text-xl font-semibold mb-4">Keep It Clean and Consistent</h3>
+                <p class="text-gray-600">Use consistent formatting throughout your resume. Stick to one or two professional fonts and maintain consistent spacing and alignment.</p>
             </div>
 
-            <!-- Content Tips -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.2s">
-                <i class="fas fa-edit tip-icon"></i>
-                <h2 class="tip-title">Content Writing</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Use action verbs to begin bullet points</li>
-                        <li>Quantify achievements when possible</li>
-                        <li>Tailor content to the job description</li>
-                        <li>Focus on relevant experience</li>
-                        <li>Proofread thoroughly for errors</li>
-                        <li>Keep descriptions concise and impactful</li>
-                    </ul>
-                </div>
+            <div class="tip-card" data-aos="fade-up" data-aos-delay="100">
+                <span class="category-badge content">Content</span>
+                <h3 class="text-xl font-semibold mb-4">Highlight Achievements</h3>
+                <p class="text-gray-600">Focus on quantifiable achievements rather than just listing job duties. Use numbers and metrics to demonstrate your impact.</p>
             </div>
 
-            <!-- Essential Sections -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.3s">
-                <i class="fas fa-list-alt tip-icon"></i>
-                <h2 class="tip-title">Essential Sections</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Contact information at the top</li>
-                        <li>Professional summary or objective</li>
-                        <li>Work experience in reverse chronological order</li>
-                        <li>Education and certifications</li>
-                        <li>Relevant skills and competencies</li>
-                        <li>Optional: achievements, volunteer work, projects</li>
-                    </ul>
-                </div>
+            <div class="tip-card" data-aos="fade-up" data-aos-delay="200">
+                <span class="category-badge strategy">Strategy</span>
+                <h3 class="text-xl font-semibold mb-4">Tailor Your Resume</h3>
+                <p class="text-gray-600">Customize your resume for each job application. Match your skills and experiences to the job requirements.</p>
             </div>
 
-            <!-- ATS Optimization -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.4s">
-                <i class="fas fa-robot tip-icon"></i>
-                <h2 class="tip-title">ATS Optimization</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Use standard section headings</li>
-                        <li>Include keywords from the job description</li>
-                        <li>Avoid tables and complex formatting</li>
-                        <li>Use standard file formats (PDF, DOCX)</li>
-                        <li>Spell out acronyms at least once</li>
-                        <li>Keep the design simple and readable</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Common Mistakes -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.5s">
-                <i class="fas fa-exclamation-triangle tip-icon"></i>
-                <h2 class="tip-title">Common Mistakes to Avoid</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Including personal information (age, marital status)</li>
-                        <li>Using generic objectives</li>
-                        <li>Including irrelevant experience</li>
-                        <li>Making spelling or grammar errors</li>
-                        <li>Using an unprofessional email address</li>
-                        <li>Including references on the resume</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Professional Branding -->
-            <div class="tip-card animate-fade-in" style="animation-delay: 0.6s">
-                <i class="fas fa-star tip-icon"></i>
-                <h2 class="tip-title">Professional Branding</h2>
-                <div class="tip-content">
-                    <ul class="tip-list">
-                        <li>Maintain a consistent personal brand</li>
-                        <li>Link to relevant professional profiles</li>
-                        <li>Highlight unique value proposition</li>
-                        <li>Include industry-specific keywords</li>
-                        <li>Show career progression</li>
-                        <li>Emphasize relevant achievements</li>
-                    </ul>
-                </div>
-            </div>
+            <!-- Add more tip cards as needed -->
         </div>
     </div>
 
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
