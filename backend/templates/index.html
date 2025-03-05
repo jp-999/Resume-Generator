@@ -83,7 +83,7 @@
             display: flex;
             gap: 30px;
             padding-top: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             z-index: 30;
         }
@@ -1062,42 +1062,27 @@
             min-width: 150px;
         }
 
-        /* Drawer styles */
+        /* Enhanced Drawer styles */
         .drawer {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            width: 300px;
+            width: 280px;
             background: white;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             z-index: 40;
             transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            margin-top: 80px; /* Add margin-top to position below navbar */
-            height: calc(100vh - 80px); /* Adjust height to account for navbar */
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 80px;
+            height: calc(100vh - 80px);
+            border-radius: 0 20px 20px 0;
+            overflow: hidden;
         }
 
         .dark .drawer {
-            background: #1a1a1a;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .drawer.hidden {
-            display: none;
-        }
-
-        .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none;
+            background: #1e1e2e;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .drawer-header {
@@ -1106,59 +1091,109 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
         }
 
         .dark .drawer-header {
             border-bottom-color: #2d2d2d;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16161f 100%);
         }
 
         .drawer-content {
             padding: 1.5rem;
             overflow-y: auto;
-            height: calc(100vh - 4rem);
+            height: calc(100% - 4rem);
         }
 
-        .drawer-item {
+        .drawer .template-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0.5rem;
+        }
+
+        .drawer .template-option {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
-            color: #4a5568;
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
+            gap: 1rem;
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 2px solid #dfe6e9;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .dark .drawer-item {
-            color: #a0aec0;
+        .drawer .template-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        .drawer-item:hover {
-            background: #f7fafc;
+        .dark .drawer .template-option {
+            background: #252836;
+            border-color: #2d2d3a;
+        }
+
+        .drawer .template-option:hover {
+            transform: translateX(5px);
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .drawer .template-option:hover::after {
+            opacity: 1;
+        }
+
+        .drawer .template-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .dark .drawer .template-option.selected {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .drawer .template-option i {
+            font-size: 1.25rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .drawer .template-option:not(.selected) i {
+            background: rgba(102, 126, 234, 0.1);
             color: #667eea;
         }
 
-        .dark .drawer-item:hover {
-            background: #2d2d2d;
+        .dark .drawer .template-option:not(.selected) i {
+            background: rgba(139, 92, 246, 0.1);
             color: #8b5cf6;
         }
 
-        .drawer-item i {
-            margin-right: 0.75rem;
-            width: 1.25rem;
-            text-align: center;
+        .drawer .template-option h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
         }
 
-        .drawer-item.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .dark .drawer-item.active {
-            background: #8b5cf6;
-        }
-
-        /* Permanent Drawer Toggle Button */
+        /* Drawer toggle button */
         .drawer-toggle-btn {
             position: fixed;
             top: 50%;
@@ -1166,35 +1201,34 @@
             transform: translateY(-50%);
             background: white;
             border: none;
-            padding: 0.75rem;
-            border-radius: 0 0.5rem 0.5rem 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 0.5rem;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             z-index: 45;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .dark .drawer-toggle-btn {
-            background: #1a1a1a;
+            background: #1e1e2e;
             color: white;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .drawer-toggle-btn:hover {
             background: #f7fafc;
+            transform: translateY(-50%) translateX(3px);
+        }
+
+        .dark .drawer-toggle-btn:hover {
+            background: #252836;
         }
 
         .drawer-toggle-btn i {
             transition: transform 0.3s ease;
         }
 
-        .drawer-hidden .drawer-toggle-btn {
-            left: 0;
-        }
-
-        .drawer-hidden .container {
-            margin-left: 0;
-        }
-
+        /* Container adjustments */
         @media (min-width: 1024px) {
             .drawer {
                 transform: translateX(0);
@@ -1205,11 +1239,15 @@
             .container {
                 margin-left: 300px;
                 width: calc(100% - 300px);
-                transition: margin-left 0.3s ease, width 0.3s ease;
+                transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             }
             .drawer-hidden .container {
                 margin-left: 0;
                 width: 100%;
+                max-width: 1200px;
+            }
+            .drawer-hidden .drawer {
+                transform: translateX(-100%);
             }
             body {
                 overflow-x: hidden;
@@ -1228,56 +1266,58 @@
             }
         }
 
-        .drawer .template-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 0.5rem;
+        /* Content shifting animations */
+        .content-shifted {
+            animation: shiftContent 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .drawer .template-option {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: #f8fafc;
-            border: 2px solid #dfe6e9;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        @keyframes shiftContent {
+            0% {
+                transform: translateX(0);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateX(10px);
+                opacity: 1;
+            }
         }
 
-        .dark .drawer .template-option {
-            background: #1a1a1a;
-            border-color: #2d2d2d;
+        .drawer-hidden .content-shifted {
+            animation: none;
+            transform: translateX(0);
         }
 
-        .drawer .template-option:hover {
-            transform: translateX(5px);
-            border-color: #667eea;
+        /* Enhance form container and preview container */
+        .form-container, .preview-container {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
         }
 
-        .drawer .template-option.selected {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
+        .form-container.content-shifted, .preview-container.content-shifted {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .dark .drawer .template-option.selected {
-            background: #8b5cf6;
-            border-color: #8b5cf6;
+        .dark .form-container.content-shifted, .dark .preview-container.content-shifted {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        .drawer .template-option i {
-            font-size: 1.25rem;
-            width: 24px;
-            text-align: center;
+        /* Drawer open state */
+        .drawer.open {
+            transform: translateX(0);
         }
 
-        .drawer .template-option h3 {
-            font-size: 1rem;
-            font-weight: 500;
-            margin: 0;
+        /* Drawer overlay enhanced */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 39;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s ease;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -1286,7 +1326,7 @@
     <div id="drawer" class="drawer">
         <div class="drawer-header">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Templates</h2>
-            <button id="drawer-close" class="lg:hidden text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">
+            <button id="drawer-close" type="button" class="lg:hidden text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1316,7 +1356,7 @@
     <div id="drawer-overlay" class="drawer-overlay hidden"></div>
 
     <!-- Permanent Drawer Toggle Button -->
-    <button id="drawer-toggle" class="drawer-toggle-btn" title="Toggle Drawer">
+    <button id="drawer-toggle" type="button" class="drawer-toggle-btn" title="Toggle Drawer">
         <i class="fas fa-chevron-left"></i>
     </button>
 
@@ -1474,6 +1514,43 @@
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/drawer.js') }}"></script>
     <script>
+        // Remove duplicate event listeners to avoid conflicts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure the drawer toggle button works
+            const toggleBtn = document.getElementById('drawer-toggle');
+            if (toggleBtn) {
+                // Remove any existing event listeners first
+                const newToggleBtn = toggleBtn.cloneNode(true);
+                toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+                
+                // Add the event listener
+                newToggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Toggle button clicked from HTML');
+                    if (window.drawerHandler) {
+                        window.drawerHandler.togglePermanentState();
+                    }
+                });
+            }
+            
+            // Make sure the drawer close button works
+            const closeBtn = document.getElementById('drawer-close');
+            if (closeBtn) {
+                // Remove any existing event listeners first
+                const newCloseBtn = closeBtn.cloneNode(true);
+                closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+                
+                // Add the event listener
+                newCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Close button clicked from HTML');
+                    if (window.drawerHandler) {
+                        window.drawerHandler.closeDrawer();
+                    }
+                });
+            }
+        });
+        
         let currentTemplate = 'classic';
 
         function selectTemplate(template) {
@@ -1885,16 +1962,6 @@
             const icon = previewToggle.querySelector('i');
             icon.className = 'fas fa-eye';
             previewToggle.title = 'Hide Preview';
-        });
-
-        // Update the drawer toggle event listener
-        document.getElementById('drawer-toggle').addEventListener('click', () => {
-            window.drawerHandler.togglePermanentState();
-        });
-
-        // Add event listener for the close button
-        document.getElementById('drawer-close').addEventListener('click', () => {
-            window.drawerHandler.closeDrawer();
         });
     </script>
     {% include 'includes/footer.html' %}
