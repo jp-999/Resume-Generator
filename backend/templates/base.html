@@ -15,6 +15,14 @@
                     fontFamily: {
                         poppins: ['Poppins', 'sans-serif'],
                     },
+                    backgroundColor: {
+                        dark: '#1a1a1a',
+                        'dark-lighter': '#2d2d2d'
+                    },
+                    textColor: {
+                        'dark-primary': '#ffffff',
+                        'dark-secondary': '#a0aec0'
+                    }
                 }
             }
         }
@@ -25,6 +33,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         body {
@@ -32,6 +41,67 @@
             min-height: 100vh;
             padding: 40px 20px;
             padding-top: 0;
+        }
+
+        /* Dark mode styles */
+        .dark body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+        }
+
+        .dark .navbar {
+            background: rgba(45, 45, 45, 0.8);
+        }
+
+        .dark .content-container {
+            background: #2d2d2d;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark .nav-link {
+            color: #a0aec0;
+        }
+
+        .dark .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .dark .nav-link.active {
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Dark mode toggle button styles */
+        .theme-toggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            outline: none;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle i {
+            font-size: 1.25rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+
+        .dark .theme-toggle i {
+            color: #ffffff;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .hero-section {
@@ -160,9 +230,9 @@
     </style>
     {% block additional_styles %}{% endblock %}
 </head>
-<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] dark:from-gray-900 dark:to-gray-800 min-h-screen pt-20">
     <!-- Navbar -->
-    <nav class="navbar">
+    <nav class="navbar dark:bg-gray-800/80">
         <div class="relative px-4 py-3">
             <div class="flex items-center justify-between">
                 <a href="/" class="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-all duration-300 group {% if active_page == 'home' %}text-purple-700{% endif %}">
@@ -190,8 +260,8 @@
                             <span>About</span>
                         </a>
                     </div>
-                    <div class="h-6 w-px bg-gray-200"></div>
-                    <button id="theme-toggle" class="theme-toggle">
+                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+                    <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
                         <i class="fas fa-moon"></i>
                     </button>
                 </div>
@@ -235,6 +305,8 @@
     <!-- Footer -->
     {% include 'includes/footer.html' %}
 
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/darkMode.js') }}"></script>
     <script>
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -247,23 +319,16 @@
             icon.classList.toggle('fa-times');
         });
 
-        // Theme toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-        const themeIcon = themeToggle.querySelector('i');
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            window.darkModeHandler.toggleDarkMode();
+        });
 
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            themeIcon.classList.toggle('fa-moon');
-            themeIcon.classList.toggle('fa-sun');
-            
-            if (html.classList.contains('dark')) {
-                document.body.classList.remove('from-[#f5f7fa]', 'to-[#c3cfe2]');
-                document.body.classList.add('from-gray-900', 'to-gray-800');
-            } else {
-                document.body.classList.remove('from-gray-900', 'to-gray-800');
-                document.body.classList.add('from-[#f5f7fa]', 'to-[#c3cfe2]');
-            }
+        // Listen for theme changes
+        document.addEventListener('themeChanged', (e) => {
+            // Update any additional UI elements that need to react to theme changes
+            const isDark = e.detail.isDark;
+            // Add any specific UI updates here
         });
     </script>
     {% block additional_scripts %}{% endblock %}

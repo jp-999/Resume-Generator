@@ -83,7 +83,9 @@
             display: flex;
             gap: 30px;
             padding-top: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 30;
         }
 
         .form-container {
@@ -445,7 +447,7 @@
             transform: translateX(-50%);
             width: 95%;
             max-width: 1200px;
-            z-index: 1000;
+            z-index: 50;
             transition: all 0.3s ease;
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -1059,9 +1061,305 @@
             margin-right: 1rem;
             min-width: 150px;
         }
+
+        /* Enhanced Drawer styles */
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 40;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 80px;
+            height: calc(100vh - 80px);
+            border-radius: 0 20px 20px 0;
+            overflow: hidden;
+        }
+
+        .dark .drawer {
+            background: #1e1e2e;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .drawer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+        }
+
+        .dark .drawer-header {
+            border-bottom-color: #2d2d2d;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16161f 100%);
+        }
+
+        .drawer-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            height: calc(100% - 4rem);
+        }
+
+        .drawer .template-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0.5rem;
+        }
+
+        .drawer .template-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 2px solid #dfe6e9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drawer .template-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dark .drawer .template-option {
+            background: #252836;
+            border-color: #2d2d3a;
+        }
+
+        .drawer .template-option:hover {
+            transform: translateX(5px);
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .drawer .template-option:hover::after {
+            opacity: 1;
+        }
+
+        .drawer .template-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .dark .drawer .template-option.selected {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .drawer .template-option i {
+            font-size: 1.25rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .drawer .template-option:not(.selected) i {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .dark .drawer .template-option:not(.selected) i {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .drawer .template-option h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Drawer toggle button */
+        .drawer-toggle-btn {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: white;
+            border: none;
+            padding: 0.75rem 0.5rem;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 45;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dark .drawer-toggle-btn {
+            background: #1e1e2e;
+            color: white;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .drawer-toggle-btn:hover {
+            background: #f7fafc;
+            transform: translateY(-50%) translateX(3px);
+        }
+
+        .dark .drawer-toggle-btn:hover {
+            background: #252836;
+        }
+
+        .drawer-toggle-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        /* Container adjustments */
+        @media (min-width: 1024px) {
+            .drawer {
+                transform: translateX(0);
+            }
+            .drawer-overlay {
+                display: none;
+            }
+            .container {
+                margin-left: 300px;
+                width: calc(100% - 300px);
+                transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .drawer-hidden .container {
+                margin-left: 0;
+                width: 100%;
+                max-width: 1200px;
+            }
+            .drawer-hidden .drawer {
+                transform: translateX(-100%);
+            }
+            body {
+                overflow-x: hidden;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .container {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            .drawer {
+                margin-top: 60px;
+                height: calc(100vh - 60px);
+            }
+        }
+
+        /* Content shifting animations */
+        .content-shifted {
+            animation: shiftContent 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes shiftContent {
+            0% {
+                transform: translateX(0);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateX(10px);
+                opacity: 1;
+            }
+        }
+
+        .drawer-hidden .content-shifted {
+            animation: none;
+            transform: translateX(0);
+        }
+
+        /* Enhance form container and preview container */
+        .form-container, .preview-container {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+
+        .form-container.content-shifted, .preview-container.content-shifted {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .dark .form-container.content-shifted, .dark .preview-container.content-shifted {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        /* Drawer open state */
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        /* Drawer overlay enhanced */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 39;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s ease;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] min-h-screen pt-20">
+<body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] dark:from-gray-900 dark:to-gray-800 min-h-screen pt-20">
+    <!-- Drawer -->
+    <div id="drawer" class="drawer">
+        <div class="drawer-header">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Templates</h2>
+            <button id="drawer-close" type="button" class="lg:hidden text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="drawer-content">
+            <div class="template-selector">
+                <div class="template-option selected" onclick="selectTemplate('classic')">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Classic</h3>
+                </div>
+                <div class="template-option" onclick="selectTemplate('modern')">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Modern</h3>
+                </div>
+                <div class="template-option" onclick="selectTemplate('minimal')">
+                    <i class="fas fa-feather"></i>
+                    <h3>Minimal</h3>
+                </div>
+                <div class="template-option" onclick="selectTemplate('executive')">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Executive</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer Overlay -->
+    <div id="drawer-overlay" class="drawer-overlay hidden"></div>
+
+    <!-- Permanent Drawer Toggle Button -->
+    <button id="drawer-toggle" type="button" class="drawer-toggle-btn" title="Toggle Drawer">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
     <!-- Updated Navbar Structure -->
     <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-6xl mx-auto bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg z-50 transition-all duration-300">
         <div class="relative px-4 py-3">
@@ -1141,25 +1439,6 @@
 
     <div class="container">
         <div class="form-container">
-            <div class="template-selector">
-                <div class="template-option selected" onclick="selectTemplate('classic')">
-                    <i class="fas fa-file-alt mb-2"></i>
-                    <h3>Classic</h3>
-                </div>
-                <div class="template-option" onclick="selectTemplate('modern')">
-                    <i class="fas fa-laptop-code mb-2"></i>
-                    <h3>Modern</h3>
-                </div>
-                <div class="template-option" onclick="selectTemplate('minimal')">
-                    <i class="fas fa-feather mb-2"></i>
-                    <h3>Minimal</h3>
-                </div>
-                <div class="template-option" onclick="selectTemplate('executive')">
-                    <i class="fas fa-briefcase mb-2"></i>
-                    <h3>Executive</h3>
-                </div>
-                </div>
-
             <form id="resumeForm">
                 <!-- Personal Information -->
                 <div class="form-group">
@@ -1232,7 +1511,46 @@
         <i class="fas fa-eye"></i>
     </button>
 
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/drawer.js') }}"></script>
     <script>
+        // Remove duplicate event listeners to avoid conflicts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure the drawer toggle button works
+            const toggleBtn = document.getElementById('drawer-toggle');
+            if (toggleBtn) {
+                // Remove any existing event listeners first
+                const newToggleBtn = toggleBtn.cloneNode(true);
+                toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+                
+                // Add the event listener
+                newToggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Toggle button clicked from HTML');
+                    if (window.drawerHandler) {
+                        window.drawerHandler.togglePermanentState();
+                    }
+                });
+            }
+            
+            // Make sure the drawer close button works
+            const closeBtn = document.getElementById('drawer-close');
+            if (closeBtn) {
+                // Remove any existing event listeners first
+                const newCloseBtn = closeBtn.cloneNode(true);
+                closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+                
+                // Add the event listener
+                newCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Close button clicked from HTML');
+                    if (window.drawerHandler) {
+                        window.drawerHandler.closeDrawer();
+                    }
+                });
+            }
+        });
+        
         let currentTemplate = 'classic';
 
         function selectTemplate(template) {
