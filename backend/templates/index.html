@@ -393,7 +393,7 @@
         }
 
         /* Page simulation in preview */
-        .preview-container {
+            .preview-container {
             position: relative;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -853,9 +853,9 @@
         }
 
         .preview-container[data-template="minimal"] .skill-preview-level {
-            position: absolute;
+                position: absolute;
             top: 0;
-            left: 0;
+                left: 0;
             height: 100%;
             background-color: #333;
         }
@@ -866,7 +866,7 @@
         }
 
         .preview-container[data-template="minimal"] .contact-info p {
-            display: flex;
+                display: flex;
             align-items: center;
             margin-bottom: 10px;
             color: #666;
@@ -1378,13 +1378,13 @@
                             <span>ATS Checker</span>
                         </a>
                         <a href="/templates" class="nav-link {% if active_page == 'templates' %}active{% endif %}">
-                            <i class="fas fa-th-large"></i>
-                            <span>Templates</span>
-                        </a>
+                        <i class="fas fa-th-large"></i>
+                        <span>Templates</span>
+                    </a>
                         <a href="/pages/tips" class="nav-link {% if active_page == 'tips' %}active{% endif %}">
-                            <i class="fas fa-lightbulb"></i>
-                            <span>Tips</span>
-                        </a>
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Tips</span>
+                    </a>
                         <a href="/about" class="nav-link {% if active_page == 'about' %}active{% endif %}">
                             <i class="fas fa-info-circle"></i>
                             <span>About</span>
@@ -1491,18 +1491,18 @@
                     your.email@example.com
                 </div>
                 
-                <div class="preview-section">
-                    <h3>Professional Summary</h3>
+            <div class="preview-section">
+                <h3>Professional Summary</h3>
                     <div class="preview-content" id="previewSummary">
                         Your professional summary will appear here...
-                    </div>
                 </div>
+            </div>
 
-                <div class="preview-section">
-                    <h3>Skills</h3>
+            <div class="preview-section">
+                <h3>Skills</h3>
                     <div class="skills-preview-list" id="previewSkills">
-                    </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -1587,12 +1587,12 @@
                             <div class="contact-info text-sm opacity-90">${data.email}</div>
                         </div>
                         <div class="modern-content p-8">
-                            <div class="preview-section">
+            <div class="preview-section">
                                 <h3 class="text-xl font-semibold text-purple-600 mb-4">Professional Summary</h3>
                                 <div class="preview-content" id="previewSummary">${data.summary}</div>
-                            </div>
+                </div>
                             ${data.sectionsContent}
-                        </div>
+            </div>
                     `;
                     break;
                 case 'minimal':
@@ -1603,13 +1603,13 @@
                                 <div class="contact-info text-gray-600">${data.email}</div>
                             </div>
                             <div class="minimal-content grid grid-cols-1 gap-8">
-                                <div class="preview-section">
+            <div class="preview-section">
                                     <h3 class="text-lg uppercase tracking-wider text-gray-700 mb-4">Professional Summary</h3>
                                     <div class="preview-content text-gray-600" id="previewSummary">${data.summary}</div>
-                                </div>
+                </div>
                                 ${data.sectionsContent}
-                            </div>
-                        </div>
+            </div>
+        </div>
                     `;
                     break;
                 case 'executive':
@@ -1618,7 +1618,7 @@
                             <div class="executive-header mb-8">
                                 <h1 id="previewName" class="text-4xl font-serif mb-2">${data.name}</h1>
                                 <div class="contact-info text-gray-700 font-serif">${data.email}</div>
-                            </div>
+    </div>
                             <div class="executive-content">
                                 <div class="preview-section mb-8">
                                     <h3 class="text-2xl font-serif text-gray-800 mb-4 border-b border-gray-300 pb-2">Professional Summary</h3>
