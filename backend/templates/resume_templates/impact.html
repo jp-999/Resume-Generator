@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Resume Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+        
+        .resume-container {
+            width: 8.5in;
+            min-height: 11in;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #0d6efd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Background animation - only for screen display */
+        @media screen {
+            .resume-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(13, 110, 253, 0.05) 0%, rgba(13, 110, 253, 0) 50%, rgba(13, 110, 253, 0.05) 100%);
+                z-index: 0;
+                animation: gradientShift 8s ease-in-out infinite alternate;
+            }
+            
+            @keyframes gradientShift {
+                0% {
+                    background-position: 0% 50%;
+                }
+                100% {
+                    background-position: 100% 50%;
+                }
+            }
+        }
+        
+        .header {
+            background: #0d6efd;
+            color: white;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        /* Header background animation - only for screen display */
+        @media screen {
+            .header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
+                background-size: 200% 200%;
+                animation: shimmer 5s ease-in-out infinite;
+                z-index: -1;
+            }
+            
+            @keyframes shimmer {
+                0% {
+                    background-position: 0% 0%;
+                }
+                50% {
+                    background-position: 100% 100%;
+                }
+                100% {
+                    background-position: 0% 0%;
+                }
+            }
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(135deg, #0d6efd 0%, #0d6efd 50%, transparent 50%, transparent 100%);
+            background-size: 20px 20px;
+            z-index: 2;
+        }
+        
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Name underline animation - only for screen display */
+        @media screen {
+            .name::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 3px;
+                background-color: white;
+                transition: width 0.5s ease;
+                animation: nameUnderline 3s ease-in-out infinite;
+            }
+            
+            @keyframes nameUnderline {
+                0% {
+                    width: 0;
+                }
+                50% {
+                    width: 100%;
+                }
+                100% {
+                    width: 0;
+                }
+            }
+        }
+        
+        .title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .contact-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        
+        .contact-info p {
+            margin-bottom: 0.25rem;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .contact-info p:hover {
+                transform: translateX(5px);
+            }
+        }
+        
+        .content {
+            padding: 2rem;
+            padding-top: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .section:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            }
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: #0d6efd;
+            transition: width 0.3s ease;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .section:hover .section-title::after {
+                width: 100%;
+            }
+        }
+        
+        .summary {
+            margin-bottom: 1.5rem;
+        }
+        
+        .experience-item, .education-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .experience-item::before, .education-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 0;
+                background: #0d6efd;
+                transition: height 0.3s ease;
+            }
+            
+            .experience-item:hover, .education-item:hover {
+                background: rgba(13, 110, 253, 0.03);
+                transform: translateX(5px);
+            }
+            
+            .experience-item:hover::before, .education-item:hover::before {
+                height: 100%;
+            }
+        }
+        
+        .item-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .experience-item:hover .item-title, .education-item:hover .item-title {
+                color: #0d6efd;
+            }
+        }
+        
+        .item-subtitle {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-description {
+            font-size: 0.95rem;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .skill-item {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hover effects - only for screen display */
+        @media screen {
+            .skill-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, rgba(13, 110, 253, 0), rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0));
+                transform: translateX(-100%);
+                transition: transform 0.6s ease;
+            }
+            
+            .skill-item:hover {
+                background: #0d6efd;
+                color: white;
+                transform: translateY(-3px);
+                box-shadow: 0 3px 10px rgba(13, 110, 253, 0.2);
+            }
+            
+            .skill-item:hover::before {
+                transform: translateX(100%);
+            }
+            
+            /* Pulse animation for skills */
+            @keyframes skillPulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+                }
+            }
+        }
+        
+        /* Apply animations to elements when they appear in viewport - only for screen display */
+        @media screen {
+            .animate-on-scroll {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.6s ease, transform 0.6s ease;
+            }
+            
+            .animate-on-scroll.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Print-specific styles */
+        @media print {
+            body {
+                background: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .resume-container {
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                border-left: 6px solid #0d6efd;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .header {
+                background: #0d6efd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .section-title {
+                color: #0d6efd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .section-title::after {
+                background: #0d6efd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                width: 50px !important;
+            }
+            
+            .skill-item {
+                background: #e9ecef !important;
+                color: #495057 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Ensure no page breaks inside items */
+            .section, .experience-item, .education-item {
+                page-break-inside: avoid;
+            }
+            
+            /* Remove all animations and transitions */
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            /* Ensure proper margins */
+            @page {
+                margin: 0.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="header">
+            <h1 class="name">{{ name }}</h1>
+            <div class="title">{{ title|default('Professional Title') }}</div>
+            <div class="contact-info">
+                <p>{{ email }}</p>
+                <p>{{ phone|default('') }}</p>
+                <p>{{ location|default('') }}</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section summary animate-on-scroll">
+                <h2 class="section-title">Professional Summary</h2>
+                <p>{{ summary }}</p>
+            </div>
+            
+            {% if experience %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Experience</h2>
+                {% for exp in experience %}
+                <div class="experience-item">
+                    <div class="item-title">{{ exp.company }}</div>
+                    <div class="item-subtitle">{{ exp.position }}</div>
+                    <div class="item-date">{{ exp.duration }}</div>
+                    <div class="item-description">{{ exp.description }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if education %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Education</h2>
+                {% for edu in education %}
+                <div class="education-item">
+                    <div class="item-title">{{ edu.institution }}</div>
+                    <div class="item-subtitle">{{ edu.degree }}</div>
+                    <div class="item-date">{{ edu.duration }}</div>
+                    {% if edu.gpa %}
+                    <div class="item-description">GPA: {{ edu.gpa }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if skills %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Skills</h2>
+                <div class="skills-list">
+                    {% for skill in skills %}
+                    <div class="skill-item" data-index="{{ loop.index0 }}">{{ skill }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if projects %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Projects</h2>
+                {% for project in projects %}
+                <div class="experience-item">
+                    <div class="item-title">{{ project.name }}</div>
+                    <div class="item-subtitle">{{ project.technologies }}</div>
+                    <div class="item-description">{{ project.description }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if certifications %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Certifications</h2>
+                {% for cert in certifications %}
+                <div class="item-title">{{ cert }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if languages %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Languages</h2>
+                {% for lang in languages %}
+                <div class="item-title">{{ lang }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if interests %}
+            <div class="section animate-on-scroll">
+                <h2 class="section-title">Interests</h2>
+                <p>{{ interests }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        // Only run animations in browser, not during PDF generation
+        if (typeof window !== 'undefined' && !window.location.href.includes('generate')) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const animatedElements = document.querySelectorAll('.animate-on-scroll');
+                
+                // Initially set all elements as visible for the preview
+                animatedElements.forEach(el => {
+                    el.classList.add('visible');
+                });
+                
+                // Add animation delay to skill items for staggered effect
+                const skillItems = document.querySelectorAll('.skill-item');
+                skillItems.forEach((item) => {
+                    const index = parseInt(item.getAttribute('data-index') || '0');
+                    // Add pulse animation with staggered delays
+                    item.style.animation = `skillPulse 3s infinite ${index * 0.2}s`;
+                });
+                
+                // Only use intersection observer for actual scrolling (not in the preview)
+                if (!window.location.pathname.includes('preview')) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('visible');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    
+                    animatedElements.forEach(el => {
+                        observer.observe(el);
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Resume Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        .resume-container {
+            width: 8.5in;
+            min-height: 11in;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Unique design element - diagonal split */
+        .resume-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 35%;
+            height: 100%;
+            background: #2c3e50;
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+            z-index: 0;
+        }
+        
+        /* Content wrapper */
+        .content-wrapper {
+            display: flex;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Left sidebar */
+        .sidebar {
+            width: 30%;
+            padding: 2.5rem 1.5rem;
+            color: #fff;
+            position: relative;
+        }
+        
+        /* Main content */
+        .main-content {
+            width: 70%;
+            padding: 2.5rem 2rem;
+            background: #fff;
+        }
+        
+        /* Profile section */
+        .profile {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-image::before {
+            content: '{{ name|default("Your Name")|slice(0,1) }}';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Contact section */
+        .contact {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #3498db;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        
+        .contact-icon {
+            width: 25px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            font-size: 0.8rem;
+        }
+        
+        .contact-text {
+            font-size: 0.9rem;
+        }
+        
+        /* Skills section */
+        .skills {
+            margin-bottom: 2.5rem;
+        }
+        
+        .skill-item {
+            margin-bottom: 1rem;
+        }
+        
+        .skill-name {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .skill-level {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .skill-level::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #3498db;
+            border-radius: 3px;
+            width: var(--skill-width, 80%);
+        }
+        
+        /* Languages section */
+        .languages {
+            margin-bottom: 2.5rem;
+        }
+        
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .language-name {
+            font-size: 0.9rem;
+        }
+        
+        .language-level {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* Main content sections */
+        .main-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .main-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            position: relative;
+            padding-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .main-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3498db;
+        }
+        
+        /* Summary section */
+        .summary {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        
+        /* Experience and Education sections */
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #3498db;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 5px;
+            width: 2px;
+            height: calc(100% + 20px);
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        
+        .timeline-subtitle {
+            font-size: 0.95rem;
+            color: #3498db;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+        
+        .timeline-date {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.8rem;
+            font-style: italic;
+        }
+        
+        .timeline-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        /* Projects section */
+        .project-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .project-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .project-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        
+        .project-tech {
+            font-size: 0.9rem;
+            color: #3498db;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .project-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        /* Interests section */
+        .interests-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .interest-item {
+            background: #f1f2f6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .resume-container {
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .resume-container::before {
+                background: #2c3e50 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .profile-image::before {
+                background: #3498db !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .section-title::after,
+            .main-section-title::after,
+            .timeline-item::before,
+            .skill-level::before {
+                background: #3498db !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .timeline-item::after {
+                background: rgba(52, 152, 219, 0.3) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .interest-item {
+                background: #f1f2f6 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            /* Ensure no page breaks inside items */
+            .timeline-item, .project-item {
+                page-break-inside: avoid;
+            }
+            
+            /* Ensure proper margins */
+            @page {
+                margin: 0.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="content-wrapper">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <!-- Profile Section -->
+                <div class="profile">
+                    <div class="profile-image"></div>
+                    <h1 class="name">{{ name }}</h1>
+                    <div class="title">{{ title|default('Professional Title') }}</div>
+                </div>
+                
+                <!-- Contact Section -->
+                <div class="contact">
+                    <h2 class="section-title">Contact</h2>
+                    {% if email %}
+                    <div class="contact-item">
+                        <div class="contact-icon">@</div>
+                        <div class="contact-text">{{ email }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if phone %}
+                    <div class="contact-item">
+                        <div class="contact-icon">☏</div>
+                        <div class="contact-text">{{ phone }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if location %}
+                    <div class="contact-item">
+                        <div class="contact-icon">⌖</div>
+                        <div class="contact-text">{{ location }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Skills Section -->
+                {% if skills %}
+                <div class="skills">
+                    <h2 class="section-title">Skills</h2>
+                    {% for skill in skills %}
+                    <div class="skill-item">
+                        <div class="skill-name">{{ skill }}</div>
+                        <div class="skill-level" style="--skill-width: {{ 60 + (loop.index0 * 7) % 40 }}%"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Languages Section -->
+                {% if languages %}
+                <div class="languages">
+                    <h2 class="section-title">Languages</h2>
+                    {% for lang in languages %}
+                    <div class="language-item">
+                        <div class="language-name">{{ lang }}</div>
+                        <div class="language-level">
+                            {% set levels = ['Basic', 'Intermediate', 'Advanced', 'Fluent', 'Native'] %}
+                            {{ levels[loop.index0 % 5] }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Summary Section -->
+                <div class="main-section">
+                    <h2 class="main-section-title">Professional Summary</h2>
+                    <div class="summary">{{ summary }}</div>
+                </div>
+                
+                <!-- Experience Section -->
+                {% if experience %}
+                <div class="main-section">
+                    <h2 class="main-section-title">Experience</h2>
+                    {% for exp in experience %}
+                    <div class="timeline-item">
+                        <div class="timeline-title">{{ exp.company }}</div>
+                        <div class="timeline-subtitle">{{ exp.position }}</div>
+                        <div class="timeline-date">{{ exp.duration }}</div>
+                        <div class="timeline-description">{{ exp.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Education Section -->
+                {% if education %}
+                <div class="main-section">
+                    <h2 class="main-section-title">Education</h2>
+                    {% for edu in education %}
+                    <div class="timeline-item">
+                        <div class="timeline-title">{{ edu.institution }}</div>
+                        <div class="timeline-subtitle">{{ edu.degree }}</div>
+                        <div class="timeline-date">{{ edu.duration }}</div>
+                        {% if edu.gpa %}
+                        <div class="timeline-description">GPA: {{ edu.gpa }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Projects Section -->
+                {% if projects %}
+                <div class="main-section">
+                    <h2 class="main-section-title">Projects</h2>
+                    {% for project in projects %}
+                    <div class="project-item">
+                        <div class="project-title">{{ project.name }}</div>
+                        <div class="project-tech">{{ project.technologies }}</div>
+                        <div class="project-description">{{ project.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Certifications Section -->
+                {% if certifications %}
+                <div class="main-section">
+                    <h2 class="main-section-title">Certifications</h2>
+                    {% for cert in certifications %}
+                    <div class="timeline-item">
+                        <div class="timeline-title">{{ cert }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Interests Section -->
+                {% if interests %}
+                <div class="main-section">
+                    <h2 class="main-section-title">Interests</h2>
+                    <div class="interests-list">
+                        {% for interest in interests.split(',') %}
+                        <div class="interest-item">{{ interest.strip() }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
