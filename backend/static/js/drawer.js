@@ -16,9 +16,12 @@ class DrawerHandler {
             { id: 'modern', name: 'Modern', icon: 'fa-laptop-code' },
             { id: 'minimal', name: 'Minimal', icon: 'fa-feather' },
             { id: 'executive', name: 'Executive', icon: 'fa-briefcase' },
-            { id: 'impact', name: 'Impact', icon: 'fa-bolt' }, // Impact template
-            { id: 'unique', name: 'Unique', icon: 'fa-fingerprint' } // New Unique template
+            { id: 'impact', name: 'Impact', icon: 'fa-bolt' },
+            { id: 'unique', name: 'Unique', icon: 'fa-fingerprint' }
         ];
+
+        // Initialize current template from localStorage or default to classic
+        this.currentTemplate = localStorage.getItem('selectedTemplate') || 'classic';
     }
 
     init() {
@@ -39,7 +42,6 @@ class DrawerHandler {
             });
         }
         
-        // Fix close button event listener
         if (this.closeBtn) {
             this.closeBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -70,17 +72,19 @@ class DrawerHandler {
         // Render template options
         this.renderTemplateOptions();
         
-        // Debug log
+        // Set initial template
+        this.applyTemplate(this.currentTemplate);
+        
         console.log('Drawer handler initialized', {
             drawer: this.drawer,
             toggleBtn: this.toggleBtn,
             closeBtn: this.closeBtn,
             overlay: this.overlay,
-            isPermanentlyHidden: this.isPermanentlyHidden
+            isPermanentlyHidden: this.isPermanentlyHidden,
+            currentTemplate: this.currentTemplate
         });
     }
     
-    // Add method to render template options
     renderTemplateOptions() {
         const templateSelector = this.drawer.querySelector('.template-selector');
         if (!templateSelector) return;
@@ -88,16 +92,12 @@ class DrawerHandler {
         // Clear existing options
         templateSelector.innerHTML = '';
         
-        // Get current template
-        const currentTemplate = window.currentTemplate || 'classic';
-        
         // Add template options
         this.templates.forEach(template => {
             const option = document.createElement('div');
-            option.className = `template-option ${template.id === currentTemplate ? 'selected' : ''}`;
+            option.className = `template-option ${template.id === this.currentTemplate ? 'selected' : ''}`;
             option.onclick = () => this.selectTemplate(template.id);
             
-            // Create consistent button structure
             option.innerHTML = `
                 <div class="template-option-content">
                     <div class="template-icon">
@@ -116,7 +116,7 @@ class DrawerHandler {
             templateSelector.appendChild(option);
         });
 
-        // Add styles for the template options
+        // Add enhanced animation styles
         if (!document.getElementById('template-option-styles')) {
             const styleEl = document.createElement('style');
             styleEl.id = 'template-option-styles';
@@ -150,15 +150,44 @@ class DrawerHandler {
                     color: white;
                 }
 
-                .dark .template-option.selected {
-                    background: #8b5cf6;
-                    border-color: #8b5cf6;
+                .template-selected-animation {
+                    animation: templateSelected 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                @keyframes templateSelected {
+                    0% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.02);
+                    }
+                    100% {
+                        transform: scale(1);
+                    }
+                }
+
+                .template-option::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(108, 92, 231, 0.1), transparent);
+                    transform: translateX(-100%);
+                    transition: transform 0.6s ease;
+                }
+
+                .template-option:hover::after {
+                    transform: translateX(100%);
                 }
 
                 .template-option-content {
                     display: flex;
                     align-items: center;
                     gap: 1rem;
+                    position: relative;
+                    z-index: 1;
                 }
 
                 .template-icon {
@@ -174,6 +203,19 @@ class DrawerHandler {
 
                 .template-option.selected .template-icon {
                     background: rgba(255, 255, 255, 0.2);
+                    animation: iconPulse 1s ease-in-out infinite;
+                }
+
+                @keyframes iconPulse {
+                    0% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.1);
+                    }
+                    100% {
+                        transform: scale(1);
+                    }
                 }
 
                 .template-icon i {
@@ -222,39 +264,24 @@ class DrawerHandler {
                 .template-option.selected .template-select-indicator {
                     opacity: 1;
                     background: rgba(255, 255, 255, 0.2);
+                    animation: checkmarkAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
-                .template-select-indicator i {
-                    font-size: 0.875rem;
-                    color: #6c5ce7;
-                }
-
-                .template-option.selected .template-select-indicator i {
-                    color: white;
-                }
-
-                /* Hover effect */
-                .template-option::after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(108, 92, 231, 0.1), transparent);
-                    transform: translateX(-100%);
-                    transition: transform 0.6s ease;
-                }
-
-                .template-option:hover::after {
-                    transform: translateX(100%);
+                @keyframes checkmarkAppear {
+                    0% {
+                        transform: scale(0) rotate(-45deg);
+                        opacity: 0;
+                    }
+                    100% {
+                        transform: scale(1) rotate(0);
+                        opacity: 1;
+                    }
                 }
             `;
             document.head.appendChild(styleEl);
         }
     }
 
-    // Helper method to get template descriptions
     getTemplateDescription(templateId) {
         const descriptions = {
             'classic': 'Traditional and professional design',
@@ -267,23 +294,130 @@ class DrawerHandler {
         return descriptions[templateId] || '';
     }
 
-    // Add method to select template
     selectTemplate(templateId) {
-        // Update selected template
-        window.currentTemplate = templateId;
+        if (this.currentTemplate === templateId) return;
         
-        // Update template options
+        console.log('Selecting template:', templateId);
+        
+        // Update selected template
+        this.currentTemplate = templateId;
+        localStorage.setItem('selectedTemplate', templateId);
+        
+        // Update template options visual state with animation
         const options = this.drawer.querySelectorAll('.template-option');
         options.forEach(option => {
             option.classList.remove('selected');
             if (option.querySelector('h3').textContent === this.templates.find(t => t.id === templateId).name) {
                 option.classList.add('selected');
+                // Add selection animation
+                option.classList.add('template-selected-animation');
+                setTimeout(() => {
+                    option.classList.remove('template-selected-animation');
+                }, 600);
             }
         });
         
-        // Update preview
-        if (typeof window.updatePreview === 'function') {
-            window.updatePreview();
+        // Apply the template with animation
+        this.applyTemplate(templateId);
+    }
+
+    applyTemplate(templateId) {
+        console.log('Applying template:', templateId);
+        
+        // Update preview container class
+        if (this.previewContainer) {
+            // Add blink animation class
+            this.previewContainer.classList.add('template-transition');
+            
+            // Remove all template classes after a short delay
+            setTimeout(() => {
+                // Remove all template classes
+                this.templates.forEach(template => {
+                    this.previewContainer.classList.remove(template.id);
+                });
+                
+                // Add new template class
+                this.previewContainer.classList.add(templateId);
+                
+                // Update preview content
+                if (typeof window.updatePreview === 'function') {
+                    window.updatePreview();
+                }
+                
+                // Remove transition class after animation completes
+                setTimeout(() => {
+                    this.previewContainer.classList.remove('template-transition');
+                }, 300);
+            }, 150);
+            
+            // Add animation styles if they don't exist
+            if (!document.getElementById('template-transition-styles')) {
+                const styleEl = document.createElement('style');
+                styleEl.id = 'template-transition-styles';
+                styleEl.textContent = `
+                    @keyframes templateBlink {
+                        0% {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                        50% {
+                            opacity: 0.5;
+                            transform: scale(0.98);
+                        }
+                        100% {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                    
+                    .template-transition {
+                        animation: templateBlink 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+                    
+                    /* Template switching effects */
+                    .preview-container {
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+                    
+                    .preview-container.template-transition {
+                        position: relative;
+                    }
+                    
+                    .preview-container.template-transition::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: linear-gradient(45deg, 
+                            rgba(255,255,255,0) 0%,
+                            rgba(255,255,255,0.1) 50%,
+                            rgba(255,255,255,0) 100%);
+                        background-size: 200% 200%;
+                        animation: shimmer 0.6s ease-in-out;
+                        pointer-events: none;
+                    }
+                    
+                    @keyframes shimmer {
+                        0% {
+                            background-position: -200% 0;
+                        }
+                        100% {
+                            background-position: 200% 0;
+                        }
+                    }
+                    
+                    /* Dark mode support */
+                    .dark .preview-container.template-transition::before {
+                        background: linear-gradient(45deg, 
+                            rgba(0,0,0,0) 0%,
+                            rgba(255,255,255,0.05) 50%,
+                            rgba(0,0,0,0) 100%);
+                    }
+                `;
+                document.head.appendChild(styleEl);
+            }
         }
     }
 
@@ -317,11 +451,8 @@ class DrawerHandler {
         }
         
         this.body.style.overflow = 'hidden';
-        
-        // Update container position
         this.updateContainerPosition();
         
-        // Add animation class to content
         if (this.mainContent) {
             this.mainContent.classList.add('content-shifted');
         }
@@ -348,11 +479,8 @@ class DrawerHandler {
         }
         
         this.body.style.overflow = '';
-        
-        // Update container position
         this.updateContainerPosition();
         
-        // Remove animation class from content
         if (this.mainContent) {
             this.mainContent.classList.remove('content-shifted');
         }
@@ -368,11 +496,8 @@ class DrawerHandler {
         localStorage.setItem('drawerHidden', 'true');
         document.body.classList.add('drawer-hidden');
         this.drawer.style.transform = 'translateX(-100%)';
-        
-        // Update container position
         this.updateContainerPosition();
         
-        // Remove animation class from content
         if (this.mainContent) {
             this.mainContent.classList.remove('content-shifted');
         }
@@ -388,11 +513,8 @@ class DrawerHandler {
         localStorage.setItem('drawerHidden', 'false');
         document.body.classList.remove('drawer-hidden');
         this.drawer.style.transform = 'translateX(0)';
-        
-        // Update container position
         this.updateContainerPosition();
         
-        // Add animation class to content
         if (this.mainContent) {
             this.mainContent.classList.add('content-shifted');
         }
@@ -421,20 +543,17 @@ class DrawerHandler {
         
         if (isDesktop) {
             if (!this.isPermanentlyHidden) {
-                // Drawer is visible on desktop
                 this.container.style.marginLeft = '300px';
                 this.container.style.width = 'calc(100% - 300px)';
                 this.container.style.maxWidth = 'none';
                 this.container.style.transition = 'margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
             } else {
-                // Drawer is hidden on desktop
                 this.container.style.marginLeft = '0';
                 this.container.style.width = '100%';
                 this.container.style.maxWidth = '1200px';
                 this.container.style.transition = 'margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
             }
         } else {
-            // Mobile view
             this.container.style.marginLeft = '0';
             this.container.style.width = '100%';
             this.container.style.maxWidth = 'none';
