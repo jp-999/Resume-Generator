@@ -9,6 +9,16 @@ class DrawerHandler {
         this.body = document.body;
         this.mainContent = document.querySelector('.form-container');
         this.previewContainer = document.querySelector('.preview-container');
+        
+        // Add template options
+        this.templates = [
+            { id: 'classic', name: 'Classic', icon: 'fa-file-alt' },
+            { id: 'modern', name: 'Modern', icon: 'fa-laptop-code' },
+            { id: 'minimal', name: 'Minimal', icon: 'fa-feather' },
+            { id: 'executive', name: 'Executive', icon: 'fa-briefcase' },
+            { id: 'impact', name: 'Impact', icon: 'fa-bolt' }, // Impact template
+            { id: 'unique', name: 'Unique', icon: 'fa-fingerprint' } // New Unique template
+        ];
     }
 
     init() {
@@ -57,6 +67,9 @@ class DrawerHandler {
         this.updateContainerPosition();
         this.updateToggleButton();
         
+        // Render template options
+        this.renderTemplateOptions();
+        
         // Debug log
         console.log('Drawer handler initialized', {
             drawer: this.drawer,
@@ -65,6 +78,52 @@ class DrawerHandler {
             overlay: this.overlay,
             isPermanentlyHidden: this.isPermanentlyHidden
         });
+    }
+    
+    // Add method to render template options
+    renderTemplateOptions() {
+        const templateSelector = this.drawer.querySelector('.template-selector');
+        if (!templateSelector) return;
+        
+        // Clear existing options
+        templateSelector.innerHTML = '';
+        
+        // Get current template
+        const currentTemplate = window.currentTemplate || 'classic';
+        
+        // Add template options
+        this.templates.forEach(template => {
+            const option = document.createElement('div');
+            option.className = `template-option ${template.id === currentTemplate ? 'selected' : ''}`;
+            option.onclick = () => this.selectTemplate(template.id);
+            
+            option.innerHTML = `
+                <i class="fas ${template.icon}"></i>
+                <h3>${template.name}</h3>
+            `;
+            
+            templateSelector.appendChild(option);
+        });
+    }
+    
+    // Add method to select template
+    selectTemplate(templateId) {
+        // Update selected template
+        window.currentTemplate = templateId;
+        
+        // Update template options
+        const options = this.drawer.querySelectorAll('.template-option');
+        options.forEach(option => {
+            option.classList.remove('selected');
+            if (option.querySelector('h3').textContent === this.templates.find(t => t.id === templateId).name) {
+                option.classList.add('selected');
+            }
+        });
+        
+        // Update preview
+        if (typeof window.updatePreview === 'function') {
+            window.updatePreview();
+        }
     }
 
     toggleDrawer() {

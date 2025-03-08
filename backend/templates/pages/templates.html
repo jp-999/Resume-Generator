@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Resume Templates - Resume Generator{% endblock %}
+{% block title %}Resume Templates{% endblock %}
 
 {% block hero %}
 <div class="hero-section">
@@ -12,55 +12,148 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
+<div class="container mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-center mb-12">Resume Templates</h1>
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Classic Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/classic-template.png') }}" alt="Classic Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Classic Template</h3>
-                <p class="text-gray-600 mb-4">A timeless design suitable for all industries. Clean layout with traditional formatting.</p>
-                <a href="/?template=classic" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 bg-gray-100 flex items-center justify-center">
+                <img src="{{ url_for('static', filename='images/templates/classic.png') }}" alt="Classic Template" class="h-full object-cover">
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Classic</h3>
+                <p class="text-gray-600 mb-4">A timeless and professional design suitable for most industries. Clean layout with a focus on readability.</p>
+                <a href="/" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">Use Template</a>
             </div>
         </div>
-
+        
         <!-- Modern Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/modern-template.png') }}" alt="Modern Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Modern Template</h3>
-                <p class="text-gray-600 mb-4">Contemporary design with a creative touch. Perfect for tech and creative industries.</p>
-                <a href="/?template=modern" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 bg-gray-100 flex items-center justify-center">
+                <img src="{{ url_for('static', filename='images/templates/modern.png') }}" alt="Modern Template" class="h-full object-cover">
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Modern</h3>
+                <p class="text-gray-600 mb-4">A contemporary design with vibrant colors and creative layout. Perfect for creative industries.</p>
+                <a href="/" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">Use Template</a>
             </div>
         </div>
-
+        
         <!-- Minimal Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/minimal-template.png') }}" alt="Minimal Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Minimal Template</h3>
-                <p class="text-gray-600 mb-4">Clean and minimalist design focusing on essential information.</p>
-                <a href="/?template=minimal" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 bg-gray-100 flex items-center justify-center">
+                <img src="{{ url_for('static', filename='images/templates/minimal.png') }}" alt="Minimal Template" class="h-full object-cover">
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Minimal</h3>
+                <p class="text-gray-600 mb-4">A clean, minimalist design that focuses on content. Ideal for those who prefer simplicity.</p>
+                <a href="/" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">Use Template</a>
             </div>
         </div>
-
+        
         <!-- Executive Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/executive-template.png') }}" alt="Executive Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Executive Template</h3>
-                <p class="text-gray-600 mb-4">Professional design ideal for senior positions and corporate roles.</p>
-                <a href="/?template=executive" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 bg-gray-100 flex items-center justify-center">
+                <img src="{{ url_for('static', filename='images/templates/executive.png') }}" alt="Executive Template" class="h-full object-cover">
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Executive</h3>
+                <p class="text-gray-600 mb-4">An elegant and sophisticated design for senior professionals and executives.</p>
+                <a href="/" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">Use Template</a>
             </div>
         </div>
+        
+        <!-- Impact Template -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+                <div class="text-white text-center p-4">
+                    <h3 class="text-2xl font-bold uppercase tracking-wider mb-2">IMPACT</h3>
+                    <p class="text-sm opacity-80">A bold, dynamic template that makes a statement</p>
+                    <div class="mt-4 w-12 h-1 bg-white mx-auto"></div>
+                    <div class="mt-4 flex justify-center space-x-2">
+                        <div class="w-16 h-6 bg-white bg-opacity-20 rounded-full"></div>
+                        <div class="w-16 h-6 bg-white bg-opacity-20 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Impact</h3>
+                <p class="text-gray-600 mb-4">A bold and dynamic design with strong visual elements. Perfect for making a powerful first impression.</p>
+                <a href="/" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Use Template</a>
+            </div>
+        </div>
+        
+        <!-- Unique Template -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-64 relative overflow-hidden">
+                <!-- Diagonal split background -->
+                <div class="absolute inset-0">
+                    <div class="absolute inset-0 bg-gray-100"></div>
+                    <div class="absolute inset-0 w-1/3 bg-[#2c3e50]" style="clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);"></div>
+                </div>
+                
+                <!-- Template preview content -->
+                <div class="relative h-full flex">
+                    <!-- Left sidebar -->
+                    <div class="w-1/3 p-3 text-white">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-full bg-[#3498db] flex items-center justify-center text-white font-bold mb-2">U</div>
+                            <div class="text-xs font-semibold">NAME</div>
+                            <div class="text-[8px] uppercase mt-1">Position</div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="text-[8px] font-semibold uppercase mb-1">Skills</div>
+                            <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mb-2">
+                                <div class="w-3/4 h-full bg-[#3498db] rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right content -->
+                    <div class="w-2/3 p-3">
+                        <div class="text-[10px] font-semibold text-[#2c3e50] uppercase mb-1">Experience</div>
+                        <div class="w-10 h-0.5 bg-[#3498db] mb-2"></div>
+                        <div class="pl-3 border-l border-[#3498db] border-opacity-30">
+                            <div class="relative">
+                                <div class="absolute left-[-13px] top-0 w-2 h-2 rounded-full bg-[#3498db] border-2 border-white"></div>
+                                <div class="text-[8px] font-semibold">Company Name</div>
+                                <div class="text-[7px] text-[#3498db]">Position Title</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Unique</h3>
+                <p class="text-gray-600 mb-4">A distinctive split-layout design with a professional sidebar and timeline elements. Perfect for standing out from the crowd.</p>
+                <a href="/" class="inline-block bg-[#2c3e50] text-white px-4 py-2 rounded-lg hover:bg-[#34495e] transition-colors">Use Template</a>
+            </div>
+        </div>
+        
+        <!-- Coming Soon Template -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <span class="bg-yellow-500 text-white px-4 py-2 rounded-full font-bold">Coming Soon</span>
+            </div>
+            <div class="h-64 bg-gray-100 flex items-center justify-center">
+                <div class="text-gray-400 text-center">
+                    <i class="fas fa-file-alt text-5xl mb-4"></i>
+                    <p>Preview not available</p>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Creative</h3>
+                <p class="text-gray-600 mb-4">An artistic design for creative professionals. Showcases your personality and creative skills.</p>
+                <button disabled class="inline-block bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed">Coming Soon</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-16 text-center">
+        <h2 class="text-2xl font-bold mb-4">Can't find what you're looking for?</h2>
+        <p class="text-gray-600 mb-6 max-w-2xl mx-auto">We're constantly adding new templates to our collection. If you have a specific design in mind, let us know!</p>
+        <a href="/contact" class="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">Request a Template</a>
     </div>
 </div>
 {% endblock %}

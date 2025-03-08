@@ -5,6 +5,7 @@ import os
 import json
 from datetime import datetime
 from io import BytesIO
+import tempfile
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
@@ -41,7 +42,34 @@ TEMPLATES = {
         'name': 'Executive',
         'description': 'An executive-style template perfect for senior positions.',
         'preview': '/static/templates/executive.png'
+    },
+    'impact': {
+        'name': 'Impact',
+        'description': 'A bold and dynamic design with strong visual elements.',
+        'preview': '/static/templates/impact.png'
+    },
+    'unique': {
+        'name': 'Unique',
+        'description': 'A distinctive split-layout design with a professional sidebar.',
+        'preview': '/static/templates/unique.png'
     }
+}
+
+# Configuration for PDF generation
+PDF_OPTIONS = {
+    'page-size': 'Letter',
+    'margin-top': '0mm',
+    'margin-right': '0mm',
+    'margin-bottom': '0mm',
+    'margin-left': '0mm',
+    'encoding': 'UTF-8',
+    'no-outline': None,
+    'enable-local-file-access': None,
+    'print-media-type': None,  # Use print media type to ensure proper rendering
+    'disable-smart-shrinking': None,  # Prevent content from being shrunk
+    'quiet': None,  # Suppress console output
+    'javascript-delay': 1000,  # Wait for JavaScript to execute
+    'no-stop-slow-scripts': None,  # Don't stop slow running scripts
 }
 
 @app.route('/')
@@ -73,51 +101,78 @@ def health_check():
 def generate_resume():
     try:
         # Get form data
-        data = {
-            'name': request.form.get('name'),
-            'email': request.form.get('email'),
-            'phone': request.form.get('phone'),
-            'summary': request.form.get('summary'),
-            'skills': request.form.get('skills'),
-            'experience': request.form.get('experience'),
-            'education': request.form.get('education'),
-            'date': datetime.now().strftime("%B %d, %Y")
-        }
-
-        # Get selected template
-        template_name = request.form.get('template', 'modern')
+        data = {}
+        for key, value in request.form.items():
+            if value:  # Only include non-empty values
+                data[key] = value
         
-        # Convert skills, experience and education to lists if they contain newlines
-        data['skills'] = data['skills'].split('\n') if data['skills'] else []
-        data['experience'] = data['experience'].split('\n') if data['experience'] else []
-        data['education'] = data['education'].split('\n') if data['education'] else []
-
-        # Generate HTML from template
-        html_content = render_template(f'resume_templates/{template_name}.html', **data)
-
-        # PDF options
-        options = {
-            'page-size': 'Letter',
-            'margin-top': '0.75in',
-            'margin-right': '0.75in',
-            'margin-bottom': '0.75in',
-            'margin-left': '0.75in',
-            'encoding': "UTF-8",
-            'no-outline': None,
-            'enable-local-file-access': None
-        }
-
+        # Process sections data if present
+        sections = {}
+        for key in request.form:
+            if key.startswith('section_'):
+                section_parts = key.split('_')
+                section_type = section_parts[1]
+                section_id = section_parts[2]
+                field = '_'.join(section_parts[3:])
+                
+                if section_type not in sections:
+                    sections[section_type] = []
+                
+                # Find or create section
+                section = None
+                for s in sections[section_type]:
+                    if s.get('id') == section_id:
+                        section = s
+                        break
+                
+                if not section:
+                    section = {'id': section_id}
+                    sections[section_type].append(section)
+                
+                section[field] = request.form[key]
+        
+        # Add processed sections to data
+        for section_type, section_items in sections.items():
+            data[section_type] = section_items
+        
+        # Get template
+        template = request.form.get('template', 'classic')
+        
+        # Render HTML
+        html = render_template(f'resume_templates/{template}.html', **data)
+        
+        # Create temporary file
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp:
+            temp_path = temp.name
+        
         # Generate PDF
-        pdf = pdfkit.from_string(html_content, False, options=options, configuration=config)
+        try:
+            # Try to use wkhtmltopdf with the configured options
+            pdfkit.from_string(html, temp_path, options=PDF_OPTIONS)
+        except Exception as e:
+            # Log the error
+            print(f"Error generating PDF with wkhtmltopdf: {str(e)}")
+            
+            # Try with minimal options as fallback
+            fallback_options = {
+                'page-size': 'Letter',
+                'quiet': None,
+                'enable-local-file-access': None,
+                'print-media-type': None
+            }
+            pdfkit.from_string(html, temp_path, options=fallback_options)
         
-        # Create response
+        # Return the PDF file
         return send_file(
-            BytesIO(pdf),
-            download_name=f"resume_{data['name'].lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+            temp_path,
+            as_attachment=True,
+            download_name=f"resume_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf",
             mimetype='application/pdf'
         )
-
+    
     except Exception as e:
+        # Log the error
+        print(f"Error generating resume: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/templates', methods=['GET'])
