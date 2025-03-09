@@ -1927,17 +1927,17 @@
                 <!-- Personal Information -->
                 <div class="form-group">
                     <label>Full Name <span class="required-field">*</span></label>
-                    <input type="text" id="fullName" required placeholder="e.g., John Doe" onkeyup="updatePreview()">
+                    <input type="text" id="fullName" required placeholder="e.g., John Doe">
                 </div>
 
                 <div class="form-group">
                     <label>Email <span class="required-field">*</span></label>
-                    <input type="email" id="email" required placeholder="e.g., john@example.com" onkeyup="updatePreview()">
+                    <input type="email" id="email" required placeholder="e.g., john@example.com">
                 </div>
 
                 <div class="form-group">
                     <label>Professional Summary</label>
-                    <textarea id="summary" placeholder="Brief overview of your professional background and goals" onkeyup="updatePreview()"></textarea>
+                    <textarea id="summary" placeholder="Brief overview of your professional background and goals"></textarea>
                 </div>
 
                 <!-- Dynamic Sections Container -->
@@ -1967,37 +1967,10 @@
                 </button>
             </form>
         </div>
-
-        <div class="preview-container">
-            <div id="resumePreview">
-                <h1 id="previewName">Your Name</h1>
-                <div class="contact-info" id="previewContact">
-                    your.email@example.com
-                </div>
-                
-            <div class="preview-section">
-                <h3>Professional Summary</h3>
-                    <div class="preview-content" id="previewSummary">
-                        Your professional summary will appear here...
-                </div>
-            </div>
-
-            <div class="preview-section">
-                <h3>Skills</h3>
-                    <div class="skills-preview-list" id="previewSkills">
-                </div>
-            </div>
-            </div>
-        </div>
     </div>
-
-    <button class="preview-toggle" id="previewToggle" title="Toggle Preview">
-        <i class="fas fa-eye"></i>
-    </button>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/drawer.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/preview.js') }}"></script>
     <script>
         // Remove duplicate event listeners to avoid conflicts
         document.addEventListener('DOMContentLoaded', function() {
@@ -2035,146 +2008,6 @@
                 });
             }
         });
-        
-        let currentTemplate = 'classic';
-
-        function selectTemplate(template) {
-            document.querySelectorAll('.template-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
-            currentTemplate = template;
-            
-            // Use the previewHandler if available, otherwise fall back to updatePreview
-            if (window.previewHandler) {
-                window.previewHandler.setTemplate(template);
-            } else {
-                updatePreview();
-            }
-        }
-
-        // Rename the sections variable used for DOM elements to avoid conflict
-        const sectionElements = document.querySelectorAll('section');
-
-        function setActiveLink() {
-            const currentScroll = window.scrollY;
-            sectionElements.forEach((section, index) => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionBottom = sectionTop + section.offsetHeight;
-                if (currentScroll >= sectionTop && currentScroll < sectionBottom) {
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    navLinks[index].classList.add('active');
-                }
-            });
-        }
-
-        function getTemplateStructure(template, data) {
-            let baseStructure = '';
-            switch(template) {
-                case 'modern':
-                    baseStructure = `
-                        <div class="modern-header bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-t-lg">
-                            <h1 id="previewName" class="text-3xl font-bold mb-2">${data.name}</h1>
-                            <div class="contact-info text-sm opacity-90">${data.email}</div>
-                        </div>
-                        <div class="modern-content p-8">
-            <div class="preview-section">
-                                <h3 class="text-xl font-semibold text-purple-600 mb-4">Professional Summary</h3>
-                                <div class="preview-content" id="previewSummary">${data.summary}</div>
-                </div>
-                            ${data.sectionsContent}
-            </div>
-                    `;
-                    break;
-                case 'minimal':
-                    baseStructure = `
-                        <div class="minimal-container p-8">
-                            <div class="minimal-header border-b-2 border-gray-200 pb-6 mb-6">
-                                <h1 id="previewName" class="text-3xl font-light mb-2">${data.name}</h1>
-                                <div class="contact-info text-gray-600">${data.email}</div>
-                            </div>
-                            <div class="minimal-content grid grid-cols-1 gap-8">
-            <div class="preview-section">
-                                    <h3 class="text-lg uppercase tracking-wider text-gray-700 mb-4">Professional Summary</h3>
-                                    <div class="preview-content text-gray-600" id="previewSummary">${data.summary}</div>
-                </div>
-                                ${data.sectionsContent}
-            </div>
-        </div>
-                    `;
-                    break;
-                case 'executive':
-                    baseStructure = `
-                        <div class="executive-container p-8 border-t-8 border-gray-800">
-                            <div class="executive-header mb-8">
-                                <h1 id="previewName" class="text-4xl font-serif mb-2">${data.name}</h1>
-                                <div class="contact-info text-gray-700 font-serif">${data.email}</div>
-    </div>
-                            <div class="executive-content">
-                                <div class="preview-section mb-8">
-                                    <h3 class="text-2xl font-serif text-gray-800 mb-4 border-b border-gray-300 pb-2">Professional Summary</h3>
-                                    <div class="preview-content font-serif text-gray-700 leading-relaxed" id="previewSummary">${data.summary}</div>
-                                </div>
-                                ${data.sectionsContent}
-                            </div>
-                        </div>
-                    `;
-                    break;
-                case 'impact':
-                    baseStructure = `
-                        <div class="impact-container">
-                            <div class="impact-header">
-                                <h1 class="impact-name">${data.name}</h1>
-                                <div class="impact-title">${data.email}</div>
-                            </div>
-                            <div class="impact-content">
-                                <div class="impact-section">
-                                    <h3 class="impact-section-title">Professional Summary</h3>
-                                    <div class="preview-content" id="previewSummary">${data.summary}</div>
-                                </div>
-                                ${data.sectionsContent.replace(/preview-section/g, 'impact-section')
-                                                     .replace(/<h3>/g, '<h3 class="impact-section-title">')
-                                                     .replace(/skills-preview-list/g, 'impact-skills')
-                                                     .replace(/skill-preview-item/g, 'impact-skill')}
-                            </div>
-                        </div>
-                    `;
-                    break;
-                default: // classic
-                    baseStructure = `
-                        <div class="classic-container p-8">
-                            <h1 id="previewName" class="text-2xl font-bold mb-2">${data.name}</h1>
-                            <div class="contact-info mb-6 text-gray-600" id="previewContact">${data.email}</div>
-                            <div class="preview-section mb-6">
-                                <h3 class="text-lg font-semibold border-b-2 border-gray-200 pb-2 mb-4">Professional Summary</h3>
-                                <div class="preview-content" id="previewSummary">${data.summary}</div>
-                            </div>
-                            ${data.sectionsContent}
-                        </div>
-                    `;
-            }
-            return baseStructure;
-        }
-
-        function updatePreview() {
-            const name = document.getElementById('fullName').value || 'Your Name';
-            const email = document.getElementById('email').value || 'your.email@example.com';
-            const summary = document.getElementById('summary').value || 'Your professional summary will appear here...';
-
-            // Get all dynamic sections content
-            const sectionsContent = dynamicSections.map(section => getSectionContent(section)).join('');
-
-            const previewContainer = document.querySelector('.preview-container');
-            const data = {
-                name,
-                email,
-                summary,
-                sectionsContent
-            };
-
-            previewContainer.innerHTML = getTemplateStructure(currentTemplate, data);
-            previewContainer.className = 'preview-container ' + currentTemplate;
-        }
 
         // Add these new functions for section management
         let dynamicSections = [];
@@ -2195,7 +2028,6 @@
             
             const sectionHtml = createSectionHtml(section);
             document.getElementById('dynamicSections').insertAdjacentHTML('beforeend', sectionHtml);
-            updatePreview();
         }
 
         function createSectionHtml(section) {
@@ -2204,35 +2036,35 @@
             switch(section.type) {
                 case 'experience':
                     inputHtml = `
-                        <input type="text" class="mb-2" placeholder="Company Name" onkeyup="updatePreview()">
-                        <input type="text" class="mb-2" placeholder="Position" onkeyup="updatePreview()">
-                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2020 - Present)" onkeyup="updatePreview()">
-                        <textarea placeholder="Description of your responsibilities and achievements" onkeyup="updatePreview()"></textarea>
+                        <input type="text" class="mb-2" placeholder="Company Name">
+                        <input type="text" class="mb-2" placeholder="Position">
+                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2020 - Present)">
+                        <textarea placeholder="Description of your responsibilities and achievements"></textarea>
                     `;
                     break;
                 case 'education':
                     inputHtml = `
-                        <input type="text" class="mb-2" placeholder="Institution Name" onkeyup="updatePreview()">
-                        <input type="text" class="mb-2" placeholder="Degree/Certificate" onkeyup="updatePreview()">
-                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2016 - 2020)" onkeyup="updatePreview()">
-                        <input type="text" placeholder="GPA/Achievements (optional)" onkeyup="updatePreview()">
+                        <input type="text" class="mb-2" placeholder="Institution Name">
+                        <input type="text" class="mb-2" placeholder="Degree/Certificate">
+                        <input type="text" class="mb-2" placeholder="Duration (e.g., 2016 - 2020)">
+                        <input type="text" placeholder="GPA/Achievements (optional)">
                     `;
                     break;
                 case 'skills':
                     inputHtml = `
-                        <input type="text" placeholder="Skills (comma-separated)" onkeyup="updatePreview()">
+                        <input type="text" placeholder="Skills (comma-separated)">
                     `;
                     break;
                 case 'projects':
                     inputHtml = `
-                        <input type="text" class="mb-2" placeholder="Project Name" onkeyup="updatePreview()">
-                        <input type="text" class="mb-2" placeholder="Technologies Used" onkeyup="updatePreview()">
-                        <textarea placeholder="Project Description" onkeyup="updatePreview()"></textarea>
+                        <input type="text" class="mb-2" placeholder="Project Name">
+                        <input type="text" class="mb-2" placeholder="Technologies Used">
+                        <textarea placeholder="Project Description"></textarea>
                     `;
                     break;
                 default:
                     inputHtml = `
-                        <textarea placeholder="Enter details for ${section.title}" onkeyup="updatePreview()"></textarea>
+                        <textarea placeholder="Enter details for ${section.title}"></textarea>
                     `;
             }
 
@@ -2256,54 +2088,7 @@
             setTimeout(() => {
                 sectionElement.remove();
                 dynamicSections = dynamicSections.filter(section => section.id !== sectionId);
-                updatePreview();
             }, 300);
-        }
-
-        function getSectionContent(section) {
-            const sectionElement = document.getElementById(section.id);
-            if (!sectionElement) return '';
-
-            let content = '';
-            switch(section.type) {
-                case 'experience':
-                    const company = sectionElement.querySelector('input:nth-child(1)').value;
-                    const position = sectionElement.querySelector('input:nth-child(2)').value;
-                    const duration = sectionElement.querySelector('input:nth-child(3)').value;
-                    const description = sectionElement.querySelector('textarea').value;
-                    
-                    content = `
-                        <div class="mb-4">
-                            <div class="font-bold">${company}</div>
-                            <div class="text-gray-600">${position}</div>
-                            <div class="text-sm text-gray-500">${duration}</div>
-                            <p class="mt-2">${description}</p>
-                        </div>
-                    `;
-                    break;
-                case 'skills':
-                    const skills = sectionElement.querySelector('input').value;
-                    const skillsArray = skills.split(',').map(skill => skill.trim());
-                    
-                    content = `
-                        <div class="skills-preview-list">
-                            ${skillsArray.map(skill => `
-                                <div class="skill-preview-item">${skill}</div>
-                            `).join('')}
-                        </div>
-                    `;
-                    break;
-                default:
-                    const text = sectionElement.querySelector('textarea').value;
-                    content = `<p>${text}</p>`;
-            }
-
-            return `
-                <div class="preview-section">
-                    <h3>${section.title}</h3>
-                    ${content}
-                </div>
-            `;
         }
 
         // Add this keyframe animation
@@ -2315,9 +2100,6 @@
             }
         `;
         document.head.appendChild(styleSheet);
-
-        // Initialize preview
-        document.addEventListener('DOMContentLoaded', updatePreview);
 
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -2442,36 +2224,6 @@
             }
 
             lastScrollY = currentScrollY;
-        });
-
-        // Update the preview toggle functionality
-        const previewToggle = document.getElementById('previewToggle');
-        const container = document.querySelector('.container');
-        let isPreviewVisible = true;
-
-        previewToggle.addEventListener('click', () => {
-            isPreviewVisible = !isPreviewVisible;
-            container.classList.toggle('preview-hidden');
-            
-            // Update the icon
-            const icon = previewToggle.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-            
-            // Update the tooltip
-            previewToggle.title = isPreviewVisible ? 'Hide Preview' : 'Show Preview';
-
-            // Force re-layout to ensure smooth transition
-            window.dispatchEvent(new Event('resize'));
-        });
-
-        // Initialize the preview toggle state
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial state
-            container.classList.remove('preview-hidden');
-            const icon = previewToggle.querySelector('i');
-            icon.className = 'fas fa-eye';
-            previewToggle.title = 'Hide Preview';
         });
     </script>
     {% include 'includes/footer.html' %}
