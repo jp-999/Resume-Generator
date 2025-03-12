@@ -1818,6 +1818,35 @@
             background: #f8f9fa;
             border-left: 6px solid #0d6efd;
         }
+
+        /* Add these styles to your existing styles */
+        const additionalStyles = `
+            .preview-container.modern .skill-preview-item {
+                @apply bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm;
+            }
+            
+            .preview-container.minimal .skill-preview-item {
+                @apply bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-sm;
+            }
+            
+            .preview-container.executive .skill-preview-item {
+                @apply bg-[#1a2639] text-[#c4a35a] px-3 py-1 border border-[#c4a35a] text-sm;
+            }
+            
+            .preview-container.impact .skill-preview-item {
+                @apply bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm;
+            }
+            
+            .preview-container.unique .skill-preview-item {
+                @apply bg-[#2c3e50] text-white px-3 py-1 rounded-sm text-sm;
+            }
+            
+            .preview-container.classic .skill-preview-item {
+                @apply bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-sm;
+            }
+        `;
+        
+        styleSheet.textContent += additionalStyles;
     </style>
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] dark:from-gray-900 dark:to-gray-800 min-h-screen pt-20">
@@ -1922,22 +1951,26 @@
     </div>
 
     <div class="container">
+        <!-- Split view container -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Form Container -->
+            <div class="lg:w-1/2">
         <div class="form-container">
             <form id="resumeForm">
                 <!-- Personal Information -->
                 <div class="form-group">
                     <label>Full Name <span class="required-field">*</span></label>
-                    <input type="text" id="fullName" required placeholder="e.g., John Doe">
+                    <input type="text" id="fullName" required placeholder="e.g., John Doe" onkeyup="updatePreview()">
                 </div>
 
                 <div class="form-group">
                     <label>Email <span class="required-field">*</span></label>
-                    <input type="email" id="email" required placeholder="e.g., john@example.com">
+                    <input type="email" id="email" required placeholder="e.g., john@example.com" onkeyup="updatePreview()">
                 </div>
 
                 <div class="form-group">
                     <label>Professional Summary</label>
-                    <textarea id="summary" placeholder="Brief overview of your professional background and goals"></textarea>
+                    <textarea id="summary" placeholder="Brief overview of your professional background and goals" onkeyup="updatePreview()"></textarea>
                 </div>
 
                 <!-- Dynamic Sections Container -->
@@ -1966,6 +1999,44 @@
                     <i class="fas fa-file-download ml-2"></i>
                 </button>
             </form>
+                </div>
+        </div>
+
+            <!-- Live Preview Section -->
+            <div class="lg:w-1/2 h-fit">
+                <div class="sticky top-4 bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
+                    <!-- Preview Header -->
+                    <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-lg font-semibold" id="previewTitle">Resume Preview</h2>
+                            <span class="text-sm text-gray-500">(Live)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <!-- Scale Controls -->
+                            <button onclick="adjustPreviewScale('decrease')" class="text-gray-600 hover:text-gray-800 p-2">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <span id="scaleIndicator" class="text-sm text-gray-600">100%</span>
+                            <button onclick="adjustPreviewScale('increase')" class="text-gray-600 hover:text-gray-800 p-2">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Container -->
+                    <div class="relative preview-wrapper" style="min-height: 600px; max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <!-- Loading overlay -->
+                        <div id="previewLoader" class="hidden absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
+                            <div class="animate-spin rounded-full h-8 w-8 border-2 border-purple-500 border-t-transparent"></div>
+                        </div>
+                        
+                        <!-- Preview content -->
+                        <div id="livePreview" class="preview-container p-8 mx-auto transition-all duration-300" style="max-width: 800px;">
+                            <!-- Template content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2224,6 +2295,243 @@
             }
 
             lastScrollY = currentScrollY;
+        });
+
+        // Preview functionality
+        let currentTemplate = 'classic';
+        let currentScale = 1;
+        const MIN_SCALE = 0.5;
+        const MAX_SCALE = 1.5;
+        const SCALE_STEP = 0.1;
+
+        function adjustPreviewScale(action) {
+            if (action === 'increase' && currentScale < MAX_SCALE) {
+                currentScale += SCALE_STEP;
+            } else if (action === 'decrease' && currentScale > MIN_SCALE) {
+                currentScale -= SCALE_STEP;
+            }
+            
+            const previewContainer = document.getElementById('livePreview');
+            previewContainer.style.transform = `scale(${currentScale})`;
+            document.getElementById('scaleIndicator').textContent = `${Math.round(currentScale * 100)}%`;
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('fullName').value || 'Your Name';
+            const email = document.getElementById('email').value || 'your.email@example.com';
+            const summary = document.getElementById('summary').value || 'Your professional summary will appear here...';
+
+            // Get all dynamic sections content
+            const sectionsContent = dynamicSections.map(section => getSectionContent(section)).join('');
+
+            const previewContainer = document.getElementById('livePreview');
+            const data = {
+                name,
+                email,
+                summary,
+                sectionsContent
+            };
+
+            previewContainer.innerHTML = getTemplateStructure(currentTemplate, data);
+            previewContainer.className = `preview-container ${currentTemplate}`;
+        }
+
+        function getSectionContent(section) {
+            const sectionElement = document.getElementById(section.id);
+            if (!sectionElement) return '';
+
+            let content = '';
+            switch(section.type) {
+                case 'experience':
+                    const company = sectionElement.querySelector('input:nth-child(1)').value || 'Company Name';
+                    const position = sectionElement.querySelector('input:nth-child(2)').value || 'Position';
+                    const duration = sectionElement.querySelector('input:nth-child(3)').value || 'Duration';
+                    const description = sectionElement.querySelector('textarea').value || 'Description';
+                    
+                    content = `
+                        <div class="mb-4">
+                            <div class="font-bold">${company}</div>
+                            <div class="text-gray-600">${position}</div>
+                            <div class="text-sm text-gray-500">${duration}</div>
+                            <p class="mt-2">${description}</p>
+                        </div>
+                    `;
+                    break;
+                case 'skills':
+                    const skills = sectionElement.querySelector('input').value || 'Skills';
+                    const skillsArray = skills.split(',').map(skill => skill.trim());
+                    
+                    content = `
+                        <div class="skills-preview-list">
+                            ${skillsArray.map(skill => `
+                                <div class="skill-preview-item">${skill}</div>
+                            `).join('')}
+                        </div>
+                    `;
+                    break;
+                default:
+                    const text = sectionElement.querySelector('textarea')?.value || 'Section content';
+                    content = `<p>${text}</p>`;
+            }
+
+            return `
+                <div class="preview-section">
+                    <h3 class="text-lg font-semibold mb-2">${section.title}</h3>
+                    ${content}
+                </div>
+            `;
+        }
+
+        function getTemplateStructure(template, data) {
+            switch(template) {
+                case 'modern':
+                    return `
+                        <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-8">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h1 class="text-4xl font-bold text-white mb-2">${data.name}</h1>
+                                    <div class="text-purple-100 text-lg">${data.email}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-8 bg-white">
+                            <div class="mb-8">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="w-8 h-1 bg-purple-600"></div>
+                                    <h3 class="text-xl font-semibold text-purple-600">Professional Summary</h3>
+                                </div>
+                                <p class="text-gray-600 leading-relaxed">${data.summary}</p>
+                            </div>
+                            ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'flex items-center gap-2 mb-4 text-xl font-semibold text-purple-600')
+                                                 .replace(/<h3 class="([^"]+)">/g, '<h3 class="$1"><div class="w-8 h-1 bg-purple-600 mr-2"></div>')}
+                        </div>
+                    `;
+
+                case 'minimal':
+                    return `
+                        <div class="p-12 bg-gray-50">
+                            <div class="max-w-3xl mx-auto">
+                                <div class="mb-12 text-center">
+                                    <h1 class="text-4xl font-light mb-3">${data.name}</h1>
+                                    <div class="text-gray-500 text-lg">${data.email}</div>
+                                </div>
+                                <div class="mb-10">
+                                    <h3 class="text-sm uppercase tracking-[0.2em] text-gray-400 mb-4">About</h3>
+                                    <p class="text-gray-600 leading-relaxed">${data.summary}</p>
+                                </div>
+                                ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'text-sm uppercase tracking-[0.2em] text-gray-400 mb-4')
+                                                     .replace(/font-bold/g, 'font-medium')
+                                                     .replace(/text-gray-600/g, 'text-gray-500')}
+                            </div>
+                        </div>
+                    `;
+
+                case 'executive':
+                    return `
+                        <div class="bg-[#1a2639] p-10">
+                            <div class="border-2 border-[#c4a35a] p-8">
+                                <div class="text-center mb-8">
+                                    <h1 class="text-4xl font-serif text-[#c4a35a] mb-3">${data.name}</h1>
+                                    <div class="text-gray-300 font-light">${data.email}</div>
+                                </div>
+                                <div class="mb-10">
+                                    <h3 class="text-xl font-serif text-[#c4a35a] mb-4 border-b border-[#c4a35a] pb-2">Professional Summary</h3>
+                                    <p class="text-gray-300 leading-relaxed">${data.summary}</p>
+                                </div>
+                                ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'text-xl font-serif text-[#c4a35a] mb-4 border-b border-[#c4a35a] pb-2')
+                                                     .replace(/text-gray-600/g, 'text-gray-300')
+                                                     .replace(/font-bold/g, 'font-serif text-[#c4a35a]')}
+                            </div>
+                        </div>
+                    `;
+
+                case 'impact':
+                    return `
+                        <div class="bg-gradient-to-br from-blue-600 to-purple-700">
+                            <div class="p-10">
+                                <div class="bg-white rounded-lg p-8 shadow-xl">
+                                    <div class="border-l-4 border-blue-600 pl-4 mb-8">
+                                        <h1 class="text-4xl font-bold text-gray-800 mb-2">${data.name}</h1>
+                                        <div class="text-blue-600 font-medium">${data.email}</div>
+                                    </div>
+                                    <div class="mb-8">
+                                        <h3 class="text-xl font-bold text-blue-600 mb-4">Professional Summary</h3>
+                                        <p class="text-gray-600 leading-relaxed">${data.summary}</p>
+                                    </div>
+                                    ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'text-xl font-bold text-blue-600 mb-4')
+                                                         .replace(/skill-preview-item/g, 'bg-blue-50 text-blue-600 px-3 py-1 rounded-full')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'unique':
+                    return `
+                        <div class="bg-[#f8f9fa]">
+                            <div class="grid grid-cols-3">
+                                <div class="col-span-1 bg-[#2c3e50] p-8 text-white min-h-screen">
+                                    <div class="mb-8 text-center">
+                                        <div class="w-24 h-24 rounded-full bg-[#3498db] mx-auto flex items-center justify-center text-2xl font-bold mb-4">
+                                            ${data.name.charAt(0)}
+                                        </div>
+                                        <h1 class="text-2xl font-bold mb-2">${data.name}</h1>
+                                        <div class="text-blue-200 text-sm">${data.email}</div>
+                                    </div>
+                                </div>
+                                <div class="col-span-2 p-8">
+                                    <div class="mb-8">
+                                        <h3 class="text-xl font-bold text-[#2c3e50] mb-4 border-b-2 border-[#3498db] pb-2">Professional Summary</h3>
+                                        <p class="text-gray-600 leading-relaxed">${data.summary}</p>
+                                    </div>
+                                    ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'text-xl font-bold text-[#2c3e50] mb-4 border-b-2 border-[#3498db] pb-2')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                default: // classic
+                    return `
+                        <div class="p-8">
+                            <div class="border-b-2 border-gray-800 pb-4 mb-6">
+                                <h1 class="text-3xl font-bold text-gray-800 mb-2">${data.name}</h1>
+                                <div class="text-gray-600">${data.email}</div>
+                            </div>
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-3 uppercase">Professional Summary</h3>
+                                <p class="text-gray-600 leading-relaxed">${data.summary}</p>
+                            </div>
+                            ${data.sectionsContent.replace(/text-lg font-semibold mb-2/g, 'text-lg font-semibold text-gray-800 mb-3 uppercase')}
+                        </div>
+                    `;
+            }
+        }
+
+        // Initialize preview when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePreview();
+        });
+
+        // Update addSection function to trigger preview update
+        const originalAddSection = addSection;
+        addSection = function() {
+            originalAddSection();
+            updatePreview();
+        };
+
+        // Update deleteSection function to trigger preview update
+        const originalDeleteSection = deleteSection;
+        deleteSection = function(sectionId) {
+            originalDeleteSection(sectionId);
+            setTimeout(updatePreview, 300); // Update after animation
+        };
+
+        // Add template selection from drawer
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'templateSelected') {
+                currentTemplate = event.data.template;
+                document.getElementById('previewTitle').textContent = `${event.data.templateName} Template`;
+                updatePreview();
+            }
         });
     </script>
     {% include 'includes/footer.html' %}
