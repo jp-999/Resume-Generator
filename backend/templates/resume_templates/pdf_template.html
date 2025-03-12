@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #1a1a1a;
+            border-bottom: 2px solid #8b5cf6;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .skill-item {
+            background-color: #f3f4f6;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .content {
+            color: #4a5568;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ resume_data.get('name', 'Your Name') }}</h1>
+        <div class="contact-info">
+            {% if resume_data.get('email') %}
+            <div>{{ resume_data.get('email') }}</div>
+            {% endif %}
+            {% if resume_data.get('phone') %}
+            <div>{{ resume_data.get('phone') }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if resume_data.get('summary') %}
+    <div class="section">
+        <h2 class="section-title">Professional Summary</h2>
+        <div class="content">{{ resume_data.get('summary') }}</div>
+    </div>
+    {% endif %}
+
+    {% if resume_data.get('skills') %}
+    <div class="section">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-list">
+            {% for skill in resume_data.get('skills').split(',') %}
+            <span class="skill-item">{{ skill.strip() }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resume_data.get('experience') %}
+    <div class="section">
+        <h2 class="section-title">Experience</h2>
+        <div class="content">{{ resume_data.get('experience') }}</div>
+    </div>
+    {% endif %}
+
+    {% if resume_data.get('education') %}
+    <div class="section">
+        <h2 class="section-title">Education</h2>
+        <div class="content">{{ resume_data.get('education') }}</div>
+    </div>
+    {% endif %}
+</body>
+</html> 

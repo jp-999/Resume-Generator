@@ -5,75 +5,121 @@
 {% block content %}
 <div class="flex flex-col lg:flex-row gap-8">
     <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-        <h1 class="text-3xl font-semibold text-center mb-8 text-gray-800 dark:text-white">
-            Resume Generator
-        </h1>
-        <form method="POST" action="/generate" class="space-y-6">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+                Resume Generator
+            </h1>
+            <p class="text-gray-600 dark:text-gray-300 mt-2">Fill in your details to create a professional resume</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('generate_resume') }}" class="space-y-8">
             <input type="hidden" name="template" value="{{ selected_template }}">
-            <div class="space-y-2">
-                <label for="name" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Full Name<span class="text-red-500">*</span>
-                </label>
-                <input type="text" id="name" name="name" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white">
+            <input type="hidden" name="action" value="preview">
+            
+            <!-- Personal Information Section -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Personal Information
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="name" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Full Name<span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="name" name="name" required
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="email" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Email<span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" required
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200">
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <label for="phone" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Phone<span class="text-red-500">*</span>
+                        </label>
+                        <input type="tel" id="phone" name="phone" required
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200">
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-2">
-                <label for="email" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Email<span class="text-red-500">*</span>
-                </label>
-                <input type="email" id="email" name="email" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white">
+            <!-- Professional Details Section -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Professional Details
+                </h2>
+
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="summary" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Professional Summary
+                        </label>
+                        <textarea id="summary" name="summary"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                            placeholder="Highlight your key professional achievements and career objectives..."></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="skills" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Skills
+                        </label>
+                        <textarea id="skills" name="skills"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                            placeholder="List your key technical and soft skills, separated by commas..."></textarea>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-2">
-                <label for="phone" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Phone<span class="text-red-500">*</span>
-                </label>
-                <input type="tel" id="phone" name="phone" required
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white">
+            <!-- Experience & Education Section -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                    Experience & Education
+                </h2>
+
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="experience" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Work Experience
+                        </label>
+                        <textarea id="experience" name="experience"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                            placeholder="Company Name - Position&#10;Duration: MM/YYYY - MM/YYYY&#10;• Key responsibilities and achievements..."></textarea>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="education" class="block text-gray-700 dark:text-gray-200 font-medium">
+                            Education
+                        </label>
+                        <textarea id="education" name="education"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                            placeholder="Degree Name&#10;Institution Name&#10;Graduation Year: YYYY&#10;• Notable achievements or relevant coursework..."></textarea>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-2">
-                <label for="summary" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Professional Summary
-                </label>
-                <textarea id="summary" name="summary"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white h-32"
-                    placeholder="e.g., Dedicated software engineer with 5+ years of experience..."></textarea>
+            <div class="flex gap-4">
+                <button type="submit" class="w-full py-4 px-6 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Generate Resume</span>
+                </button>
             </div>
-
-            <div class="space-y-2">
-                <label for="skills" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Skills
-                </label>
-                <textarea id="skills" name="skills"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white h-32"
-                    placeholder="e.g., Python, JavaScript, Project Management..."></textarea>
-            </div>
-
-            <div class="space-y-2">
-                <label for="experience" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Experience
-                </label>
-                <textarea id="experience" name="experience"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white h-32"
-                    placeholder="e.g., Software Engineer at Tech Corp (2020-Present)..."></textarea>
-            </div>
-
-            <div class="space-y-2">
-                <label for="education" class="block text-gray-700 dark:text-gray-200 font-medium">
-                    Education
-                </label>
-                <textarea id="education" name="education"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white h-32"
-                    placeholder="e.g., BS in Computer Science, University Name (2016-2020)..."></textarea>
-            </div>
-
-            <button type="submit"
-                class="w-full py-3 px-6 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 transition-all duration-300">
-                Generate Resume
-            </button>
         </form>
     </div>
 
@@ -87,9 +133,9 @@
                     Personal Information
                 </h3>
                 <div class="text-gray-600 dark:text-gray-300">
-                    <p class="font-semibold">{{ request.form['name'] | default('Your Name') }}</p>
-                    <p>{{ request.form['email'] | default('your.email@example.com') }}</p>
-                    <p>{{ request.form['phone'] | default('Your Phone') }}</p>
+                    <p id="preview-name" class="font-semibold">{{ request.form['name'] | default('Your Name') }}</p>
+                    <p id="preview-email">{{ request.form['email'] | default('your.email@example.com') }}</p>
+                    <p id="preview-phone">{{ request.form['phone'] | default('Your Phone Number') }}</p>
                 </div>
             </div>
 
@@ -97,7 +143,7 @@
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Professional Summary
                 </h3>
-                <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <p id="preview-summary" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
                     {{ request.form['summary'] | default('Your professional summary will appear here') }}
                 </p>
             </div>
@@ -106,16 +152,16 @@
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Skills
                 </h3>
-                <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <p id="preview-skills" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
                     {{ request.form['skills'] | default('Your skills will appear here') }}
                 </p>
             </div>
 
             <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Experience
+                    Work Experience
                 </h3>
-                <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <p id="preview-experience" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
                     {{ request.form['experience'] | default('Your experience will appear here') }}
                 </p>
             </div>
@@ -124,11 +170,70 @@
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Education
                 </h3>
-                <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <p id="preview-education" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
                     {{ request.form['education'] | default('Your education will appear here') }}
                 </p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Function to update preview text with fallback
+    function updatePreview(inputId, previewId, defaultText) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        
+        input.addEventListener('input', function() {
+            preview.textContent = this.value || defaultText;
+        });
+    }
+
+    // Initialize all preview updates
+    document.addEventListener('DOMContentLoaded', function() {
+        // Personal Information
+        updatePreview('name', 'preview-name', 'Your Name');
+        updatePreview('email', 'preview-email', 'your.email@example.com');
+        updatePreview('phone', 'preview-phone', 'Your Phone Number');
+        
+        // Professional Details
+        updatePreview('summary', 'preview-summary', 'Your professional summary will appear here');
+        updatePreview('skills', 'preview-skills', 'Your skills will appear here');
+        
+        // Experience & Education
+        updatePreview('experience', 'preview-experience', 'Your experience will appear here');
+        updatePreview('education', 'preview-education', 'Your education will appear here');
+
+        // Add animation class to preview sections when they update
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const previewId = 'preview-' + this.id;
+                const preview = document.getElementById(previewId);
+                if (preview) {
+                    preview.classList.add('preview-update');
+                    setTimeout(() => {
+                        preview.classList.remove('preview-update');
+                    }, 300);
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    @keyframes highlight {
+        0% { background-color: transparent; }
+        50% { background-color: rgba(147, 51, 234, 0.1); }
+        100% { background-color: transparent; }
+    }
+
+    .preview-update {
+        animation: highlight 0.3s ease-in-out;
+    }
+
+    .whitespace-pre-line {
+        white-space: pre-line;
+    }
+</style>
 {% endblock %} 
