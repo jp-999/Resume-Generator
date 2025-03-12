@@ -12,6 +12,50 @@
             <p class="text-gray-600 dark:text-gray-300 mt-2">Fill in your details to create a professional resume</p>
         </div>
 
+        <!-- Resume Parser Section -->
+        <div class="bg-purple-50 dark:bg-gray-700/50 p-6 rounded-xl mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Resume Parser
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">Upload your existing resume to automatically fill in the form below</p>
+            
+            <form id="resumeParserForm" class="space-y-4">
+                <div class="flex items-center justify-center w-full">
+                    <label for="resumeFile" class="flex flex-col items-center justify-center w-full h-32 border-2 border-purple-300 border-dashed rounded-lg cursor-pointer bg-white dark:bg-gray-700 hover:bg-purple-50 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                <span class="font-semibold">Click to upload</span> or drag and drop
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">PDF, DOCX, or TXT (MAX. 10MB)</p>
+                        </div>
+                        <input id="resumeFile" name="resume" type="file" class="hidden" accept=".pdf,.docx,.txt" />
+                    </label>
+                </div>
+                <div id="fileInfo" class="text-center text-sm text-gray-500 dark:text-gray-400 hidden">
+                    Selected file: <span id="fileName"></span>
+                    <button type="button" id="clearFile" class="ml-2 text-red-500 hover:text-red-600">
+                        <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="px-6 py-2 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Parse Resume</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <form method="POST" action="{{ url_for('generate_resume') }}" class="space-y-8">
             <input type="hidden" name="template" value="{{ selected_template }}">
             <input type="hidden" name="action" value="preview">
@@ -52,13 +96,13 @@
                 </div>
             </div>
 
-            <!-- Professional Details Section -->
+            <!-- Professional Summary Section -->
             <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    Professional Details
+                    Professional Summary
                 </h2>
 
                 <div class="space-y-6">
@@ -71,43 +115,189 @@
                             placeholder="Highlight your key professional achievements and career objectives..."></textarea>
                     </div>
 
-                    <div class="space-y-2">
-                        <label for="skills" class="block text-gray-700 dark:text-gray-200 font-medium">
-                            Skills
-                        </label>
-                        <textarea id="skills" name="skills"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
-                            placeholder="List your key technical and soft skills, separated by commas..."></textarea>
+                    <!-- Skills Section -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move" data-section="skills">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                                <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <span class="editable-heading" contenteditable="true">Skills</span>
+                                </h2>
+                            </div>
+                        </div>
+                        <div id="skills-container" class="space-y-4">
+                            <div class="skill-entry space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label class="block text-gray-700 dark:text-gray-200 font-medium">
+                                        Skills Entry
+                                    </label>
+                                    <button type="button" class="delete-entry text-red-500 hover:text-red-600 hidden">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <textarea name="skills[]"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                                    placeholder="List your key technical and soft skills, separated by commas..."></textarea>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEntry('skills')" class="mt-4 flex items-center text-purple-600 hover:text-purple-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add More Skills
+                        </button>
                     </div>
-                </div>
-            </div>
 
-            <!-- Experience & Education Section -->
-            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
-                    Experience & Education
-                </h2>
-
-                <div class="space-y-6">
-                    <div class="space-y-2">
-                        <label for="experience" class="block text-gray-700 dark:text-gray-200 font-medium">
-                            Work Experience
-                        </label>
-                        <textarea id="experience" name="experience"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
-                            placeholder="Company Name - Position&#10;Duration: MM/YYYY - MM/YYYY&#10;• Key responsibilities and achievements..."></textarea>
+                    <!-- Experience Section -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move" data-section="experience">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                                <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <span class="editable-heading" contenteditable="true">Work Experience</span>
+                                </h2>
+                            </div>
+                        </div>
+                        <div id="experience-container" class="space-y-6">
+                            <div class="experience-entry bg-white dark:bg-gray-600/50 p-4 rounded-lg space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <label class="block text-gray-700 dark:text-gray-200 font-medium">
+                                        Experience Entry
+                                    </label>
+                                    <button type="button" class="delete-entry text-red-500 hover:text-red-600 hidden">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Company Name
+                                        </label>
+                                        <input type="text" name="experience_company[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                                            placeholder="Enter company name">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Position
+                                        </label>
+                                        <input type="text" name="experience_position[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                                            placeholder="Enter your position">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Start Date
+                                        </label>
+                                        <input type="month" name="experience_start[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            End Date
+                                        </label>
+                                        <input type="month" name="experience_end[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                        Description
+                                    </label>
+                                    <textarea name="experience_description[]"
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                                        placeholder="• Key responsibilities and achievements..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEntry('experience')" class="mt-4 flex items-center text-purple-600 hover:text-purple-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add More Experience
+                        </button>
                     </div>
 
-                    <div class="space-y-2">
-                        <label for="education" class="block text-gray-700 dark:text-gray-200 font-medium">
-                            Education
-                        </label>
-                        <textarea id="education" name="education"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
-                            placeholder="Degree Name&#10;Institution Name&#10;Graduation Year: YYYY&#10;• Notable achievements or relevant coursework..."></textarea>
+                    <!-- Education Section -->
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move" data-section="education">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                                <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <span class="editable-heading" contenteditable="true">Education</span>
+                                </h2>
+                            </div>
+                        </div>
+                        <div id="education-container" class="space-y-6">
+                            <div class="education-entry bg-white dark:bg-gray-600/50 p-4 rounded-lg space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <label class="block text-gray-700 dark:text-gray-200 font-medium">
+                                        Education Entry
+                                    </label>
+                                    <button type="button" class="delete-entry text-red-500 hover:text-red-600 hidden">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Degree
+                                        </label>
+                                        <input type="text" name="education_degree[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                                            placeholder="Enter degree name">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Institution
+                                        </label>
+                                        <input type="text" name="education_institution[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                                            placeholder="Enter institution name">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            Start Date
+                                        </label>
+                                        <input type="month" name="education_start[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                            End Date
+                                        </label>
+                                        <input type="month" name="education_end[]" 
+                                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-gray-700 dark:text-gray-200 text-sm font-medium">
+                                        Additional Information
+                                    </label>
+                                    <textarea name="education_description[]"
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                                        placeholder="• Notable achievements or relevant coursework..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEntry('education')" class="mt-4 flex items-center text-purple-600 hover:text-purple-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add More Education
+                        </button>
                     </div>
                 </div>
             </div>
@@ -143,27 +333,27 @@
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Professional Summary
                 </h3>
-                <p id="preview-summary" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <div id="preview-summary" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                     {{ request.form['summary'] | default('Your professional summary will appear here') }}
-                </p>
+                </div>
             </div>
 
             <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Skills
                 </h3>
-                <p id="preview-skills" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <div id="preview-skills" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                     {{ request.form['skills'] | default('Your skills will appear here') }}
-                </p>
+                </div>
             </div>
 
             <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
                     Work Experience
                 </h3>
-                <p id="preview-experience" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                <div id="preview-experience" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                     {{ request.form['experience'] | default('Your experience will appear here') }}
-                </p>
+                </div>
             </div>
 
             <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -179,14 +369,334 @@
 </div>
 
 <script>
-    // Function to update preview text with fallback
+    // File input handling
+    const fileInput = document.getElementById('resumeFile');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const clearFile = document.getElementById('clearFile');
+    const dropZone = document.querySelector('label[for="resumeFile"]');
+
+    // Show selected file name
+    fileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            fileName.textContent = this.files[0].name;
+            fileInfo.classList.remove('hidden');
+            showNotification('File selected: ' + this.files[0].name, 'info');
+        }
+    });
+
+    // Clear selected file
+    clearFile.addEventListener('click', function() {
+        fileInput.value = '';
+        fileInfo.classList.add('hidden');
+        fileName.textContent = '';
+    });
+
+    // Drag and drop handling
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-purple-500', 'bg-purple-50');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-purple-500', 'bg-purple-50');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        
+        if (file) {
+            // Check file type
+            const fileType = file.name.split('.').pop().toLowerCase();
+            if (['pdf', 'docx', 'txt'].includes(fileType)) {
+                fileInput.files = dt.files;
+                fileName.textContent = file.name;
+                fileInfo.classList.remove('hidden');
+                showNotification('File dropped: ' + file.name, 'info');
+            } else {
+                showNotification('Invalid file type. Please use PDF, DOCX, or TXT files.', 'error');
+            }
+        }
+    }
+
+    // Handle resume parsing
+    document.getElementById('resumeParserForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const file = fileInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('resume', file);
+
+            try {
+                showNotification('Parsing resume...', 'info');
+                
+                const response = await fetch('/parse-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('Server response:', data); // Debug log
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Resume parsing failed');
+                }
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                if (!data || Object.keys(data).length === 0) {
+                    throw new Error('No data was extracted from the resume');
+                }
+                
+                fillFormWithParsedData(data);
+                showNotification('Resume parsed successfully!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Failed to parse resume. Please try again.', 'error');
+            }
+        } else {
+            showNotification('Please select a file to parse', 'error');
+        }
+    });
+
+    function fillFormWithParsedData(data) {
+        console.log('Parsed resume data:', data); // Debug log
+
+        try {
+            // Basic Information
+            if (data.name) {
+                document.getElementById('name').value = data.name;
+                updatePreviewText('preview-name', data.name);
+            }
+            if (data.email) {
+                document.getElementById('email').value = data.email;
+                updatePreviewText('preview-email', data.email);
+            }
+            if (data.phone) {
+                document.getElementById('phone').value = data.phone;
+                updatePreviewText('preview-phone', data.phone);
+            }
+
+            // Professional Summary
+            if (data.summary) {
+                document.getElementById('summary').value = data.summary;
+                updatePreviewText('preview-summary', data.summary);
+            }
+
+            // Skills
+            if (data.skills) {
+                const skillsContainer = document.getElementById('skills-container');
+                const skillsEntry = skillsContainer.querySelector('.skill-entry textarea');
+                if (Array.isArray(data.skills)) {
+                    skillsEntry.value = data.skills.join('\n• ');
+                } else if (typeof data.skills === 'string') {
+                    skillsEntry.value = data.skills;
+                }
+                updatePreviewText('preview-skills', skillsEntry.value);
+            }
+
+            // Work Experience
+            if (data.experience && Array.isArray(data.experience)) {
+                const experienceContainer = document.getElementById('experience-container');
+                // Clear existing entries except the first one
+                while (experienceContainer.children.length > 1) {
+                    experienceContainer.removeChild(experienceContainer.lastChild);
+                }
+                
+                data.experience.forEach((exp, index) => {
+                    if (index > 0) {
+                        addEntry('experience');
+                    }
+                    const entry = experienceContainer.children[index];
+                    if (entry) {
+                        entry.querySelector('[name="experience_company[]"]').value = exp.company || '';
+                        entry.querySelector('[name="experience_position[]"]').value = exp.position || '';
+                        entry.querySelector('[name="experience_start[]"]').value = exp.startDate || '';
+                        entry.querySelector('[name="experience_end[]"]').value = exp.endDate || '';
+                        entry.querySelector('[name="experience_description[]"]').value = exp.description || '';
+                    }
+                });
+                updateExperiencePreview();
+            }
+
+            // Education
+            if (data.education && Array.isArray(data.education)) {
+                const educationContainer = document.getElementById('education-container');
+                // Clear existing entries except the first one
+                while (educationContainer.children.length > 1) {
+                    educationContainer.removeChild(educationContainer.lastChild);
+                }
+                
+                data.education.forEach((edu, index) => {
+                    if (index > 0) {
+                        addEntry('education');
+                    }
+                    const entry = educationContainer.children[index];
+                    if (entry) {
+                        entry.querySelector('[name="education_degree[]"]').value = edu.degree || '';
+                        entry.querySelector('[name="education_institution[]"]').value = edu.institution || '';
+                        entry.querySelector('[name="education_start[]"]').value = edu.startDate || '';
+                        entry.querySelector('[name="education_end[]"]').value = edu.endDate || '';
+                        entry.querySelector('[name="education_description[]"]').value = edu.description || '';
+                    }
+                });
+                updateEducationPreview();
+            }
+
+            // Handle additional sections
+            const standardSections = ['name', 'email', 'phone', 'summary', 'skills', 'experience', 'education'];
+            const additionalSections = Object.keys(data).filter(key => !standardSections.includes(key));
+
+            additionalSections.forEach(sectionKey => {
+                if (data[sectionKey]) {
+                    createDynamicSection(sectionKey, 
+                        Array.isArray(data[sectionKey]) 
+                            ? data[sectionKey].join('\n• ')
+                            : data[sectionKey]
+                    );
+                }
+            });
+
+            showNotification('Resume data successfully loaded!', 'success');
+        } catch (error) {
+            console.error('Error filling form with parsed data:', error);
+            showNotification('Error processing resume data: ' + error.message, 'error');
+        }
+    }
+
+    function updatePreviewText(previewId, text) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            preview.innerHTML = text.replace(/\n/g, '<br>');
+            preview.classList.add('preview-update');
+            setTimeout(() => preview.classList.remove('preview-update'), 300);
+        }
+    }
+
+    function createDynamicSection(sectionKey, content) {
+        const formContainer = document.querySelector('form[method="POST"]');
+        const previewContainer = document.querySelector('.live-preview .space-y-6');
+        
+        // Create form section
+        const formSection = document.createElement('div');
+        formSection.className = 'bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move';
+        formSection.dataset.section = sectionKey;
+        
+        const sectionTitle = sectionKey.split('_').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+
+        formSection.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                        <span class="editable-heading" contenteditable="true">${sectionTitle}</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <textarea id="${sectionKey}" name="${sectionKey}"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                    placeholder="Enter ${sectionTitle.toLowerCase()} details...">${content}</textarea>
+            </div>
+        `;
+
+        // Create preview section
+        const previewSection = document.createElement('div');
+        previewSection.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
+        previewSection.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
+                ${sectionTitle}
+            </h3>
+            <p id="preview-${sectionKey}" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                ${content || `Your ${sectionTitle.toLowerCase()} will appear here`}
+            </p>
+        `;
+
+        // Insert sections
+        const lastSection = formContainer.querySelector('div.flex.gap-4');
+        formContainer.insertBefore(formSection, lastSection);
+        previewContainer.appendChild(previewSection);
+
+        // Initialize preview update for the new section
+        updatePreview(sectionKey, `preview-${sectionKey}`, `Your ${sectionTitle.toLowerCase()} will appear here`);
+
+        // Make the section draggable
+        if (typeof Sortable !== 'undefined') {
+            new Sortable(formSection.parentElement, {
+                handle: '.cursor-grab',
+                animation: 150
+            });
+        }
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
+            type === 'error' ? 'bg-red-500' :
+            type === 'success' ? 'bg-green-500' :
+            'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('opacity-0');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // Existing preview update code
     function updatePreview(inputId, previewId, defaultText) {
         const input = document.getElementById(inputId);
         const preview = document.getElementById(previewId);
         
-        input.addEventListener('input', function() {
-            preview.textContent = this.value || defaultText;
-        });
+        if (input && preview) {
+            input.addEventListener('input', function() {
+                let content = '';
+                
+                // Handle multiple entries if they exist
+                const container = input.closest(`#${inputId}-container`);
+                if (container) {
+                    const entries = container.querySelectorAll(`textarea[name="${inputId}[]"]`);
+                    content = Array.from(entries)
+                        .map(entry => entry.value)
+                        .filter(value => value.trim() !== '')
+                        .join('\n\n');
+                } else {
+                    content = this.value;
+                }
+                
+                preview.innerHTML = (content || defaultText)
+                    .replace(/\\n/g, '<br>')
+                    .replace(/\n/g, '<br>');
+            });
+        }
     }
 
     // Initialize all preview updates
@@ -219,6 +729,125 @@
             });
         });
     });
+
+    function addEntry(type) {
+        const container = document.getElementById(`${type}-container`);
+        const template = container.querySelector(`.${type}-entry`).cloneNode(true);
+        
+        // Clear all input values
+        template.querySelectorAll('input, textarea').forEach(input => {
+            input.value = '';
+        });
+        
+        // Show delete button for all entries except the first one
+        const deleteButtons = container.querySelectorAll('.delete-entry');
+        deleteButtons.forEach(button => button.classList.remove('hidden'));
+        
+        // Add delete functionality
+        template.querySelector('.delete-entry').addEventListener('click', function() {
+            if (container.children.length > 1) {
+                template.remove();
+                if (type === 'experience') {
+                    updateExperiencePreview();
+                } else if (type === 'education') {
+                    updateEducationPreview();
+                }
+            }
+        });
+        
+        // Add input event listeners for the new entry
+        template.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', () => {
+                if (type === 'experience') {
+                    updateExperiencePreview();
+                } else if (type === 'education') {
+                    updateEducationPreview();
+                }
+            });
+        });
+        
+        // Add the new entry to the container
+        container.appendChild(template);
+    }
+
+    // Initialize delete buttons for existing entries
+    document.addEventListener('DOMContentLoaded', function() {
+        ['skills', 'experience', 'education'].forEach(type => {
+            const container = document.getElementById(`${type}-container`);
+            const deleteButtons = container.querySelectorAll('.delete-entry');
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const entry = button.closest(`.${type}-entry`);
+                    if (container.children.length > 1) {
+                        entry.remove();
+                        updatePreview();
+                    }
+                });
+            });
+        });
+    });
+
+    // Update the preview update code to handle the new structure
+    function updateExperiencePreview() {
+        const container = document.getElementById('experience-container');
+        const preview = document.getElementById('preview-experience');
+        let content = '';
+
+        container.querySelectorAll('.experience-entry').forEach(entry => {
+            const company = entry.querySelector('[name="experience_company[]"]').value;
+            const position = entry.querySelector('[name="experience_position[]"]').value;
+            const startDate = entry.querySelector('[name="experience_start[]"]').value;
+            const endDate = entry.querySelector('[name="experience_end[]"]').value;
+            const description = entry.querySelector('[name="experience_description[]"]').value;
+
+            if (company || position || description) {
+                content += `${company ? company + ' - ' : ''}${position || ''}\n`;
+                content += `${startDate ? startDate : ''} ${endDate ? '- ' + endDate : ''}\n`;
+                content += `${description}\n\n`;
+            }
+        });
+
+        preview.innerHTML = content || 'Your experience will appear here';
+    }
+
+    function updateEducationPreview() {
+        const container = document.getElementById('education-container');
+        const preview = document.getElementById('preview-education');
+        let content = '';
+
+        container.querySelectorAll('.education-entry').forEach(entry => {
+            const degree = entry.querySelector('[name="education_degree[]"]').value;
+            const institution = entry.querySelector('[name="education_institution[]"]').value;
+            const startDate = entry.querySelector('[name="education_start[]"]').value;
+            const endDate = entry.querySelector('[name="education_end[]"]').value;
+            const description = entry.querySelector('[name="education_description[]"]').value;
+
+            if (degree || institution || description) {
+                content += `${degree ? degree + '\n' : ''}`;
+                content += `${institution ? institution + '\n' : ''}`;
+                content += `${startDate ? startDate : ''} ${endDate ? '- ' + endDate : ''}\n`;
+                content += `${description}\n\n`;
+            }
+        });
+
+        preview.innerHTML = content || 'Your education will appear here';
+    }
+
+    // Add event listeners for the new fields
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... existing initialization code ...
+
+        // Add input event listeners for experience fields
+        document.querySelectorAll('#experience-container input, #experience-container textarea').forEach(input => {
+            input.addEventListener('input', updateExperiencePreview);
+        });
+
+        // Add input event listeners for education fields
+        document.querySelectorAll('#education-container input, #education-container textarea').forEach(input => {
+            input.addEventListener('input', updateEducationPreview);
+        });
+    });
 </script>
 
 <style>
@@ -234,6 +863,11 @@
 
     .whitespace-pre-line {
         white-space: pre-line;
+    }
+
+    /* Add smooth transition for drag and drop */
+    label[for="resumeFile"] {
+        transition: all 0.3s ease-in-out;
     }
 </style>
 {% endblock %} 

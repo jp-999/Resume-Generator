@@ -7,6 +7,9 @@ from datetime import datetime
 import platform
 from io import BytesIO
 import tempfile
+import PyPDF2
+from docx import Document
+import re
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
@@ -186,6 +189,189 @@ def generate_resume():
 @app.route('/api/templates', methods=['GET'])
 def get_templates():
     return jsonify(TEMPLATES)
+
+@app.route('/parse-resume', methods=['POST'])
+def parse_resume():
+    try:
+        if 'resume' not in request.files:
+            return jsonify({'error': 'No file uploaded'}), 400
+            
+        file = request.files['resume']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+            
+        # Get file extension
+        file_ext = file.filename.rsplit('.', 1)[1].lower()
+        
+        if file_ext not in ['pdf', 'docx', 'txt']:
+            return jsonify({'error': 'Invalid file format'}), 400
+            
+        # Extract text based on file type
+        text = ''
+        if file_ext == 'pdf':
+            pdf_reader = PyPDF2.PdfReader(file)
+            for page in pdf_reader.pages:
+                text += page.extract_text()
+        elif file_ext == 'docx':
+            doc = Document(file)
+            for para in doc.paragraphs:
+                text += para.text + '\n'
+        else:  # txt file
+            text = file.read().decode('utf-8')
+            
+        # Parse the extracted text
+        parsed_data = parse_resume_text(text)
+        return jsonify(parsed_data)
+        
+    except Exception as e:
+        print(f"Resume parsing error: {str(e)}")
+        return jsonify({'error': 'Failed to parse resume'}), 500
+
+def parse_resume_text(text):
+    # Initialize parsed data
+    parsed_data = {
+        'name': '',
+        'email': '',
+        'phone': '',
+        'summary': '',
+        'skills': [],
+        'experience': '',
+        'education': ''
+    }
+    
+    # Split text into lines and sections
+    lines = text.split('\n')
+    sections = []
+    current_section = []
+    current_section_title = ''
+    
+    # Common section headers
+    section_headers = {
+        'summary': ['summary', 'professional summary', 'profile', 'objective', 'about'],
+        'experience': ['experience', 'work experience', 'employment history', 'work history', 'professional experience'],
+        'education': ['education', 'educational background', 'academic background', 'academic qualifications'],
+        'skills': ['skills', 'technical skills', 'core competencies', 'expertise', 'qualifications']
+    }
+    
+    # Extract email
+    email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    email_matches = re.findall(email_pattern, text)
+    if email_matches:
+        parsed_data['email'] = email_matches[0]
+    
+    # Extract phone
+    phone_patterns = [
+        r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',  # Standard US format
+        r'\+\d{1,3}[-\s]?\d{3}[-\s]?\d{3}[-\s]?\d{4}\b',  # International format
+        r'\(\d{3}\)\s*\d{3}[-.]?\d{4}\b'  # (123) 456-7890 format
+    ]
+    for pattern in phone_patterns:
+        phone_match = re.search(pattern, text)
+        if phone_match:
+            parsed_data['phone'] = phone_match.group()
+            break
+    
+    # Extract name (usually first line that's not email/phone/section header)
+    for line in lines[:5]:  # Check first 5 lines
+        line = line.strip()
+        if line and not re.search(email_pattern, line) and not any(pattern in line.lower() for pattern in sum(section_headers.values(), [])):
+            if not re.search(r'\d', line):  # Avoid lines with numbers (likely phone)
+                parsed_data['name'] = line
+                break
+    
+    # Process text into sections
+    current_section = []
+    current_type = None
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # Check if line is a section header
+        line_lower = line.lower()
+        section_type = None
+        
+        for key, headers in section_headers.items():
+            if any(header in line_lower for header in headers):
+                section_type = key
+                break
+        
+        if section_type:
+            # Save previous section
+            if current_type and current_section:
+                if current_type == 'skills':
+                    # Process skills section
+                    skills_text = ' '.join(current_section)
+                    parsed_data['skills'] = extract_skills(skills_text)
+                else:
+                    parsed_data[current_type] = '\\n'.join(current_section)
+            
+            current_type = section_type
+            current_section = []
+        else:
+            current_section.append(line)
+    
+    # Save last section
+    if current_type and current_section:
+        if current_type == 'skills':
+            skills_text = ' '.join(current_section)
+            parsed_data['skills'] = extract_skills(skills_text)
+        else:
+            parsed_data[current_type] = '\\n'.join(current_section)
+    
+    # If no explicit summary section found, try to extract it from the beginning
+    if not parsed_data['summary']:
+        summary_lines = []
+        for line in lines:
+            line = line.strip()
+            if line and not any(header in line.lower() for header in sum(section_headers.values(), [])):
+                if not re.search(email_pattern, line) and not re.search(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b', line):
+                    summary_lines.append(line)
+            if len(summary_lines) >= 3:  # Limit to first few lines
+                break
+        if summary_lines:
+            parsed_data['summary'] = '\\n'.join(summary_lines)
+    
+    # If no skills found in skills section, try to extract from whole text
+    if not parsed_data['skills']:
+        parsed_data['skills'] = extract_skills(text)
+    
+    return parsed_data
+
+def extract_skills(text):
+    # Common technical skills and keywords
+    common_skills = {
+        'programming': ['python', 'java', 'javascript', 'c++', 'ruby', 'php', 'swift', 'kotlin', 'golang', 'rust',
+                       'html', 'css', 'sql', 'nosql', 'react', 'angular', 'vue', 'node.js', 'django', 'flask',
+                       'spring', 'express', 'typescript'],
+        'tools': ['git', 'docker', 'kubernetes', 'jenkins', 'aws', 'azure', 'gcp', 'terraform', 'ansible',
+                 'jira', 'confluence', 'bitbucket', 'github', 'gitlab', 'maven', 'gradle', 'npm', 'yarn'],
+        'databases': ['mysql', 'postgresql', 'mongodb', 'redis', 'elasticsearch', 'oracle', 'sql server',
+                     'dynamodb', 'cassandra', 'firebase'],
+        'methodologies': ['agile', 'scrum', 'kanban', 'waterfall', 'tdd', 'bdd', 'ci/cd', 'devops', 'lean'],
+        'soft_skills': ['leadership', 'communication', 'teamwork', 'problem solving', 'analytical',
+                       'project management', 'time management', 'critical thinking', 'collaboration']
+    }
+    
+    found_skills = set()
+    text_lower = text.lower()
+    
+    # Extract skills from each category
+    for category, skills in common_skills.items():
+        for skill in skills:
+            if re.search(r'\b' + re.escape(skill) + r'\b', text_lower):
+                found_skills.add(skill)
+    
+    # Also look for comma or bullet-separated lists that might be skills
+    skill_lists = re.findall(r'(?:^|\n)(?:[•\-\*]\s*|\w+:\s*)([^.\n]+)(?:\n|$)', text)
+    for skill_list in skill_lists:
+        skills = [s.strip().lower() for s in re.split(r'[,•\-\*]', skill_list)]
+        for skill in skills:
+            if len(skill) > 2 and not re.search(r'\d', skill):  # Avoid numbers and very short terms
+                found_skills.add(skill)
+    
+    return sorted(list(found_skills))
 
 @app.errorhandler(404)
 def page_not_found(e):
