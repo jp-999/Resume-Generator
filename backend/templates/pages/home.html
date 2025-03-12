@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Generator - Home{% endblock %}
+
+{% block hero %}
+<section class="hero-section" data-aos="fade-down">
+    <h1 class="text-5xl font-bold mb-6">Create Your Professional Resume</h1>
+    <p class="text-xl mb-8 max-w-2xl mx-auto">Stand out from the competition with a professionally crafted resume. Choose a template and start building your resume today!</p>
+    <div class="flex justify-center gap-4">
+        <a href="/generator" class="bg-purple-600 text-white px-8 py-3 rounded-full hover:bg-purple-700 transition-all duration-300 transform hover:scale-105">
+            Create Your Resume
+        </a>
+        <a href="/templates" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white hover:text-purple-600 transition-all duration-300">
+            View Templates
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="feature-card" data-aos="fade-right">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-magic text-purple-600 mr-2"></i>
+                Easy to Use
+            </h3>
+            <p class="text-gray-600">
+                Our intuitive resume builder guides you through each step of the creation process.
+            </p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-left">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-file-alt text-purple-600 mr-2"></i>
+                Professional Templates
+            </h3>
+            <p class="text-gray-600">
+                Choose from a variety of professionally designed templates to suit your style.
+            </p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-right" data-aos-delay="200">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-check-circle text-purple-600 mr-2"></i>
+                ATS Optimized
+            </h3>
+            <p class="text-gray-600">
+                Ensure your resume is ATS-friendly to pass through automated screening systems.
+            </p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-left" data-aos-delay="200">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-cloud-download-alt text-purple-600 mr-2"></i>
+                Download & Share
+            </h3>
+            <p class="text-gray-600">
+                Download your resume in PDF format and easily share it with potential employers.
+            </p>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">What Our Users Say</h2>
+    <div class="testimonials-section">
+        <div class="testimonial-card" data-aos="fade-up">
+            <p class="text-gray-600 mb-4">"I was able to create a professional-looking resume in minutes! This tool is a game-changer."</p>
+            <p class="font-semibold">- John Doe, Software Engineer</p>
+        </div>
+
+        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+            <p class="text-gray-600 mb-4">"The templates are modern and easy to customize. I highly recommend this resume generator!"</p>
+            <p class="font-semibold">- Jane Smith, Marketing Manager</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 8rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        margin-bottom: 4rem;
+    }
+
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: #6c5ce7;
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .feature-card:hover::before {
+        transform: scaleY(1);
+    }
+
+    .testimonials-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .testimonial-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .testimonials-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+</script>
+{% endblock %} 

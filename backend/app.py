@@ -74,8 +74,13 @@ PDF_OPTIONS = {
 
 @app.route('/')
 def index():
+    # Render the new home page
+    return render_template('pages/home.html', active_page='home', templates=TEMPLATES)
+
+@app.route('/generator')
+def generator():
     template = request.args.get('template', 'modern')
-    return render_template('index.html', active_page='home', selected_template=template, templates=TEMPLATES)
+    return render_template('pages/generator.html', active_page='generator', selected_template=template, templates=TEMPLATES)
 
 @app.route('/templates')
 def templates():
