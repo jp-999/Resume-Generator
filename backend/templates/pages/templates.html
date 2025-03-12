@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Resume Templates - Resume Generator{% endblock %}
+{% block title %}Resume Templates{% endblock %}
 
 {% block hero %}
 <div class="hero-section">
@@ -12,54 +12,313 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-container">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Classic Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/classic-template.png') }}" alt="Classic Template" class="object-cover w-full h-full">
+<div class="templates-page">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Split view container -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Templates Grid -->
+            <div class="lg:w-1/2">
+                <h2 class="text-2xl font-bold mb-6">Choose Your Template</h2>
+                <div class="grid grid-cols-2 gap-4 templates-grid">
+                    <!-- Classic Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="classic"
+                         onclick="handleTemplateSelect(this, 'classic')">
+                        <div class="h-40 bg-white flex items-center justify-center relative overflow-hidden">
+                            <!-- Classic Preview Design -->
+                            <div class="absolute inset-0 p-3">
+                                <div class="border-b-2 border-gray-800 pb-2 mb-3">
+                                    <div class="text-lg font-bold text-gray-800">JOHN DOE</div>
+                                    <div class="text-sm text-gray-600">Senior Developer</div>
+                                </div>
+                                <div class="text-xs">
+                                    <div class="font-semibold mb-1 text-gray-800">PROFESSIONAL SUMMARY</div>
+                                    <div class="h-1 w-12 bg-gray-800 mb-2"></div>
+                                    <div class="text-gray-600 leading-tight">
+                                        Experienced professional with expertise in...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Classic</h3>
+                            <p class="text-sm text-gray-600">Traditional and professional</p>
+                        </div>
+                    </div>
+
+                    <!-- Modern Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="modern"
+                         onclick="handleTemplateSelect(this, 'modern')">
+                        <div class="h-40 relative overflow-hidden">
+                            <!-- Modern Preview Design -->
+                            <div class="absolute inset-0">
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-500"></div>
+                                <div class="absolute inset-0 bg-white" style="clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);">
+                                    <div class="p-3 pl-12">
+                                        <div class="text-sm font-bold text-gray-800">Experience</div>
+                                        <div class="mt-2 space-y-1">
+                                            <div class="flex items-center">
+                                                <div class="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
+                                                <div class="text-[10px] text-gray-600">Senior Developer</div>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <div class="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                                                <div class="text-[10px] text-gray-600">Tech Lead</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-3 left-3 text-white">
+                                    <div class="text-lg font-bold">JOHN</div>
+                                    <div class="text-sm">DOE</div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Modern</h3>
+                            <p class="text-sm text-gray-600">Contemporary and creative</p>
+                        </div>
+                    </div>
+
+                    <!-- Minimal Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="minimal"
+                         onclick="handleTemplateSelect(this, 'minimal')">
+                        <div class="h-40 relative overflow-hidden">
+                            <!-- Minimal Preview Design -->
+                            <div class="absolute inset-0 p-4 bg-gray-50">
+                                <div class="mb-4">
+                                    <div class="text-xl font-light text-gray-800">John Doe</div>
+                                    <div class="text-xs text-gray-500 tracking-wider">SENIOR DEVELOPER</div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-1/3">
+                                        <div class="text-[10px] font-medium text-gray-400 mb-1">SKILLS</div>
+                                        <div class="space-y-1">
+                                            <div class="h-1 w-full bg-gray-200">
+                                                <div class="h-full w-3/4 bg-gray-400"></div>
+                                            </div>
+                                            <div class="h-1 w-full bg-gray-200">
+                                                <div class="h-full w-1/2 bg-gray-400"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-2/3 border-l border-gray-200 pl-4">
+                                        <div class="text-[10px] font-medium text-gray-400 mb-1">EXPERIENCE</div>
+                                        <div class="text-[8px] text-gray-600 leading-tight">
+                                            Led development teams and implemented...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Minimal</h3>
+                            <p class="text-sm text-gray-600">Clean and minimalist</p>
+                        </div>
+                    </div>
+
+                    <!-- Executive Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="executive"
+                         onclick="handleTemplateSelect(this, 'executive')">
+                        <div class="h-40 relative overflow-hidden">
+                            <!-- Executive Preview Design -->
+                            <div class="absolute inset-0">
+                                <div class="absolute inset-0 bg-[#1a2639]"></div>
+                                <div class="absolute inset-0">
+                                    <div class="h-1/3 bg-gradient-to-r from-[#c4a35a] to-[#f0e6d0]"></div>
+                                    <div class="absolute inset-x-0 top-10 text-center">
+                                        <div class="text-lg font-serif text-white">John Doe</div>
+                                        <div class="text-[10px] tracking-widest text-[#c4a35a]">EXECUTIVE DIRECTOR</div>
+                                    </div>
+                                    <div class="absolute inset-x-0 bottom-0 h-1/2 p-3">
+                                        <div class="flex justify-between text-[8px] text-[#c4a35a] mb-1">
+                                            <span>EXPERIENCE</span>
+                                            <span>ACHIEVEMENTS</span>
+                                        </div>
+                                        <div class="h-px w-full bg-[#c4a35a] opacity-30 mb-2"></div>
+                                        <div class="text-[8px] text-gray-400 leading-tight">
+                                            Strategic leadership and executive...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Executive</h3>
+                            <p class="text-sm text-gray-600">Elegant and sophisticated</p>
+                        </div>
+                    </div>
+
+                    <!-- Impact Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="impact"
+                         onclick="handleTemplateSelect(this, 'impact')">
+                        <div class="h-40 relative overflow-hidden">
+                            <!-- Impact Preview Design -->
+                            <div class="absolute inset-0">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-700"></div>
+                                <div class="absolute inset-0">
+                                    <div class="absolute top-4 left-4">
+                                        <div class="text-2xl font-bold text-white tracking-tight">JOHN</div>
+                                        <div class="text-sm font-light text-blue-200">DOE</div>
+                                    </div>
+                                    <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-white p-3">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <div class="w-8 h-1 bg-blue-600"></div>
+                                            <div class="text-[10px] font-semibold text-gray-800">EXPERTISE</div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-1">
+                                            <div class="text-[8px] text-gray-600 bg-gray-100 px-2 py-1 rounded">Development</div>
+                                            <div class="text-[8px] text-gray-600 bg-gray-100 px-2 py-1 rounded">Leadership</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Impact</h3>
+                            <p class="text-sm text-gray-600">Bold and dynamic design</p>
+                        </div>
+                    </div>
+
+                    <!-- Unique Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="unique"
+                         onclick="handleTemplateSelect(this, 'unique')">
+                        <div class="h-40 relative overflow-hidden">
+                            <!-- Diagonal split background -->
+                            <div class="absolute inset-0">
+                                <div class="absolute inset-0 bg-gray-100"></div>
+                                <div class="absolute inset-0 w-1/3 bg-[#2c3e50]" style="clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);"></div>
+                            </div>
+                            
+                            <!-- Template preview content -->
+                            <div class="relative h-full flex">
+                                <!-- Left sidebar -->
+                                <div class="w-1/3 p-3 text-white">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-12 h-12 rounded-full bg-[#3498db] flex items-center justify-center text-white font-bold mb-2">U</div>
+                                        <div class="text-xs font-semibold">NAME</div>
+                                        <div class="text-[8px] uppercase mt-1">Position</div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="text-[8px] font-semibold uppercase mb-1">Skills</div>
+                                        <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mb-2">
+                                            <div class="w-3/4 h-full bg-[#3498db] rounded-full"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right content -->
+                                <div class="w-2/3 p-3">
+                                    <div class="text-[10px] font-semibold text-[#2c3e50] uppercase mb-1">Experience</div>
+                                    <div class="w-10 h-0.5 bg-[#3498db] mb-2"></div>
+                                    <div class="pl-3 border-l border-[#3498db] border-opacity-30">
+                                        <div class="relative">
+                                            <div class="absolute left-[-13px] top-0 w-2 h-2 rounded-full bg-[#3498db] border-2 border-white"></div>
+                                            <div class="text-[8px] font-semibold">Company Name</div>
+                                            <div class="text-[7px] text-[#3498db]">Position Title</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Unique</h3>
+                            <p class="text-sm text-gray-600">Distinctive split-layout design</p>
+                        </div>
+                    </div>
+
+                    <!-- Coming Soon Template -->
+                    <div class="template-card bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer" 
+                         data-template="coming-soon"
+                         onclick="handleTemplateSelect(this, 'coming-soon')">
+                        <div class="h-40 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                            <div class="text-gray-400 text-center">
+                                <i class="fas fa-file-alt text-5xl mb-4"></i>
+                                <p>Preview not available</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+                                <span class="preview-badge">Coming Soon</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold">Creative</h3>
+                            <p class="text-sm text-gray-600">An artistic design for creative professionals</p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Classic Template</h3>
-                <p class="text-gray-600 mb-4">A timeless design suitable for all industries. Clean layout with traditional formatting.</p>
-                <a href="/?template=classic" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
+            </div>
+
+            <!-- Live Preview Section -->
+            <div class="lg:w-1/2 h-fit">
+                <div class="sticky top-4 bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
+                    <!-- Preview Header -->
+                    <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-lg font-semibold" id="previewTitle">Classic Template</h2>
+                            <span class="text-sm text-gray-500">(Preview)</span>
+                        </div>
+                        <button id="useTemplateBtn" 
+                                onclick="useSelectedTemplate()" 
+                                class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2">
+                            <span>Use Template</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Preview Scale Controls -->
+                    <div class="px-4 py-2 bg-gray-50 border-b flex justify-end items-center space-x-4">
+                        <button onclick="adjustPreviewScale('decrease')" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <span id="scaleIndicator" class="text-sm text-gray-600">100%</span>
+                        <button onclick="adjustPreviewScale('increase')" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+
+                    <!-- Preview Container -->
+                    <div class="relative preview-wrapper" style="min-height: 600px; max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <!-- Loading overlay -->
+                        <div id="previewLoader" class="hidden absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
+                            <div class="animate-spin rounded-full h-8 w-8 border-2 border-purple-500 border-t-transparent"></div>
+                        </div>
+                        
+                        <!-- Preview content -->
+                        <div id="livePreview" class="preview-container p-8 mx-auto transition-all duration-300" style="max-width: 800px;">
+                            <!-- Template content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Modern Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/modern-template.png') }}" alt="Modern Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Modern Template</h3>
-                <p class="text-gray-600 mb-4">Contemporary design with a creative touch. Perfect for tech and creative industries.</p>
-                <a href="/?template=modern" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
-            </div>
-        </div>
-
-        <!-- Minimal Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/minimal-template.png') }}" alt="Minimal Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Minimal Template</h3>
-                <p class="text-gray-600 mb-4">Clean and minimalist design focusing on essential information.</p>
-                <a href="/?template=minimal" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
-            </div>
-        </div>
-
-        <!-- Executive Template -->
-        <div class="template-card">
-            <div class="template-preview bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <div class="aspect-w-8.5 aspect-h-11 bg-gray-50 rounded-lg mb-4 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/executive-template.png') }}" alt="Executive Template" class="object-cover w-full h-full">
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Executive Template</h3>
-                <p class="text-gray-600 mb-4">Professional design ideal for senior positions and corporate roles.</p>
-                <a href="/?template=executive" class="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300">Use Template</a>
-            </div>
+        
+        <div class="mt-16 text-center">
+            <h2 class="text-2xl font-bold mb-4">Can't find what you're looking for?</h2>
+            <p class="text-gray-600 mb-6 max-w-2xl mx-auto">We're constantly adding new templates to our collection. If you have a specific design in mind, let us know!</p>
+            <a href="/contact" class="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">Request a Template</a>
         </div>
     </div>
 </div>
@@ -67,36 +326,636 @@
 
 {% block additional_styles %}
 <style>
-    .template-card {
-        animation: fadeInUp 0.5s ease-out;
-        animation-fill-mode: both;
+    /* Scope all preview styles to templates page */
+    .templates-page {
+        /* Base font settings */
+        --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-secondary: 'DM Sans', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
     }
 
-    .template-card:nth-child(2) {
-        animation-delay: 0.1s;
+    /* Light mode colors */
+    .templates-page {
+        --text-primary: #1a1a1a;
+        --text-secondary: #4b5563;
+        --text-tertiary: #6b7280;
+        --bg-primary: #ffffff;
+        --bg-secondary: #f3f4f6;
+        --accent-primary: #8b5cf6;
+        --accent-secondary: #7c3aed;
     }
 
-    .template-card:nth-child(3) {
-        animation-delay: 0.2s;
+    /* Dark mode colors */
+    @media (prefers-color-scheme: dark) {
+        .templates-page {
+            --text-primary: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --accent-primary: #a78bfa;
+            --accent-secondary: #8b5cf6;
+        }
     }
 
-    .template-card:nth-child(4) {
-        animation-delay: 0.3s;
+    /* Global font styles */
+    .templates-page {
+        font-family: var(--font-primary);
+        color: var(--text-primary);
+        background-color: var(--bg-secondary);
     }
 
-    .aspect-w-8\.5 {
-        position: relative;
-        padding-bottom: 129.41%; /* 11/8.5 aspect ratio */
+    /* Typography styles */
+    .templates-page h1,
+    .templates-page h2,
+    .templates-page h3,
+    .templates-page h4,
+    .templates-page h5,
+    .templates-page h6 {
+        font-family: var(--font-secondary);
+        color: var(--text-primary);
     }
 
-    .aspect-w-8\.5 > * {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+    .templates-page .hero-title {
+        @apply text-4xl font-bold tracking-tight;
+        color: var(--text-primary);
     }
+
+    .templates-page .hero-subtitle {
+        @apply text-lg;
+        color: var(--text-secondary);
+    }
+
+    /* Template card styles with dark mode support */
+    .templates-page .template-card {
+        background-color: var(--bg-primary);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateZ(0);
+        will-change: transform, opacity;
+    }
+
+    .templates-page .template-card h3 {
+        color: var(--text-primary);
+    }
+
+    .templates-page .template-card p {
+        color: var(--text-secondary);
+    }
+
+    /* Dark mode specific template card styles */
+    @media (prefers-color-scheme: dark) {
+        .templates-page .template-card {
+            @apply shadow-lg shadow-purple-500/5;
+        }
+
+        .templates-page .template-card:hover {
+            @apply shadow-xl shadow-purple-500/10;
+        }
+
+        .templates-page .template-card .preview-badge {
+            @apply bg-gray-800 text-gray-200;
+        }
+    }
+
+    /* Preview section dark mode support */
+    @media (prefers-color-scheme: dark) {
+        .templates-page .preview-wrapper {
+            background: linear-gradient(45deg, #2d3748 25%, transparent 25%),
+                        linear-gradient(-45deg, #2d3748 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #2d3748 75%),
+                        linear-gradient(-45deg, transparent 75%, #2d3748 75%);
+        }
+
+        .templates-page .preview-container {
+            background-color: var(--bg-primary);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    /* Button styles with dark mode support */
+    .templates-page .btn-primary {
+        @apply bg-purple-600 text-white;
+        background-color: var(--accent-primary);
+    }
+
+    .templates-page .btn-primary:hover {
+        background-color: var(--accent-secondary);
+    }
+
+    /* Preview badge */
+    .templates-page .preview-badge {
+        @apply bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-medium opacity-0 transform scale-95 transition-all duration-300;
+    }
+
+    .templates-page .template-card:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transition-duration: 0.6s;
+    }
+
+    .templates-page .template-card.selected {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        @apply ring-2 ring-purple-500 ring-offset-2;
+        z-index: 10;
+        transition-duration: 0.8s;
+    }
+
+    .templates-page .template-card:not(.selected) {
+        transform: scale(0.98);
+        opacity: 0.8;
+    }
+
+    .templates-page .template-card.selected:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+
+    .templates-page .template-card:hover .preview-badge {
+        @apply opacity-100 scale-100;
+    }
+
+    /* Add animation for selection */
+    @keyframes selectPop {
+        0% {
+            transform: translateY(0) scale(1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        40% {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        70% {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    }
+
+    .templates-page .template-card.selecting {
+        animation: selectPop 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .templates-page .preview-container {
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .templates-page .preview-container.switching {
+        opacity: 0;
+        transform: scale(0.98);
+        transition-duration: 0.6s;
+    }
+
+    .templates-page .preview-container.switched {
+        opacity: 1;
+        transform: scale(1);
+        transition-duration: 0.8s;
+    }
+
+    /* Template-specific styles */
+    .templates-page .template-classic,
+    .templates-page .template-modern,
+    .templates-page .template-minimal,
+    .templates-page .template-executive,
+    .templates-page .template-impact,
+    .templates-page .template-unique,
+    .templates-page .template-coming-soon {
+        /* Template specific styles remain the same but scoped to templates-page */
+    }
+
+    /* Preview container styles */
+    .templates-page .preview-wrapper {
+        background: linear-gradient(45deg, #f7f7f7 25%, transparent 25%),
+                    linear-gradient(-45deg, #f7f7f7 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #f7f7f7 75%),
+                    linear-gradient(-45deg, transparent 75%, #f7f7f7 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    /* Scrollbar styles */
+    .templates-page .preview-wrapper::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .templates-page .preview-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .templates-page .preview-wrapper::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .templates-page .preview-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #666;
+    }
+
+    /* Add blink animation keyframes */
+    @keyframes cardBlink {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        40% {
+            opacity: 0.5;
+            transform: translateY(15px) scale(0.98);
+        }
+        70% {
+            opacity: 0.8;
+            transform: translateY(5px) scale(1.02);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes cardBlinkOut {
+        0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        30% {
+            opacity: 0.8;
+            transform: translateY(5px) scale(0.99);
+        }
+        100% {
+            opacity: 0.6;
+            transform: translateY(20px) scale(0.98);
+        }
+    }
+
+    /* Add scroll animation classes */
+    .templates-page .template-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .templates-page .template-card.scroll-visible {
+        animation: cardBlink 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .templates-page .template-card.scroll-hidden {
+        animation: cardBlinkOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Stagger delay classes */
+    .templates-page .template-card:nth-child(1) { animation-delay: 0ms; }
+    .templates-page .template-card:nth-child(2) { animation-delay: 200ms; }
+    .templates-page .template-card:nth-child(3) { animation-delay: 400ms; }
+    .templates-page .template-card:nth-child(4) { animation-delay: 600ms; }
+    .templates-page .template-card:nth-child(5) { animation-delay: 800ms; }
+    .templates-page .template-card:nth-child(6) { animation-delay: 1000ms; }
+    .templates-page .template-card:nth-child(7) { animation-delay: 1200ms; }
 </style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Scope all JavaScript to templates page
+(function() {
+    // Only run this code if we're on the templates page
+    if (!document.querySelector('.templates-page')) return;
+
+    // Cache DOM elements
+    const previewContainer = document.getElementById('livePreview');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewLoader = document.getElementById('previewLoader');
+    const useTemplateBtn = document.getElementById('useTemplateBtn');
+
+    // Template data cache
+    const templateCache = new Map();
+    let currentTemplate = 'classic';
+
+    // Sample data for preview
+    const sampleData = {
+        name: 'John Doe',
+        title: 'Senior Developer',
+        email: 'john@example.com',
+        phone: '+1 234 567 890',
+        summary: 'Experienced software developer with a passion for creating efficient and scalable solutions.',
+        experience: [
+            {
+                company: 'Tech Corp',
+                position: 'Senior Developer',
+                duration: '2020 - Present',
+                description: 'Led development of multiple high-impact projects.'
+            }
+        ],
+        skills: ['JavaScript', 'Python', 'React', 'Node.js', 'AWS']
+    };
+
+    // Handle template selection
+    function handleTemplateSelect(element, templateId) {
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.classList.remove('selected', 'selecting', 'scroll-visible', 'scroll-hidden');
+            if (card !== element) {
+                card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                card.style.transform = 'scale(0.98)';
+                card.style.opacity = '0.8';
+            }
+        });
+
+        element.classList.add('selecting');
+        
+        setTimeout(() => {
+            element.classList.remove('selecting');
+            element.classList.add('selected');
+        }, 1000);
+
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        updatePreview(templateId);
+    }
+
+    // Add new preview scaling functionality
+    let currentScale = 1;
+    const MIN_SCALE = 0.5;
+    const MAX_SCALE = 1.5;
+    const SCALE_STEP = 0.1;
+
+    function adjustPreviewScale(action) {
+        const previewContainer = document.getElementById('livePreview');
+        const scaleIndicator = document.getElementById('scaleIndicator');
+        
+        if (action === 'increase' && currentScale < MAX_SCALE) {
+            currentScale += SCALE_STEP;
+        } else if (action === 'decrease' && currentScale > MIN_SCALE) {
+            currentScale -= SCALE_STEP;
+        }
+        
+        previewContainer.style.transform = `scale(${currentScale})`;
+        scaleIndicator.textContent = `${Math.round(currentScale * 100)}%`;
+    }
+
+    // Update preview with loading state
+    async function updatePreview(templateId) {
+        if (currentTemplate === templateId) return;
+
+        previewLoader.classList.remove('hidden');
+        previewContainer.classList.add('switching');
+
+        previewTitle.textContent = document.querySelector(`[data-template="${templateId}"] h3`).textContent;
+        currentScale = 1;
+        document.getElementById('scaleIndicator').textContent = '100%';
+        previewContainer.style.transform = 'scale(1)';
+
+        try {
+            const content = await getTemplateContent(templateId);
+            
+            // Increased delay for smoother transition
+            await new Promise(resolve => setTimeout(resolve, 600));
+
+            previewContainer.innerHTML = content;
+            currentTemplate = templateId;
+
+            previewContainer.classList.remove('switching');
+            previewContainer.classList.add('switched');
+
+            setTimeout(() => {
+                previewContainer.classList.remove('switched');
+            }, 800);
+        } catch (error) {
+            console.error('Error updating preview:', error);
+        } finally {
+            previewLoader.classList.add('hidden');
+        }
+    }
+
+    // Get template content with caching
+    async function getTemplateContent(templateId) {
+        if (templateCache.has(templateId)) {
+            return templateCache.get(templateId);
+        }
+
+        // Generate template content based on template ID
+        const content = generateTemplateContent(templateId);
+        templateCache.set(templateId, content);
+        return content;
+    }
+
+    // Generate template content
+    function generateTemplateContent(templateId) {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const textColor = isDark ? 'text-gray-100' : 'text-gray-800';
+        const subTextColor = isDark ? 'text-gray-300' : 'text-gray-600';
+        
+        switch(templateId) {
+            case 'modern':
+                return `
+                    <div class="template-modern">
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 class="text-3xl font-bold ${textColor}">${sampleData.name}</h1>
+                                <div class="text-purple-500 font-medium">${sampleData.title}</div>
+                            </div>
+                            <div class="text-right text-sm ${subTextColor}">
+                                <div>${sampleData.email}</div>
+                                <div>${sampleData.phone}</div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold ${textColor} mb-2">Professional Summary</h3>
+                            <p class="${subTextColor}">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            case 'minimal':
+                return `
+                    <div class="template-minimal">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-2">${sampleData.name}</h1>
+                        <div class="text-gray-600 mb-4">${sampleData.title}</div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Professional Summary</h3>
+                            <p class="text-gray-600">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            case 'executive':
+                return `
+                    <div class="template-executive">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-2">${sampleData.name}</h1>
+                        <div class="text-gray-600 mb-4">${sampleData.title}</div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Professional Summary</h3>
+                            <p class="text-gray-600">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            case 'impact':
+                return `
+                    <div class="template-impact">
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800">${sampleData.name}</h1>
+                                <div class="text-blue-600 font-medium">${sampleData.title}</div>
+                            </div>
+                            <div class="text-right text-sm text-gray-600">
+                                <div>${sampleData.email}</div>
+                                <div>${sampleData.phone}</div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Professional Summary</h3>
+                            <p class="text-gray-600">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            case 'unique':
+                return `
+                    <div class="template-unique">
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 class="text-3xl font-bold text-gray-800">${sampleData.name}</h1>
+                                <div class="text-blue-600 font-medium">${sampleData.title}</div>
+                            </div>
+                            <div class="text-right text-sm text-gray-600">
+                                <div>${sampleData.email}</div>
+                                <div>${sampleData.phone}</div>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Professional Summary</h3>
+                            <p class="text-gray-600">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            case 'coming-soon':
+                return `
+                    <div class="template-coming-soon">
+                        <div class="text-gray-400 text-center">
+                            <i class="fas fa-file-alt text-5xl mb-4"></i>
+                            <p>Preview not available</p>
+                        </div>
+                    </div>
+                `;
+            default:
+                return `
+                    <div class="template-classic">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-2">${sampleData.name}</h1>
+                        <div class="text-gray-600 mb-4">${sampleData.title}</div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Professional Summary</h3>
+                            <p class="text-gray-600">${sampleData.summary}</p>
+                        </div>
+                    </div>
+                `;
+        }
+    }
+
+    // Handle template selection
+    function useSelectedTemplate() {
+        // Show loading overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        overlay.innerHTML = `
+            <div class="bg-white rounded-lg p-8 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent mx-auto mb-4"></div>
+                <p class="text-lg">Loading ${currentTemplate} template...</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Save template selection and redirect
+        localStorage.setItem('selectedTemplate', currentTemplate);
+        setTimeout(() => {
+            window.location.href = `/?template=${currentTemplate}`;
+        }, 500);
+    }
+
+    // Add scroll animation handling
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.template-card');
+        let lastScrollPosition = window.scrollY;
+        
+        // Initialize with default template
+        const defaultTemplate = cards[0];
+        if (defaultTemplate) {
+            defaultTemplate.classList.add('selected');
+            updatePreview('classic');
+        }
+
+        // Create Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('scroll-hidden');
+                    entry.target.classList.add('scroll-visible');
+                } else {
+                    // Only animate out if the card was previously visible
+                    if (entry.target.classList.contains('scroll-visible')) {
+                        entry.target.classList.remove('scroll-visible');
+                        entry.target.classList.add('scroll-hidden');
+                    }
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px'
+        });
+
+        // Observe all template cards
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+
+        // Handle scroll direction
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            const scrollingDown = currentScroll > lastScrollPosition;
+            
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isVisible) {
+                    if (scrollingDown) {
+                        card.style.animationDelay = `${rect.top / window.innerHeight * 400}ms`;
+                    } else {
+                        card.style.animationDelay = `${(window.innerHeight - rect.bottom) / window.innerHeight * 400}ms`;
+                    }
+                }
+            });
+            
+            lastScrollPosition = currentScroll;
+        }, { passive: true });
+
+        // Reset animations on resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                cards.forEach(card => {
+                    card.style.animationDelay = '0ms';
+                });
+            }, 250);
+        });
+    });
+
+    // Add dark mode detection and handling
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check system dark mode preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Function to update theme
+        function updateTheme(e) {
+            document.documentElement.classList.toggle('dark', e.matches);
+            
+            // Update template previews if needed
+            if (currentTemplate) {
+                updatePreview(currentTemplate);
+            }
+        }
+        
+        // Initial theme setup
+        updateTheme(prefersDark);
+        
+        // Listen for system theme changes
+        prefersDark.addListener(updateTheme);
+    });
+})();
+</script>
 {% endblock %} 
