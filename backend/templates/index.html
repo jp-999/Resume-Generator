@@ -1819,34 +1819,30 @@
             border-left: 6px solid #0d6efd;
         }
 
-        /* Add these styles to your existing styles */
-        const additionalStyles = `
-            .preview-container.modern .skill-preview-item {
-                @apply bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm;
-            }
-            
-            .preview-container.minimal .skill-preview-item {
-                @apply bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-sm;
-            }
-            
-            .preview-container.executive .skill-preview-item {
-                @apply bg-[#1a2639] text-[#c4a35a] px-3 py-1 border border-[#c4a35a] text-sm;
-            }
-            
-            .preview-container.impact .skill-preview-item {
-                @apply bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm;
-            }
-            
-            .preview-container.unique .skill-preview-item {
-                @apply bg-[#2c3e50] text-white px-3 py-1 rounded-sm text-sm;
-            }
-            
-            .preview-container.classic .skill-preview-item {
-                @apply bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-sm;
-            }
-        `;
+        /* Add template-specific styles */
+        .preview-container.modern .skill-preview-item {
+            @apply bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm;
+        }
         
-        styleSheet.textContent += additionalStyles;
+        .preview-container.minimal .skill-preview-item {
+            @apply bg-gray-100 text-gray-600 px-3 py-1 rounded-sm text-sm;
+        }
+        
+        .preview-container.executive .skill-preview-item {
+            @apply bg-[#1a2639] text-[#c4a35a] px-3 py-1 border border-[#c4a35a] text-sm;
+        }
+        
+        .preview-container.impact .skill-preview-item {
+            @apply bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm;
+        }
+        
+        .preview-container.unique .skill-preview-item {
+            @apply bg-[#2c3e50] text-white px-3 py-1 rounded-sm text-sm;
+        }
+        
+        .preview-container.classic .skill-preview-item {
+            @apply bg-gray-100 text-gray-800 px-3 py-1 rounded-md text-sm;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] dark:from-gray-900 dark:to-gray-800 min-h-screen pt-20">

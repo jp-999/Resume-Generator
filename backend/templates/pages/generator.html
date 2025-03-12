@@ -12,8 +12,9 @@
             <p class="text-gray-600 dark:text-gray-300 mt-2">Fill in your details to create a professional resume</p>
         </div>
 
-        <form method="POST" action="/generate" class="space-y-8">
+        <form method="POST" action="{{ url_for('generate_resume') }}" class="space-y-8">
             <input type="hidden" name="template" value="{{ selected_template }}">
+            <input type="hidden" name="action" value="preview">
             
             <!-- Personal Information Section -->
             <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6">
@@ -111,13 +112,14 @@
                 </div>
             </div>
 
-            <button type="submit"
-                class="w-full py-4 px-6 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center justify-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Generate Resume</span>
-            </button>
+            <div class="flex gap-4">
+                <button type="submit" class="w-full py-4 px-6 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Generate Resume</span>
+                </button>
+            </div>
         </form>
     </div>
 

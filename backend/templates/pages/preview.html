@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Preview{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2] dark:from-gray-900 dark:to-gray-800 pt-20 pb-10">
+    <div class="container max-w-7xl mx-auto px-4">
+        <!-- Preview Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Resume Preview</h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-2">Review your resume and download when ready</p>
+                </div>
+                <div class="flex gap-4">
+                    <form method="POST" action="{{ url_for('download_pdf') }}" class="contents">
+                        <!-- Pass all resume data as hidden fields -->
+                        {% for key, value in resume_data.items() %}
+                            {% if value %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+                        <button type="submit" class="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all duration-200">
+                            <i class="fas fa-download"></i>
+                            <span>Download PDF</span>
+                        </button>
+                    </form>
+                    <a href="{{ url_for('generator') }}" class="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-all duration-200">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Preview -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Personal Information -->
+                <div class="mb-8 text-center">
+                    <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">{{ resume_data.get('name', 'Your Name') }}</h1>
+                    <div class="text-gray-600 dark:text-gray-300">
+                        <p>{{ resume_data.get('email', '') }}</p>
+                        <p>{{ resume_data.get('phone', '') }}</p>
+                    </div>
+                </div>
+
+                <!-- Professional Summary -->
+                {% if resume_data.get('summary') %}
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Professional Summary</h2>
+                    <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ resume_data.get('summary') }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Skills -->
+                {% if resume_data.get('skills') %}
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Skills</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in resume_data.get('skills').split(',') %}
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm">
+                            {{ skill.strip() }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Experience -->
+                {% if resume_data.get('experience') %}
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Experience</h2>
+                    <div class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ resume_data.get('experience') }}</div>
+                </div>
+                {% endif %}
+
+                <!-- Education -->
+                {% if resume_data.get('education') %}
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Education</h2>
+                    <div class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ resume_data.get('education') }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Action Footer -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-gray-600 dark:text-gray-300">Ready to download your resume?</p>
+                <div class="flex gap-4">
+                    <form method="POST" action="{{ url_for('download_pdf') }}" class="contents">
+                        {% for key, value in resume_data.items() %}
+                            {% if value %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+                        <button type="submit" class="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all duration-200">
+                            <i class="fas fa-download"></i>
+                            <span>Download PDF</span>
+                        </button>
+                    </form>
+                    <a href="{{ url_for('generator') }}" class="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-all duration-200">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
