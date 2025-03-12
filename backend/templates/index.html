@@ -1333,7 +1333,7 @@
             .drawer-hidden .container {
                 margin-left: 0;
                 width: 100%;
-                max-width: 1200px;
+            max-width: 1200px;
             }
             .drawer-hidden .drawer {
                 transform: translateX(-100%);
@@ -1716,9 +1716,9 @@
         
         .executive .section-title::after {
             content: '';
-            position: absolute;
+                position: absolute;
             bottom: -5px;
-            left: 0;
+                left: 0;
             width: 2.5rem;
             height: 2px;
             background: #4682B4;
@@ -1729,7 +1729,7 @@
         }
         
         .executive .item-header {
-            display: flex;
+                display: flex;
             justify-content: space-between;
             margin-bottom: 0.5rem;
         }
@@ -1999,8 +1999,8 @@
                     <i class="fas fa-file-download ml-2"></i>
                 </button>
             </form>
-                </div>
         </div>
+                </div>
 
             <!-- Live Preview Section -->
             <div class="lg:w-1/2 h-fit">
@@ -2010,7 +2010,7 @@
                         <div class="flex items-center space-x-2">
                             <h2 class="text-lg font-semibold" id="previewTitle">Resume Preview</h2>
                             <span class="text-sm text-gray-500">(Live)</span>
-                        </div>
+            </div>
                         <div class="flex items-center gap-2">
                             <!-- Scale Controls -->
                             <button onclick="adjustPreviewScale('decrease')" class="text-gray-600 hover:text-gray-800 p-2">
@@ -2020,21 +2020,21 @@
                             <button onclick="adjustPreviewScale('increase')" class="text-gray-600 hover:text-gray-800 p-2">
                                 <i class="fas fa-search-plus"></i>
                             </button>
-                        </div>
-                    </div>
+                </div>
+            </div>
 
                     <!-- Preview Container -->
                     <div class="relative preview-wrapper" style="min-height: 600px; max-height: calc(100vh - 200px); overflow-y: auto;">
                         <!-- Loading overlay -->
                         <div id="previewLoader" class="hidden absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
                             <div class="animate-spin rounded-full h-8 w-8 border-2 border-purple-500 border-t-transparent"></div>
-                        </div>
+                </div>
                         
                         <!-- Preview content -->
                         <div id="livePreview" class="preview-container p-8 mx-auto transition-all duration-300" style="max-width: 800px;">
                             <!-- Template content will be inserted here -->
-                        </div>
-                    </div>
+            </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -2515,7 +2515,7 @@
         const originalAddSection = addSection;
         addSection = function() {
             originalAddSection();
-            updatePreview();
+        updatePreview();
         };
 
         // Update deleteSection function to trigger preview update
@@ -2536,4 +2536,4 @@
     </script>
     {% include 'includes/footer.html' %}
 </body>
-</html>
+</html> 
