@@ -12,6 +12,22 @@
             <p class="text-gray-600 dark:text-gray-300 mt-2">Fill in your details to create a professional resume</p>
         </div>
 
+        <!-- Error Message Container -->
+        <div id="errorContainer" class="hidden mb-8">
+            <div class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 rounded-r-xl">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p id="errorMessage" class="text-sm text-red-700 dark:text-red-200"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Resume Parser Section -->
         <div class="bg-purple-50 dark:bg-gray-700/50 p-6 rounded-xl mb-8">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
@@ -302,6 +318,39 @@
                 </div>
             </div>
 
+            <!-- Add Section Dropdown -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 mb-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Additional Section
+                    </h2>
+                </div>
+                <div class="flex gap-4">
+                    <select id="sectionType" class="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                        <option value="">Select a section to add...</option>
+                        <option value="projects">Projects</option>
+                        <option value="certifications">Certifications</option>
+                        <option value="awards">Awards & Achievements</option>
+                        <option value="publications">Publications</option>
+                        <option value="languages">Languages</option>
+                        <option value="volunteer">Volunteer Experience</option>
+                        <option value="interests">Interests & Activities</option>
+                        <option value="references">References</option>
+                        <option value="custom">Custom Section</option>
+                    </select>
+                    <button type="button" id="addSectionBtn" 
+                        class="px-6 py-2 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        <span>Add Section</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="flex gap-4">
                 <button type="submit" class="w-full py-4 px-6 text-white font-medium rounded-lg bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-500/50 transition-all duration-300 flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,28 +501,36 @@
                 
                 const response = await fetch('/parse-resume', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
 
-                const data = await response.json();
-                console.log('Server response:', data); // Debug log
-
                 if (!response.ok) {
-                    throw new Error(data.error || 'Resume parsing failed');
+                    throw new Error('Failed to parse resume. Server returned: ' + response.status);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format. Expected JSON but got: ' + contentType);
+                }
+
+                const data = await response.json();
+                console.log('Raw server response:', data); // Debug log
+
+                if (!data || Object.keys(data).length === 0) {
+                    throw new Error('No data was extracted from the resume');
                 }
 
                 if (data.error) {
                     throw new Error(data.error);
                 }
-
-                if (!data || Object.keys(data).length === 0) {
-                    throw new Error('No data was extracted from the resume');
-                }
                 
                 fillFormWithParsedData(data);
                 showNotification('Resume parsed successfully!', 'success');
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Parsing error:', error);
                 showNotification(error.message || 'Failed to parse resume. Please try again.', 'error');
             }
         } else {
@@ -482,107 +539,277 @@
     });
 
     function fillFormWithParsedData(data) {
-        console.log('Parsed resume data:', data); // Debug log
-
+        console.log('Raw parsed data:', data); // Debug log
+        
         try {
-            // Basic Information
-            if (data.name) {
-                document.getElementById('name').value = data.name;
-                updatePreviewText('preview-name', data.name);
-            }
-            if (data.email) {
-                document.getElementById('email').value = data.email;
-                updatePreviewText('preview-email', data.email);
-            }
-            if (data.phone) {
-                document.getElementById('phone').value = data.phone;
-                updatePreviewText('preview-phone', data.phone);
-            }
+            // Reset form fields first
+            resetFormFields();
 
-            // Professional Summary
-            if (data.summary) {
-                document.getElementById('summary').value = data.summary;
-                updatePreviewText('preview-summary', data.summary);
-            }
-
-            // Skills
-            if (data.skills) {
-                const skillsContainer = document.getElementById('skills-container');
-                const skillsEntry = skillsContainer.querySelector('.skill-entry textarea');
-                if (Array.isArray(data.skills)) {
-                    skillsEntry.value = data.skills.join('\n• ');
-                } else if (typeof data.skills === 'string') {
-                    skillsEntry.value = data.skills;
-                }
-                updatePreviewText('preview-skills', skillsEntry.value);
-            }
-
-            // Work Experience
-            if (data.experience && Array.isArray(data.experience)) {
-                const experienceContainer = document.getElementById('experience-container');
-                // Clear existing entries except the first one
-                while (experienceContainer.children.length > 1) {
-                    experienceContainer.removeChild(experienceContainer.lastChild);
-                }
-                
-                data.experience.forEach((exp, index) => {
-                    if (index > 0) {
-                        addEntry('experience');
-                    }
-                    const entry = experienceContainer.children[index];
-                    if (entry) {
-                        entry.querySelector('[name="experience_company[]"]').value = exp.company || '';
-                        entry.querySelector('[name="experience_position[]"]').value = exp.position || '';
-                        entry.querySelector('[name="experience_start[]"]').value = exp.startDate || '';
-                        entry.querySelector('[name="experience_end[]"]').value = exp.endDate || '';
-                        entry.querySelector('[name="experience_description[]"]').value = exp.description || '';
-                    }
-                });
-                updateExperiencePreview();
-            }
-
-            // Education
-            if (data.education && Array.isArray(data.education)) {
-                const educationContainer = document.getElementById('education-container');
-                // Clear existing entries except the first one
-                while (educationContainer.children.length > 1) {
-                    educationContainer.removeChild(educationContainer.lastChild);
-                }
-                
-                data.education.forEach((edu, index) => {
-                    if (index > 0) {
-                        addEntry('education');
-                    }
-                    const entry = educationContainer.children[index];
-                    if (entry) {
-                        entry.querySelector('[name="education_degree[]"]').value = edu.degree || '';
-                        entry.querySelector('[name="education_institution[]"]').value = edu.institution || '';
-                        entry.querySelector('[name="education_start[]"]').value = edu.startDate || '';
-                        entry.querySelector('[name="education_end[]"]').value = edu.endDate || '';
-                        entry.querySelector('[name="education_description[]"]').value = edu.description || '';
-                    }
-                });
-                updateEducationPreview();
-            }
-
-            // Handle additional sections
-            const standardSections = ['name', 'email', 'phone', 'summary', 'skills', 'experience', 'education'];
-            const additionalSections = Object.keys(data).filter(key => !standardSections.includes(key));
-
-            additionalSections.forEach(sectionKey => {
-                if (data[sectionKey]) {
-                    createDynamicSection(sectionKey, 
-                        Array.isArray(data[sectionKey]) 
-                            ? data[sectionKey].join('\n• ')
-                            : data[sectionKey]
-                    );
-                }
+            // Standard sections handling remains the same...
+            
+            // Handle all additional sections
+            const standardSections = ['Name', 'name', 'Email', 'email', 'Phone', 'phone', 'Phone Number', 
+                                   'Summary', 'summary', 'Skills', 'skills', 'Experience', 'experience', 
+                                   'Education', 'education'];
+            
+            const additionalSections = Object.entries(data).filter(([key, value]) => {
+                // Filter out standard sections and ensure the value exists
+                return !standardSections.includes(key) && value && 
+                       (Array.isArray(value) || typeof value === 'object' || typeof value === 'string');
             });
 
-            showNotification('Resume data successfully loaded!', 'success');
+            // Process each additional section
+            additionalSections.forEach(([key, value]) => {
+                // Format the section title
+                const sectionTitle = key
+                    .split('_')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+
+                let sectionContent = '';
+
+                if (Array.isArray(value)) {
+                    // Handle array format
+                    sectionContent = value
+                        .map(item => {
+                            if (typeof item === 'object') {
+                                // Handle object items
+                                return formatObjectToString(item);
+                            } else {
+                                // Handle string items
+                                return item.trim().startsWith('•') ? item.trim() : `• ${item.trim()}`;
+                            }
+                        })
+                        .join('\n');
+                } else if (typeof value === 'object') {
+                    // Handle object format
+                    sectionContent = formatObjectToString(value);
+                } else {
+                    // Handle string format
+                    sectionContent = value
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line)
+                        .map(line => line.startsWith('•') ? line : `• ${line}`)
+                        .join('\n');
+                }
+
+                // Create the new section
+                createDynamicSection(key, sectionContent, true);
+            });
+
         } catch (error) {
-            console.error('Error filling form with parsed data:', error);
+            console.error('Error processing resume data:', error);
             showNotification('Error processing resume data: ' + error.message, 'error');
+        }
+    }
+
+    function formatObjectToString(obj) {
+        let result = [];
+        
+        // Handle common object structures
+        if (obj.title || obj.name) {
+            result.push(`• ${obj.title || obj.name}`);
+        }
+        
+        if (obj.date || obj.period) {
+            result.push(`  ${obj.date || obj.period}`);
+        }
+        
+        if (obj.description) {
+            const descriptions = Array.isArray(obj.description) ? obj.description : [obj.description];
+            descriptions.forEach(desc => {
+                const lines = desc.split('\n');
+                lines.forEach(line => {
+                    result.push(`  ${line.trim().startsWith('•') ? line.trim() : '• ' + line.trim()}`);
+                });
+            });
+        }
+        
+        // Handle any other properties
+        Object.entries(obj).forEach(([key, value]) => {
+            if (!['title', 'name', 'date', 'period', 'description'].includes(key)) {
+                if (Array.isArray(value)) {
+                    value.forEach(item => {
+                        result.push(`  • ${item}`);
+                    });
+                } else if (typeof value === 'string') {
+                    result.push(`  • ${value}`);
+                }
+            }
+        });
+        
+        return result.join('\n');
+    }
+
+    function createDynamicSection(sectionKey, content, isNewSection = false) {
+        // Find the containers
+        const formContainer = document.querySelector('form[method="POST"]');
+        const addSectionDiv = document.querySelector('.bg-gray-50.dark\\:bg-gray-700\\/50.p-6.rounded-xl.space-y-6.mb-8');
+        const previewContainer = document.querySelector('.space-y-6');
+        
+        if (!formContainer || !previewContainer) {
+            console.error('Required containers not found');
+            return;
+        }
+
+        // Format section title
+        const sectionTitle = sectionKey
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+
+        // Create form section
+        const formSection = document.createElement('div');
+        formSection.className = 'bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move';
+        formSection.dataset.section = sectionKey;
+        
+        formSection.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                        <span class="editable-heading" contenteditable="true">${sectionTitle}</span>
+                    </h2>
+                </div>
+                <button type="button" class="delete-section text-red-500 hover:text-red-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <textarea name="${sectionKey}[]"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
+                    placeholder="Enter ${sectionTitle.toLowerCase()} details...">${content}</textarea>
+            </div>
+        `;
+
+        // Create preview section
+        const previewSection = document.createElement('div');
+        previewSection.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
+        previewSection.dataset.preview = sectionKey;
+        previewSection.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
+                ${sectionTitle}
+            </h3>
+            <div id="preview-${sectionKey}" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
+                ${content || `Your ${sectionTitle.toLowerCase()} will appear here`}
+            </div>
+        `;
+
+        // Insert form section before the "Add Section" div
+        formContainer.insertBefore(formSection, addSectionDiv);
+        
+        // Append preview section
+        previewContainer.appendChild(previewSection);
+
+        // Add delete functionality
+        const deleteButton = formSection.querySelector('.delete-section');
+        if (deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                formSection.remove();
+                previewSection.remove();
+                showNotification(`${sectionTitle} section removed`, 'info');
+            });
+        }
+
+        // Add live preview update
+        const textarea = formSection.querySelector('textarea');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                const previewElement = document.getElementById(`preview-${sectionKey}`);
+                if (previewElement) {
+                    const content = this.value || `Your ${sectionTitle.toLowerCase()} will appear here`;
+                    previewElement.innerHTML = content.replace(/\n/g, '<br>');
+                    previewElement.classList.add('preview-update');
+                    setTimeout(() => previewElement.classList.remove('preview-update'), 300);
+                }
+            });
+        }
+
+        // Initialize Sortable for the new section if available
+        if (typeof Sortable !== 'undefined') {
+            new Sortable(formSection.parentElement, {
+                handle: '.cursor-grab',
+                animation: 150
+            });
+        }
+
+        showNotification(`${sectionTitle} section added successfully`, 'success');
+    }
+
+    function resetFormFields() {
+        // Reset personal information
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('summary').value = '';
+
+        // Reset skills
+        const skillsContainer = document.getElementById('skills-container');
+        const firstSkillEntry = skillsContainer.querySelector('.skill-entry textarea');
+        if (firstSkillEntry) {
+            firstSkillEntry.value = '';
+        }
+
+        // Reset experience
+        const experienceContainer = document.getElementById('experience-container');
+        while (experienceContainer.children.length > 1) {
+            experienceContainer.removeChild(experienceContainer.lastChild);
+        }
+        const firstExpEntry = experienceContainer.querySelector('.experience-entry');
+        if (firstExpEntry) {
+            firstExpEntry.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        }
+
+        // Reset education
+        const educationContainer = document.getElementById('education-container');
+        while (educationContainer.children.length > 1) {
+            educationContainer.removeChild(educationContainer.lastChild);
+        }
+        const firstEduEntry = educationContainer.querySelector('.education-entry');
+        if (firstEduEntry) {
+            firstEduEntry.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        }
+
+        // Reset preview sections
+        updatePreviewText('preview-name', 'Your Name');
+        updatePreviewText('preview-email', 'your.email@example.com');
+        updatePreviewText('preview-phone', 'Your Phone Number');
+        updatePreviewText('preview-summary', 'Your professional summary will appear here');
+        updatePreviewText('preview-skills', 'Your skills will appear here');
+        updatePreviewText('preview-experience', 'Your experience will appear here');
+        updatePreviewText('preview-education', 'Your education will appear here');
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        try {
+            // Handle "Present" case
+            if (dateString.toLowerCase() === 'present') {
+                return '';
+            }
+
+            // Try to parse month and year
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+                return date.toISOString().substring(0, 7); // YYYY-MM format
+            }
+
+            // Try to extract year and month from string
+            const matches = dateString.match(/(\w+)\s+(\d{4})/);
+            if (matches) {
+                const month = new Date(Date.parse(matches[1] + " 1, 2000")).getMonth() + 1;
+                return `${matches[2]}-${month.toString().padStart(2, '0')}`;
+            }
+
+            return dateString;
+        } catch (e) {
+            console.warn('Error formatting date:', e);
+            return dateString;
         }
     }
 
@@ -595,80 +822,31 @@
         }
     }
 
-    function createDynamicSection(sectionKey, content) {
-        const formContainer = document.querySelector('form[method="POST"]');
-        const previewContainer = document.querySelector('.live-preview .space-y-6');
-        
-        // Create form section
-        const formSection = document.createElement('div');
-        formSection.className = 'bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move';
-        formSection.dataset.section = sectionKey;
-        
-        const sectionTitle = sectionKey.split('_').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-
-        formSection.innerHTML = `
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
-                        <span class="editable-heading" contenteditable="true">${sectionTitle}</span>
-                    </h2>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <textarea id="${sectionKey}" name="${sectionKey}"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
-                    placeholder="Enter ${sectionTitle.toLowerCase()} details...">${content}</textarea>
-            </div>
-        `;
-
-        // Create preview section
-        const previewSection = document.createElement('div');
-        previewSection.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
-        previewSection.innerHTML = `
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                ${sectionTitle}
-            </h3>
-            <p id="preview-${sectionKey}" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                ${content || `Your ${sectionTitle.toLowerCase()} will appear here`}
-            </p>
-        `;
-
-        // Insert sections
-        const lastSection = formContainer.querySelector('div.flex.gap-4');
-        formContainer.insertBefore(formSection, lastSection);
-        previewContainer.appendChild(previewSection);
-
-        // Initialize preview update for the new section
-        updatePreview(sectionKey, `preview-${sectionKey}`, `Your ${sectionTitle.toLowerCase()} will appear here`);
-
-        // Make the section draggable
-        if (typeof Sortable !== 'undefined') {
-            new Sortable(formSection.parentElement, {
-                handle: '.cursor-grab',
-                animation: 150
-            });
-        }
-    }
-
     function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
-            type === 'error' ? 'bg-red-500' :
-            type === 'success' ? 'bg-green-500' :
-            'bg-blue-500'
-        }`;
-        notification.textContent = message;
-        document.body.appendChild(notification);
+        // Update error container for error messages
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        if (type === 'error') {
+            errorContainer.classList.remove('hidden');
+            errorMessage.textContent = message;
+            // Scroll error into view
+            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            errorContainer.classList.add('hidden');
+            // Show toast notification for non-error messages
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
+                type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
 
-        setTimeout(() => {
-            notification.classList.add('opacity-0');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+            setTimeout(() => {
+                notification.classList.add('opacity-0');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
     }
 
     // Existing preview update code
@@ -847,6 +1025,45 @@
         document.querySelectorAll('#education-container input, #education-container textarea').forEach(input => {
             input.addEventListener('input', updateEducationPreview);
         });
+    });
+
+    // Handle adding new sections from dropdown
+    document.getElementById('addSectionBtn').addEventListener('click', function() {
+        const select = document.getElementById('sectionType');
+        const selectedValue = select.value;
+        
+        if (!selectedValue) {
+            showNotification('Please select a section type', 'error');
+            return;
+        }
+
+        let sectionKey;
+        let sectionTitle;
+        
+        if (selectedValue === 'custom') {
+            sectionTitle = prompt('Enter the name for your custom section:');
+            if (!sectionTitle) return;
+            
+            sectionKey = sectionTitle
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, '')
+                .replace(/\s+/g, '_');
+        } else {
+            sectionKey = selectedValue;
+        }
+
+        // Check if section already exists
+        const existingSection = document.querySelector(`[data-section="${sectionKey}"]`);
+        if (existingSection) {
+            showNotification('This section already exists', 'error');
+            return;
+        }
+
+        // Create the new section
+        createDynamicSection(sectionKey, '', true);
+        
+        // Reset select
+        select.value = '';
     });
 </script>
 

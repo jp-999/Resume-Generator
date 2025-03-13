@@ -1,6 +1,12 @@
 {
   "dependencies": {
+    "docx4js": "^3.3.0",
+    "email-validator": "^2.0.4",
+    "fs": "^0.0.1-security",
+    "natural": "^8.0.1",
     "next-themes": "^0.4.6",
+    "pdf-parse": "^1.1.1",
+    "phone": "^3.1.58",
     "react-dom": "^19.0.0"
   },
   "scripts": {
