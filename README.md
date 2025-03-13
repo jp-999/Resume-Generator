@@ -118,18 +118,28 @@ Visit `http://localhost:5000` in your browser and start creating! 🎉
 
 ## ✨ Features
 
-- 📝 **Multiple Professional Templates** - Choose from Classic, Minimal, Modern, and Executive designs
-- 🎨 **Live Preview** - See changes in real-time as you type with template-specific styling
-- 🌙 **Dark Mode** - Easy on the eyes with dark mode support
+- 📝 **Multiple Professional Templates** 
+  - Modern - Clean and modern design for tech and creative professionals
+  - Classic - Timeless design suitable for all industries
+  - Minimal - Minimalist design that puts content first
+  - Executive - Sophisticated design for senior positions
+  - Impact - Bold and dynamic design with strong visual elements
+  - Unique - Distinctive split-layout design with professional sidebar
+
+- 🎨 **Live Preview** - See your resume in real-time as you build it
+- 📄 **PDF Generation** - Download your resume as a professional PDF document
 - 📱 **Responsive Design** - Works perfectly on all devices
-- 🔒 **No Data Storage** - Your information stays private
-- 📄 **Professional PDF Output** - Clean and well-formatted resumes
-- ⚡ **Fast Generation** - Get your resume in seconds
-- 🎯 **Social Links** - Add your GitHub and LinkedIn profiles
-- 📜 **Certifications** - Showcase your professional certifications
-- 🖼️ **Profile Picture** - Add a professional photo to your resume
-- 🎚️ **Skill Bars** - Visual representation of your skill levels
-- 📊 **Two-Column Layout** - Efficient use of space with modern design
+- 🤖 **ATS Checker** - Ensure your resume is ATS-friendly
+- 📋 **Resume Parser** - Upload existing resumes (PDF, DOCX, TXT) to auto-fill forms
+- 📚 **Resume Tips** - Get expert advice on resume writing
+- 🔒 **Privacy First** - No data storage, everything processed locally
+- 💼 **Professional Sections**
+  - Contact Information
+  - Professional Summary
+  - Work Experience
+  - Education
+  - Skills
+  - Additional Sections
 
 ## 📋 Templates
 
@@ -175,26 +185,25 @@ Visit `http://localhost:5000` in your browser and start creating! 🎉
   - TailwindCSS for styling
   - JavaScript for interactivity
   - Font Awesome Icons
-  - Google Fonts (Poppins, Inter, Roboto)
+  - Google Fonts
 
 - **Backend**:
   - Python 3.8+
   - Flask Web Framework
-  - ReportLab PDF Library
-  - Jinja2 Templates
+  - wkhtmltopdf for PDF generation
+  - PyPDF2 for PDF parsing
+  - python-docx for DOCX parsing
+  - Flask-CORS for cross-origin support
 
 ## 📖 Usage
 
-1. Choose your preferred template
-2. Fill in your personal details
-3. Add your professional summary
-4. List your skills (with proficiency levels)
-5. Input work experience
-6. Add education details
-7. Include certifications (optional)
-8. Add social links (optional)
-9. Preview your resume in real-time
-10. Generate and download your PDF resume
+1. Visit the homepage and choose from available templates
+2. Click on "Create Resume" to start building
+3. Fill in your personal and professional details
+4. Preview your resume in real-time
+5. Use the ATS checker to ensure compatibility
+6. Download your resume as a PDF
+7. Optionally, upload an existing resume to auto-fill the form
 
 ## 🎨 Template Features
 
