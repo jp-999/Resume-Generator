@@ -241,7 +241,7 @@ def parse_resume():
         elif file_ext == 'txt':
             with open(file_path, 'r', encoding='utf-8') as f:
                 text = f.read()
-        
+            
         # Parse the extracted text
         parsed_data = parse_resume_text(text)
         return jsonify(parsed_data)
