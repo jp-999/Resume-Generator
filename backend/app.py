@@ -14,7 +14,8 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
-    static_folder='static'         # Point to the static folder
+    static_folder='static',         # Point to the static folder
+    static_url_path='/static'       # Set the URL path for static files
 )
 CORS(app)
 
