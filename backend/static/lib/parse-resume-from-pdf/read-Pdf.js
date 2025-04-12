@@ -1,89 +1,55 @@
-// Getting pdfjs to work is tricky. The following 3 lines would make it work
-// https://stackoverflow.com/a/63486898/7699841
-import * as pdfjs from "pdfjs-dist";
-// @ts-ignore
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// Getting pdfjs to work is tricky. The following lines make it work in a browser environment
+import * as pdfjs from "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/+esm";
+import { PDFJS_WORKER_URL } from "../constants.js";
 
-import { TextItem as PdfjsTextItem } from "pdfjs-dist/types/src/display/api";
-import { TextItems } from "lib/parse-resume-from-pdf/types";
+// Set worker source
+pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
 
 /**
- * Step 1: Read pdf and output textItems by concatenating results from each page.
+ * Step 1. Read a pdf resume file into text items to prepare for processing.
  *
- * To make processing easier, it returns a new TextItem type, which removes unused
- * attributes (dir, transform), adds x and y positions, and replaces loaded font
- * name with original font name.
- *
- * @example
- * const onFileChange = async (e) => {
- *     const fileUrl = URL.createObjectURL(e.target.files[0]);
- *     const textItems = await readPdf(fileUrl);
- * }
+ * The core of this function utilizes PDF.js to extract text from PDF documents.
+ * Each text item comes with its text content and positioning data (x, y).
  */
-export const readPdf = async (fileUrl) => {
-  const pdfFile = await pdfjs.getDocument(fileUrl).promise;
-  let textItems = [];
-
-  for (let i = 1; i <= pdfFile.numPages; i++) {
-    // Parse each page into text content
-    const page = await pdfFile.getPage(i);
-    const textContent = await page.getTextContent();
-
-    // Wait for font data to be loaded
-    await page.getOperatorList();
-    const commonObjs = page.commonObjs;
-
-    // Convert Pdfjs TextItem type to new TextItem type
-    const pageTextItems = textContent.items.map((item) => {
-      const {
-        str: text,
-        dir, // Remove text direction
-        transform,
-        fontName: pdfFontName,
-        ...otherProps
-      } = item;
-
-      // Extract x, y position of text item from transform.
-      // As a side note, origin (0, 0) is bottom left.
-      // Reference: https://github.com/mozilla/pdf.js/issues/5643#issuecomment-496648719
-      const x = transform[4];
-      const y = transform[5];
-
-      // Use commonObjs to convert font name to original name (e.g. "GVDLYI+Arial-BoldMT")
-      // since non system font name by default is a loaded name, e.g. "g_d8_f1"
-      // Reference: https://github.com/mozilla/pdf.js/pull/15659
-      const fontObj = commonObjs.get(pdfFontName);
-      const fontName = fontObj.name;
-
-      // pdfjs reads a "-" as "-­‐" in the resume example. This is to revert it.
-      // Note "-­‐" is "-&#x00AD;‐" with a soft hyphen in between. It is not the same as "--"
-      const newText = text.replace(/-­‐/g, "-");
-
-      const newItem = {
-        ...otherProps,
-        fontName,
-        text: newText,
-        x,
-        y,
-      };
-      return newItem;
-    });
-
-    // Some pdf's text items are not in order. This is most likely a result of creating it
-    // from design softwares, e.g. canvas. The commented out method can sort pageTextItems
-    // by y position to put them back in order. But it is not used since it might be more
-    // helpful to let users know that the pdf is not in order.
-    // pageTextItems.sort((a, b) => Math.round(b.y) - Math.round(a.y));
-
-    // Add text items of each page to total
-    textItems.push(...pageTextItems);
+export async function readPdf(fileUrl) {
+  if (!window.pdfjsLib) {
+    throw new Error("PDF.js library not found!");
   }
 
-  // Filter out empty space textItem noise
-  const isEmptySpace = (textItem) =>
-    !textItem.hasEOL && textItem.text.trim() === "";
-  textItems = textItems.filter((textItem) => !isEmptySpace(textItem));
+  try {
+    // Load the PDF document using PDF.js
+    const loadingTask = pdfjsLib.getDocument(fileUrl);
+    const pdf = await loadingTask.promise;
+    const numPages = pdf.numPages;
 
-  return textItems;
-};
+    // Extract text from all pages
+    let allTextItems = [];
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+
+      const pageTextItems = textContent.items.map((item) => {
+        // Extract position from transform matrix
+        const x = item.transform[4];
+        const y = item.transform[5];
+        
+        return {
+          text: item.str,
+          x,
+          y,
+          width: item.width || 0,
+          height: item.height || 10,
+          fontName: item.fontName || '',
+        };
+      });
+
+      allTextItems = [...allTextItems, ...pageTextItems];
+    }
+
+    // Filter out empty text items
+    return allTextItems.filter((item) => item.text.trim() !== "");
+  } catch (error) {
+    console.error("Error reading PDF:", error);
+    throw error;
+  }
+}

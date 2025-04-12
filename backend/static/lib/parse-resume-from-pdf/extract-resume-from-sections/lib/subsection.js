@@ -1,5 +1,5 @@
-import { BULLET_POINTS } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
-import { isBold } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
+import { BULLET_POINTS } from "./bullet-points.js";
+import { isBold } from "./common-features.js";
 
 /**
  * Divide lines into subsections based on difference in line gap or bold text.

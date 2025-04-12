@@ -10,6 +10,7 @@ import tempfile
 import PyPDF2
 from docx import Document
 import re
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
@@ -32,7 +33,15 @@ except Exception as e:
     config = None
 
 # Directory for storing generated PDFs
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'generated')
+GENERATED_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'generated')
+os.makedirs(GENERATED_FOLDER, exist_ok=True)
+
+# Configure upload folder for resume files
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+
+# Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Available templates
@@ -206,26 +215,37 @@ def parse_resume():
         if file_ext not in ['pdf', 'docx', 'txt']:
             return jsonify({'error': 'Invalid file format'}), 400
             
-        # Extract text based on file type
-        text = ''
+        # Save the file temporarily to serve to the client-side parser
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        # For PDF files, we'll use the client-side JS parser
         if file_ext == 'pdf':
-            pdf_reader = PyPDF2.PdfReader(file)
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-        elif file_ext == 'docx':
-            doc = Document(file)
-            for para in doc.paragraphs:
-                text += para.text + '\n'
-        else:  # txt file
-            text = file.read().decode('utf-8')
-            
-        # Parse the extracted text
-        parsed_data = parse_resume_text(text)
-        return jsonify(parsed_data)
+            # Return the file URL for client-side processing
+            file_url = url_for('static', filename=f'uploads/{filename}')
+            return jsonify({
+                'fileUrl': file_url,
+                'usePdfParser': True
+            })
+        else:
+            # For non-PDF files, use the existing server-side parser
+            text = ''
+            if file_ext == 'docx':
+                doc = Document(file_path)
+                for para in doc.paragraphs:
+                    text += para.text + '\n'
+            else:  # txt file
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    text = f.read()
+                
+            # Parse the extracted text
+            parsed_data = parse_resume_text(text)
+            return jsonify(parsed_data)
         
     except Exception as e:
         print(f"Resume parsing error: {str(e)}")
-        return jsonify({'error': 'Failed to parse resume'}), 500
+        return jsonify({'error': f'Failed to parse resume: {str(e)}'}), 500
 
 def parse_resume_text(text):
     # Initialize parsed data

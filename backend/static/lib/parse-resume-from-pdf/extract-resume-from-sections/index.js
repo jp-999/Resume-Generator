@@ -1,8 +1,8 @@
-import { extractProfile } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-profile";
-import { extractEducation } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-education";
-import { extractWorkExperience } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-work-experience";
-import { extractProject } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-project";
-import { extractSkills } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-skills";
+import { extractProfile } from "./extractProfile.js";
+import { extractEducation } from "./extractEducation.js";
+import { extractWorkExperience } from "./extractWorkExperience.js";
+import { extractProject } from "./extractProject.js";
+import { extractSkills } from "./extractSkills.js";
 
 /**
  * Step 4. Extract resume from sections.

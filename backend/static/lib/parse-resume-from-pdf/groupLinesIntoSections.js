@@ -4,7 +4,7 @@ import {
   isBold,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 
-export const PROFILE_SECTION = "profile";
+const PROFILE_SECTION = "profile";
 
 /**
  * Step 3. Group lines into sections
@@ -56,39 +56,38 @@ const SECTION_TITLE_KEYWORDS = [
   ...SECTION_TITLE_SECONDARY_KEYWORDS,
 ];
 
-const isSectionTitle = (line, lineNumber) => {
-  const isFirstTwoLines = lineNumber < 2;
-  const hasMoreThanOneItemInLine = line.length > 1;
-  const hasNoItemInLine = line.length === 0;
-  if (isFirstTwoLines || hasMoreThanOneItemInLine || hasNoItemInLine) {
-    return false;
+// Check if a line is a section title based on text alone
+const isSectionTitleText = (text) => {
+  if (text) {
+    // If line is less than 50 characters
+    return (
+      text.length < 50 &&
+      // Title should not have bullet point
+      !/^[•●]/.test(text) &&
+      // Check title format for common title patterns
+      (/^(SUMMARY|summary|Summary|EDUCATION|Education|education|EXPERIENCE|Experience|experience|EMPLOYMENT|Employment|employment|SKILL|Skill|skill|HISTORY|History|history|CERTIFICATION|Certification|certification|QUALIFICATION|Qualification|qualification|HONOR|Honor|honor|PROJECT|Project|project|ACHIEVEMENT|Achievement|achievement|INTEREST|Interest|interest|LANGUAGE|Language|language|REFERENCE|Reference|reference|AWARD|Award|award|STRENGTH|Strength|strength|VOLUNTEER|Volunteer|volunteer|OBJECTIVE|Objective|objective|PERSONAL|Personal|personal|CURRICULUM|Curriculum|curriculum|PUBLICATION|Publication|publication|CONFERENCE|Conference|conference|AFFILIATION|Affiliation|affiliation|ENDORSEMENT|Endorsement|endorsement|PATENT|Patent|patent|RECOMMENDATION|Recommendation|recommendation|TESTIMONIAL|Testimonial|testimonial|ASSESSMENT|Assessment|assessment|RECOGNITION|Recognition|recognition|INVOLVEMENT|Involvement|involvement|ACTIVITY|Activity|activity|TRAINING|Training|training|SEMINAR|Seminar|seminar|LEADERSHIP|Leadership|leadership|EXPERTISE|Expertise|expertise|COMPETENCY|Competency|competency|COURSE|Course|course)(\s|$)/ ||
+        /^(community|COMMUNITY|ABOUT|About|about)((\s+)me|ME|Me)?$/.test(text) ||
+        /^(MY|my|My)(\s+)(EXPERTISE|EDUCATION|BACKGROUND|CAREER|INTEREST|PROFILE|SPECIALITY|COMPETENCY)$/.test(text) ||
+        /^(PROFESSIONAL|Professional|professional)(\s+)(BACKGROUND|SUMMARY|PROFILE)$/.test(text) ||
+        /^(RELEVANT|Relevant|relevant)(\s+)(EXPERIENCE|QUALIFICATION|SKILL|PROJECT)$/.test(text))
+    );
   }
+  return false;
+};
 
-  const textItem = line[0];
+// Check if a line is a section title
+const isSectionTitle = (line, lineIdx) => {
+  if (line && line.length === 1) {
+    const onlyItem = line[0];
 
-  // The main heuristic to determine a section title is to check if the text is double emphasized
-  // to be both bold and all uppercase, which is generally true for a well formatted resume
-  if (isBold(textItem) && hasLetterAndIsAllUpperCase(textItem)) {
-    return true;
+    // Check if it's the first line, since first line is often always name
+    if (lineIdx === 0) {
+      // Skip name line as section header
+      return false;
+    }
+
+    // Check text if it seems like a title
+    return isSectionTitleText(onlyItem.text);
   }
-
-  // The following is a fallback heuristic to detect section title if it includes a keyword match
-  // (This heuristics is not well tested and may not work well)
-  const text = textItem.text.trim();
-  const textHasAtMost2Words =
-    text.split(" ").filter((s) => s !== "&").length <= 2;
-  const startsWithCapitalLetter = /[A-Z]/.test(text.slice(0, 1));
-
-  if (
-    textHasAtMost2Words &&
-    hasOnlyLettersSpacesAmpersands(textItem) &&
-    startsWithCapitalLetter &&
-    SECTION_TITLE_KEYWORDS.some((keyword) =>
-      text.toLowerCase().includes(keyword)
-    )
-  ) {
-    return true;
-  }
-
   return false;
 };

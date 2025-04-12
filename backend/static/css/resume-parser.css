@@ -1,0 +1,139 @@
+/**
+ * Resume Parser CSS
+ */
+
+/* Loading indicator styles */
+.parser-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.parser-loading::before {
+    content: "Parsing your resume...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(147, 51, 234, 0.9);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    animation: pulse 2s infinite;
+}
+
+.parser-loading::before::after {
+    content: "";
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 3px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.parser-loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 90;
+    border-radius: 1rem;
+    backdrop-filter: blur(2px);
+}
+
+/* Pulse animation for the loading text */
+@keyframes pulse {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.5);
+    }
+    70% { 
+        box-shadow: 0 0 0 15px rgba(147, 51, 234, 0);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+    }
+}
+
+/* Spinner animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Notification styles */
+.resume-parser-notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slide-in 0.3s ease-out forwards;
+    transition: opacity 0.3s ease;
+}
+
+.notification-success {
+    background-color: #10b981;
+}
+
+.notification-error {
+    background-color: #ef4444;
+}
+
+.notification-info {
+    background-color: #3b82f6;
+}
+
+.notification-close {
+    margin-left: 0.75rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Animation for preview updates */
+@keyframes highlight {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(147, 51, 234, 0.1); }
+    100% { background-color: transparent; }
+}
+
+.preview-update {
+    animation: highlight 0.5s ease-in-out;
+} 

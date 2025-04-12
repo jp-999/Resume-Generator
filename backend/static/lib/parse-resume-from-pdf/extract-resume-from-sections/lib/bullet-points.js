@@ -29,39 +29,52 @@ export const BULLET_POINTS = [
  * Convert bullet point lines into a string array aka descriptions.
  */
 export const getBulletPointsFromLines = (lines) => {
-  // Simply return all lines with text item joined together if there is no bullet point
-  const firstBulletPointLineIndex = getFirstBulletPointLineIdx(lines);
-  if (firstBulletPointLineIndex === undefined) {
-    return lines.map((line) => line.map((item) => item.text).join(" "));
+  // If no lines, return empty array
+  if (lines.length === 0) {
+    return [];
   }
 
-  // Otherwise, process and remove bullet points
+  // Initialize with first line
+  let descriptions = [];
+  let currentDescription = "";
 
-  // Combine all lines into a single string
-  let lineStr = "";
-  for (let item of lines.flat()) {
-    const text = item.text;
-    // Make sure a space is added between 2 words
-    if (!lineStr.endsWith(" ") && !text.startsWith(" ")) {
-      lineStr += " ";
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lineText = line
+      .map((item) => item.text)
+      .join("")
+      .trim();
+
+    // Skip empty lines
+    if (lineText === "") {
+      continue;
     }
-    lineStr += text;
+
+    // Check for bullet point at start of line
+    const hasBulletPoint = BULLET_POINTS.includes(lineText[0]);
+
+    if (hasBulletPoint) {
+      // If we already have a current description, save it before starting a new one
+      if (currentDescription) {
+        descriptions.push(currentDescription);
+      }
+      // Start a new description without the bullet point
+      currentDescription = lineText.slice(1).trim();
+    } else if (i === 0) {
+      // First line with no bullet point
+      currentDescription = lineText;
+    } else {
+      // Continuation of current description
+      currentDescription += " " + lineText;
+    }
   }
 
-  // Get the most common bullet point
-  const commonBulletPoint = getMostCommonBulletPoint(lineStr);
-
-  // Start line string from the beginning of the first bullet point
-  const firstBulletPointIndex = lineStr.indexOf(commonBulletPoint);
-  if (firstBulletPointIndex !== -1) {
-    lineStr = lineStr.slice(firstBulletPointIndex);
+  // Add the last description if exists
+  if (currentDescription) {
+    descriptions.push(currentDescription);
   }
 
-  // Divide the single string using bullet point as divider
-  return lineStr
-    .split(commonBulletPoint)
-    .map((text) => text.trim())
-    .filter((text) => !!text);
+  return descriptions;
 };
 
 const getMostCommonBulletPoint = (str) => {
