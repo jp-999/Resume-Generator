@@ -228,20 +228,23 @@ def parse_resume():
                 'fileUrl': file_url,
                 'usePdfParser': True
             })
-        else:
-            # For non-PDF files, use the existing server-side parser
-            text = ''
-            if file_ext == 'docx':
-                doc = Document(file_path)
-                for para in doc.paragraphs:
-                    text += para.text + '\n'
-            else:  # txt file
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    text = f.read()
-                
-            # Parse the extracted text
-            parsed_data = parse_resume_text(text)
-            return jsonify(parsed_data)
+        
+        # For non-PDF files, use the server-side parser
+        text = ''
+        
+        # Handle DOCX files
+        if file_ext == 'docx':
+            doc = Document(file_path)
+            for para in doc.paragraphs:
+                text += para.text + '\n'
+        # Handle TXT files
+        elif file_ext == 'txt':
+            with open(file_path, 'r', encoding='utf-8') as f:
+                text = f.read()
+        
+        # Parse the extracted text
+        parsed_data = parse_resume_text(text)
+        return jsonify(parsed_data)
         
     except Exception as e:
         print(f"Resume parsing error: {str(e)}")

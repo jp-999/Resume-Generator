@@ -87,7 +87,7 @@ function groupTextItemsIntoLines(textItems) {
         // If Y position is similar to current line, add to current line
         if (Math.abs(item.y - currentY) < 3) {
             currentLine.push(item);
-        } else {
+            } else {
             // Sort line items by X position (left to right)
             currentLine.sort((a, b) => a.x - b.x);
             lines.push(currentLine);
