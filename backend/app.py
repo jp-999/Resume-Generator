@@ -14,8 +14,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
-    static_folder='static',         # Point to the static folder
-    static_url_path='/static'       # Set the URL path for static files
+    static_folder='static'         # Point to the static folder
 )
 CORS(app)
 
@@ -259,15 +258,12 @@ def parse_resume_text(text):
         'phone': '',
         'summary': '',
         'skills': [],
-        'experience': '',
-        'education': ''
+        'experience': [],  # Changed from string to array
+        'education': []    # Changed from string to array
     }
     
     # Split text into lines and sections
     lines = text.split('\n')
-    sections = []
-    current_section = []
-    current_section_title = ''
     
     # Common section headers
     section_headers = {
@@ -328,8 +324,26 @@ def parse_resume_text(text):
                     # Process skills section
                     skills_text = ' '.join(current_section)
                     parsed_data['skills'] = extract_skills(skills_text)
+                elif current_type == 'experience':
+                    # Convert experience section to array format with at least one entry
+                    parsed_data['experience'] = [{
+                        'company': '',
+                        'position': '',
+                        'startDate': '',
+                        'endDate': '',
+                        'description': '\n'.join(current_section)
+                    }]
+                elif current_type == 'education':
+                    # Convert education section to array format with at least one entry
+                    parsed_data['education'] = [{
+                        'degree': '',
+                        'institution': '',
+                        'startDate': '',
+                        'endDate': '',
+                        'description': '\n'.join(current_section)
+                    }]
                 else:
-                    parsed_data[current_type] = '\\n'.join(current_section)
+                    parsed_data[current_type] = '\n'.join(current_section)
             
             current_type = section_type
             current_section = []
@@ -341,8 +355,24 @@ def parse_resume_text(text):
         if current_type == 'skills':
             skills_text = ' '.join(current_section)
             parsed_data['skills'] = extract_skills(skills_text)
+        elif current_type == 'experience':
+            parsed_data['experience'] = [{
+                'company': '',
+                'position': '',
+                'startDate': '',
+                'endDate': '',
+                'description': '\n'.join(current_section)
+            }]
+        elif current_type == 'education':
+            parsed_data['education'] = [{
+                'degree': '',
+                'institution': '',
+                'startDate': '',
+                'endDate': '', 
+                'description': '\n'.join(current_section)
+            }]
         else:
-            parsed_data[current_type] = '\\n'.join(current_section)
+            parsed_data[current_type] = '\n'.join(current_section)
     
     # If no explicit summary section found, try to extract it from the beginning
     if not parsed_data['summary']:
@@ -355,12 +385,39 @@ def parse_resume_text(text):
             if len(summary_lines) >= 3:  # Limit to first few lines
                 break
         if summary_lines:
-            parsed_data['summary'] = '\\n'.join(summary_lines)
+            parsed_data['summary'] = '\n'.join(summary_lines)
     
     # If no skills found in skills section, try to extract from whole text
     if not parsed_data['skills']:
         parsed_data['skills'] = extract_skills(text)
     
+    # Ensure experience and education are always arrays
+    if not isinstance(parsed_data['experience'], list):
+        parsed_data['experience'] = []
+    
+    if not isinstance(parsed_data['education'], list):
+        parsed_data['education'] = []
+    
+    # Make sure experience and education have at least one empty entry
+    if not parsed_data['experience']:
+        parsed_data['experience'] = [{
+            'company': '',
+            'position': '',
+            'startDate': '',
+            'endDate': '',
+            'description': ''
+        }]
+    
+    if not parsed_data['education']:
+        parsed_data['education'] = [{
+            'degree': '',
+            'institution': '',
+            'startDate': '',
+            'endDate': '',
+            'description': ''
+        }]
+    
+    print("Parsed resume data:", parsed_data)
     return parsed_data
 
 def extract_skills(text):

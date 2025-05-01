@@ -163,51 +163,75 @@ if (typeof window.fillFormWithParsedData !== 'function') {
         console.log('Filling form with parsed data:', data);
 
         try {
-            // Reset form if needed
-            document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]), textarea').forEach(input => {
-                if (input.type !== 'button') {
-                    input.value = '';
-                }
-            });
-            
             // Basic Information
             if (data.name) {
-                document.getElementById('name').value = data.name;
-                window.updatePreviewText('preview-name', data.name);
+                const nameInput = document.getElementById('name');
+                if (nameInput) {
+                    nameInput.value = data.name;
+                    console.log('Set name to:', data.name);
+                }
             }
+            
             if (data.email) {
-                document.getElementById('email').value = data.email;
-                window.updatePreviewText('preview-email', data.email);
+                const emailInput = document.getElementById('email');
+                if (emailInput) {
+                    emailInput.value = data.email;
+                    console.log('Set email to:', data.email);
+                }
             }
+            
             if (data.phone) {
-                document.getElementById('phone').value = data.phone;
-                window.updatePreviewText('preview-phone', data.phone);
+                const phoneInput = document.getElementById('phone');
+                if (phoneInput) {
+                    phoneInput.value = data.phone;
+                    console.log('Set phone to:', data.phone);
+                }
             }
 
             // Professional Summary
             if (data.summary) {
-                document.getElementById('summary').value = data.summary;
-                window.updatePreviewText('preview-summary', data.summary);
+                const summaryInput = document.getElementById('summary');
+                if (summaryInput) {
+                    summaryInput.value = data.summary;
+                    console.log('Set summary to:', data.summary);
+                    
+                    // Make sure the textarea adjusts its height
+                    if (typeof autosizeTextarea === 'function') {
+                        autosizeTextarea(summaryInput);
+                    }
+                }
             }
 
             // Skills
-            if (data.skills && data.skills.length > 0) {
+            if (data.skills) {
                 const skillsContainer = document.getElementById('skills-container');
                 if (skillsContainer) {
                     const skillsEntry = skillsContainer.querySelector('.skill-entry textarea');
                     if (skillsEntry) {
+                        let skillsText = '';
+                        
                         if (Array.isArray(data.skills)) {
-                            skillsEntry.value = data.skills.join('\n• ');
+                            skillsText = data.skills.join('\n• ');
+                            if (!skillsText.startsWith('• ')) {
+                                skillsText = '• ' + skillsText;
+                            }
                         } else if (typeof data.skills === 'string') {
-                            skillsEntry.value = data.skills;
+                            skillsText = data.skills;
                         }
-                        window.updatePreviewText('preview-skills', skillsEntry.value);
+                        
+                        skillsEntry.value = skillsText;
+                        console.log('Set skills to:', skillsText);
+                        
+                        // Make sure the textarea adjusts its height
+                        if (typeof autosizeTextarea === 'function') {
+                            autosizeTextarea(skillsEntry);
+                        }
                     }
                 }
             }
 
             // Work Experience
-            if (data.experience && data.experience.length > 0 && Array.isArray(data.experience)) {
+            if (data.experience && Array.isArray(data.experience)) {
                 const experienceContainer = document.getElementById('experience-container');
                 if (experienceContainer) {
                     // Clear existing entries except the first one
@@ -215,28 +239,58 @@ if (typeof window.fillFormWithParsedData !== 'function') {
                         experienceContainer.removeChild(experienceContainer.lastChild);
                     }
                     
+                    // Reset the first entry
+                    const firstEntry = experienceContainer.querySelector('.experience-entry');
+                    if (firstEntry) {
+                        firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                            input.value = '';
+                        });
+                    }
+                    
                     data.experience.forEach((exp, index) => {
                         if (index > 0) {
-                            window.addEntry('experience');
+                            // Add new entry for each experience after the first one
+                            addEntry('experience');
                         }
                         
-                        const entry = experienceContainer.children[index];
+                        // Get the current entry element
+                        const entries = experienceContainer.querySelectorAll('.experience-entry');
+                        const entry = entries[index];
+                        
                         if (entry) {
-                            if (exp.company) entry.querySelector('[name="experience_company[]"]').value = exp.company;
-                            if (exp.position) entry.querySelector('[name="experience_position[]"]').value = exp.position;
-                            if (exp.startDate) entry.querySelector('[name="experience_start[]"]').value = exp.startDate;
-                            if (exp.endDate) entry.querySelector('[name="experience_end[]"]').value = exp.endDate;
-                            if (exp.description) entry.querySelector('[name="experience_description[]"]').value = exp.description;
+                            // Fill in the experience data
+                            const companyInput = entry.querySelector('[name="experience_company[]"]');
+                            const positionInput = entry.querySelector('[name="experience_position[]"]');
+                            const startDateInput = entry.querySelector('[name="experience_start[]"]');
+                            const endDateInput = entry.querySelector('[name="experience_end[]"]');
+                            const descriptionInput = entry.querySelector('[name="experience_description[]"]');
+                            
+                            if (companyInput && exp.company) companyInput.value = exp.company;
+                            if (positionInput && exp.position) positionInput.value = exp.position;
+                            if (startDateInput && exp.startDate) {
+                                // Format date if necessary
+                                startDateInput.value = formatDateForInput(exp.startDate);
+                            }
+                            if (endDateInput && exp.endDate) {
+                                // Format date if necessary
+                                endDateInput.value = formatDateForInput(exp.endDate);
+                            }
+                            if (descriptionInput && exp.description) {
+                                descriptionInput.value = exp.description;
+                                // Make sure the textarea adjusts its height
+                                if (typeof autosizeTextarea === 'function') {
+                                    autosizeTextarea(descriptionInput);
+                                }
+                            }
+                            
+                            console.log(`Set experience ${index} data:`, exp);
                         }
                     });
-                    
-                    // Update the preview
-                    window.updateExperiencePreview();
                 }
             }
 
             // Education
-            if (data.education && data.education.length > 0 && Array.isArray(data.education)) {
+            if (data.education && Array.isArray(data.education)) {
                 const educationContainer = document.getElementById('education-container');
                 if (educationContainer) {
                     // Clear existing entries except the first one
@@ -244,31 +298,134 @@ if (typeof window.fillFormWithParsedData !== 'function') {
                         educationContainer.removeChild(educationContainer.lastChild);
                     }
                     
+                    // Reset the first entry
+                    const firstEntry = educationContainer.querySelector('.education-entry');
+                    if (firstEntry) {
+                        firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                            input.value = '';
+                        });
+                    }
+                    
                     data.education.forEach((edu, index) => {
                         if (index > 0) {
-                            window.addEntry('education');
+                            // Add new entry for each education after the first one
+                            addEntry('education');
                         }
                         
-                        const entry = educationContainer.children[index];
+                        // Get the current entry element
+                        const entries = educationContainer.querySelectorAll('.education-entry');
+                        const entry = entries[index];
+                        
                         if (entry) {
-                            if (edu.degree) entry.querySelector('[name="education_degree[]"]').value = edu.degree;
-                            if (edu.institution) entry.querySelector('[name="education_institution[]"]').value = edu.institution;
-                            if (edu.startDate) entry.querySelector('[name="education_start[]"]').value = edu.startDate;
-                            if (edu.endDate) entry.querySelector('[name="education_end[]"]').value = edu.endDate;
-                            if (edu.description) entry.querySelector('[name="education_description[]"]').value = edu.description;
+                            // Fill in the education data
+                            const degreeInput = entry.querySelector('[name="education_degree[]"]');
+                            const institutionInput = entry.querySelector('[name="education_institution[]"]');
+                            const startDateInput = entry.querySelector('[name="education_start[]"]');
+                            const endDateInput = entry.querySelector('[name="education_end[]"]');
+                            const descriptionInput = entry.querySelector('[name="education_description[]"]');
+                            
+                            if (degreeInput && edu.degree) degreeInput.value = edu.degree;
+                            if (institutionInput && edu.institution) institutionInput.value = edu.institution;
+                            if (startDateInput && edu.startDate) {
+                                // Format date if necessary
+                                startDateInput.value = formatDateForInput(edu.startDate);
+                            }
+                            if (endDateInput && edu.endDate) {
+                                // Format date if necessary
+                                endDateInput.value = formatDateForInput(edu.endDate);
+                            }
+                            if (descriptionInput && edu.description) {
+                                descriptionInput.value = edu.description;
+                                // Make sure the textarea adjusts its height
+                                if (typeof autosizeTextarea === 'function') {
+                                    autosizeTextarea(descriptionInput);
+                                }
+                            }
+                            
+                            console.log(`Set education ${index} data:`, edu);
                         }
                     });
-                    
-                    // Update the preview
-                    window.updateEducationPreview();
                 }
             }
+            
+            // Handle additional sections if they exist
+            const standardSections = ['name', 'email', 'phone', 'summary', 'skills', 'experience', 'education'];
+            const additionalSections = Object.keys(data).filter(key => !standardSections.includes(key));
+            
+            if (additionalSections.length > 0) {
+                console.log('Found additional sections:', additionalSections);
+            }
 
-            console.log('Form filled successfully');
+            console.log('Resume data successfully loaded into form!');
+            showNotification('Resume data successfully loaded!', 'success');
         } catch (error) {
             console.error('Error filling form with parsed data:', error);
+            showNotification('Error processing resume data: ' + error.message, 'error');
         }
     };
+}
+
+// Helper function to format dates for input elements (YYYY-MM format)
+function formatDateForInput(dateStr) {
+    if (!dateStr) return '';
+    
+    // Handle 'Present' or 'Current' values
+    if (/present|current|now/i.test(dateStr)) {
+        return '';
+    }
+    
+    try {
+        // If it's already in YYYY-MM format, return as is
+        if (/^\d{4}-\d{2}$/.test(dateStr)) {
+            return dateStr;
+        }
+        
+        // Try to extract year and month from various formats
+        const yearMatch = dateStr.match(/\b(19|20)\d{2}\b/);
+        if (!yearMatch) return '';
+        
+        const year = yearMatch[0];
+        
+        // Try to find month
+        const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        let month = '01'; // Default to January
+        
+        for (let i = 0; i < monthNames.length; i++) {
+            if (dateStr.toLowerCase().includes(monthNames[i])) {
+                // Add 1 to index and pad with leading zero if needed
+                month = String(i + 1).padStart(2, '0');
+                break;
+            }
+        }
+        
+        return `${year}-${month}`;
+    } catch (e) {
+        console.error('Error formatting date:', e);
+        return '';
+    }
+}
+
+// Helper function to show notifications to user
+function showNotification(message, type = 'info') {
+    if (typeof window.showNotification === 'function') {
+        // Use existing notification function if available
+        window.showNotification(message, type);
+    } else {
+        // Create our own notification
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
+            type === 'error' ? 'bg-red-500' :
+            type === 'success' ? 'bg-green-500' :
+            'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('opacity-0');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
 }
 
 // Only define parseAndFillResume if it doesn't already exist

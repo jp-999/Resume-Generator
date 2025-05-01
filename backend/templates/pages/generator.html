@@ -8,7 +8,37 @@
 
 {% block content %}
 
-<!-- Add the autosize class to all textareas -->
+<!-- Add the autosize class to all textareas and initialize the autosize functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add autosize class to all textareas when page loads
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.classList.add('autosize', 'overflow-hidden', 'resize-none');
+            // Initialize autosize functionality
+            if (typeof autosizeTextarea === 'function') {
+                autosizeTextarea(textarea);
+            } else {
+                // Fallback autosize function if the main one isn't loaded yet
+                function adjustHeight() {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = textarea.scrollHeight + 'px';
+                }
+                
+                // Set initial height
+                adjustHeight();
+                
+                // Update on input
+                textarea.addEventListener('input', adjustHeight);
+                
+                // Store the function on the textarea element for possible cleanup later
+                textarea._autosize = adjustHeight;
+            }
+        });
+    });
+</script>
+
+<!-- Original autosize script (keeping for backward compatibility) -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Add autosize class to all textareas when page loads
@@ -449,39 +479,40 @@
                     body: formData
                 });
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Server returned an error');
+                }
+
                 const data = await response.json();
                 console.log('Server response:', data);
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Resume parsing failed');
-                }
 
                 if (data.error) {
                     throw new Error(data.error);
                 }
 
-                let parsedData;
-                
-                // Check if we need to use client-side PDF parsing
+                // Handle the parsing result
                 if (data.usePdfParser && data.fileUrl) {
-                    showNotification('Parsing PDF with advanced parser...', 'info');
+                    showNotification('Parsing PDF with client-side parser...', 'info');
                     try {
-                        // Parse the PDF using our parse and fill function
-                        parsedData = await window.parseAndFillResume(data.fileUrl);
-                        console.log('PDF parsed and form filled with data:', parsedData);
+                        // Use window.parseAndFillResume from our enhanced resumeParserLoader.js
+                        if (typeof window.parseAndFillResume === 'function') {
+                            await window.parseAndFillResume(data.fileUrl);
+                        } else {
+                            throw new Error('PDF parser not available');
+                        }
                     } catch (pdfError) {
                         console.error('PDF parsing error:', pdfError);
                         throw new Error('Failed to parse PDF: ' + pdfError.message);
                     }
                 } else {
-                    // Use the data returned directly from the server
-                    parsedData = data;
-                    // Fill the form with the server-parsed data
-                    fillFormWithParsedData(parsedData);
-                }
-
-                if (!parsedData || Object.keys(parsedData).length === 0) {
-                    throw new Error('No data was extracted from the resume');
+                    // Server-side parsing result
+                    if (typeof window.fillFormWithParsedData === 'function') {
+                        window.fillFormWithParsedData(data);
+                    } else {
+                        console.warn('Form filling function not available, using fallback');
+                        fillFormWithParsedData(data); // Use the function defined in generator.html
+                    }
                 }
                 
                 showNotification('Resume parsed successfully!', 'success');
@@ -498,56 +529,68 @@
         }
     });
 
+    // Fallback function in case the external one isn't loaded
     function fillFormWithParsedData(data) {
-        console.log('Filling form with parsed data:', data);
+        console.log('Using fallback form filling with parsed data:', data);
 
         try {
             // Basic Information
-            if (data.name) {
-                document.getElementById('name').value = data.name;
-            }
-            if (data.email) {
-                document.getElementById('email').value = data.email;
-            }
-            if (data.phone) {
-                document.getElementById('phone').value = data.phone;
-            }
+            if (data.name) document.getElementById('name').value = data.name;
+            if (data.email) document.getElementById('email').value = data.email;
+            if (data.phone) document.getElementById('phone').value = data.phone;
 
             // Professional Summary
-            if (data.summary) {
-                document.getElementById('summary').value = data.summary;
-            }
+            if (data.summary) document.getElementById('summary').value = data.summary;
 
             // Skills
             if (data.skills) {
                 const skillsContainer = document.getElementById('skills-container');
                 const skillsEntry = skillsContainer.querySelector('.skill-entry textarea');
+                let skillsText = '';
+                
                 if (Array.isArray(data.skills)) {
-                    skillsEntry.value = data.skills.join('\n• ');
+                    skillsText = data.skills.join('\n• ');
+                    if (!skillsText.startsWith('• ')) {
+                        skillsText = '• ' + skillsText;
+                    }
                 } else if (typeof data.skills === 'string') {
-                    skillsEntry.value = data.skills;
+                    skillsText = data.skills;
                 }
+                
+                skillsEntry.value = skillsText;
             }
 
             // Work Experience
             if (data.experience && Array.isArray(data.experience)) {
                 const experienceContainer = document.getElementById('experience-container');
+                
                 // Clear existing entries except the first one
                 while (experienceContainer.children.length > 1) {
                     experienceContainer.removeChild(experienceContainer.lastChild);
+                }
+                
+                // Reset the first entry
+                const firstEntry = experienceContainer.querySelector('.experience-entry');
+                if (firstEntry) {
+                    firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                        input.value = '';
+                    });
                 }
                 
                 data.experience.forEach((exp, index) => {
                     if (index > 0) {
                         addEntry('experience');
                     }
-                    const entry = experienceContainer.children[index];
+                    
+                    const entries = experienceContainer.querySelectorAll('.experience-entry');
+                    const entry = entries[index];
+                    
                     if (entry) {
-                        entry.querySelector('[name="experience_company[]"]').value = exp.company || '';
-                        entry.querySelector('[name="experience_position[]"]').value = exp.position || '';
-                        entry.querySelector('[name="experience_start[]"]').value = exp.startDate || '';
-                        entry.querySelector('[name="experience_end[]"]').value = exp.endDate || '';
-                        entry.querySelector('[name="experience_description[]"]').value = exp.description || '';
+                        if (exp.company) entry.querySelector('[name="experience_company[]"]').value = exp.company;
+                        if (exp.position) entry.querySelector('[name="experience_position[]"]').value = exp.position;
+                        if (exp.startDate) entry.querySelector('[name="experience_start[]"]').value = formatDateForInput(exp.startDate);
+                        if (exp.endDate) entry.querySelector('[name="experience_end[]"]').value = formatDateForInput(exp.endDate);
+                        if (exp.description) entry.querySelector('[name="experience_description[]"]').value = exp.description;
                     }
                 });
             }
@@ -555,39 +598,37 @@
             // Education
             if (data.education && Array.isArray(data.education)) {
                 const educationContainer = document.getElementById('education-container');
+                
                 // Clear existing entries except the first one
                 while (educationContainer.children.length > 1) {
                     educationContainer.removeChild(educationContainer.lastChild);
+                }
+                
+                // Reset the first entry
+                const firstEntry = educationContainer.querySelector('.education-entry');
+                if (firstEntry) {
+                    firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                        input.value = '';
+                    });
                 }
                 
                 data.education.forEach((edu, index) => {
                     if (index > 0) {
                         addEntry('education');
                     }
-                    const entry = educationContainer.children[index];
+                    
+                    const entries = educationContainer.querySelectorAll('.education-entry');
+                    const entry = entries[index];
+                    
                     if (entry) {
-                        entry.querySelector('[name="education_degree[]"]').value = edu.degree || '';
-                        entry.querySelector('[name="education_institution[]"]').value = edu.institution || '';
-                        entry.querySelector('[name="education_start[]"]').value = edu.startDate || '';
-                        entry.querySelector('[name="education_end[]"]').value = edu.endDate || '';
-                        entry.querySelector('[name="education_description[]"]').value = edu.description || '';
+                        if (edu.degree) entry.querySelector('[name="education_degree[]"]').value = edu.degree;
+                        if (edu.institution) entry.querySelector('[name="education_institution[]"]').value = edu.institution;
+                        if (edu.startDate) entry.querySelector('[name="education_start[]"]').value = formatDateForInput(edu.startDate);
+                        if (edu.endDate) entry.querySelector('[name="education_end[]"]').value = formatDateForInput(edu.endDate);
+                        if (edu.description) entry.querySelector('[name="education_description[]"]').value = edu.description;
                     }
                 });
             }
-
-            // Handle additional sections
-            const standardSections = ['name', 'email', 'phone', 'summary', 'skills', 'experience', 'education'];
-            const additionalSections = Object.keys(data).filter(key => !standardSections.includes(key));
-
-            additionalSections.forEach(sectionKey => {
-                if (data[sectionKey]) {
-                    createDynamicSection(sectionKey, 
-                        Array.isArray(data[sectionKey]) 
-                            ? data[sectionKey].join('\n• ')
-                            : data[sectionKey]
-                    );
-                }
-            });
 
             showNotification('Resume data successfully loaded!', 'success');
         } catch (error) {
@@ -596,69 +637,60 @@
         }
     }
 
-    function createDynamicSection(sectionKey, content) {
-        const formContainer = document.querySelector('form[method="POST"]');
-
-        // Create form section
-        const formSection = document.createElement('div');
-        formSection.className = 'bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move';
-        formSection.dataset.section = sectionKey;
+    // Helper function to format dates for input elements (YYYY-MM format)
+    function formatDateForInput(dateStr) {
+        if (!dateStr) return '';
         
-        const sectionTitle = sectionKey.split('_').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-        
-        formSection.innerHTML = `
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
-                        <span class="editable-heading" contenteditable="true">${sectionTitle}</span>
-                    </h2>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <textarea id="${sectionKey}" name="${sectionKey}"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32 autosize overflow-hidden resize-none"
-                    placeholder="Enter ${sectionTitle.toLowerCase()} details...">${content}</textarea>
-            </div>
-        `;
-
-        // Insert section
-        const lastSection = formContainer.querySelector('div.flex.gap-4');
-        formContainer.insertBefore(formSection, lastSection);
-
-        // Make the section draggable
-        if (typeof Sortable !== 'undefined') {
-            new Sortable(formSection.parentElement, {
-                handle: '.cursor-grab',
-                animation: 150
-            });
+        // Handle 'Present' or 'Current' values
+        if (/present|current|now/i.test(dateStr)) {
+            return '';
         }
-
-        // Apply autosize to the new textarea
-        const newTextarea = formSection.querySelector('textarea');
-        if (newTextarea && typeof autosizeTextarea === 'function') {
-            autosizeTextarea(newTextarea);
+        
+        try {
+            // If it's already in YYYY-MM format, return as is
+            if (/^\d{4}-\d{2}$/.test(dateStr)) {
+                return dateStr;
+            }
+            
+            // Try to extract year and month from various formats
+            const yearMatch = dateStr.match(/\b(19|20)\d{2}\b/);
+            if (!yearMatch) return '';
+            
+            const year = yearMatch[0];
+            
+            // Try to find month
+            const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+            let month = '01'; // Default to January
+            
+            for (let i = 0; i < monthNames.length; i++) {
+                if (dateStr.toLowerCase().includes(monthNames[i])) {
+                    // Add 1 to index and pad with leading zero if needed
+                    month = String(i + 1).padStart(2, '0');
+                    break;
+                }
+            }
+            
+            return `${year}-${month}`;
+        } catch (e) {
+            console.error('Error formatting date:', e);
+            return '';
         }
     }
 
     function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
-        type === 'error' ? 'bg-red-500' :
-        type === 'success' ? 'bg-green-500' :
-        'bg-blue-500'
-            }`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
+            type === 'error' ? 'bg-red-500' :
+            type === 'success' ? 'bg-green-500' :
+            'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
 
-            setTimeout(() => {
-                notification.classList.add('opacity-0');
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
+        setTimeout(() => {
+            notification.classList.add('opacity-0');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     function addEntry(type) {

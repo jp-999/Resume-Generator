@@ -1,88 +1,129 @@
 /**
- * Resume Parser Library Loader
+ * Resume Parser Loader
  * 
- * This script loads the resume parser library and makes it available globally.
+ * This script manages loading all resume parser scripts in the correct order
+ * and coordinates between the server and client-side parsers.
  */
 
-(function() {
-    // Define the required components
-    const components = [
-        // Core parser
-        '/static/lib/parse-resume-from-pdf/index.js',
-        '/static/lib/parse-resume-from-pdf/read-Pdf.js',
-        '/static/lib/parse-resume-from-pdf/group-text-items-into-lines.js',
-        '/static/lib/parse-resume-from-pdf/group-lines-into-sections.js',
-        
-        // Extract resume sections
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/index.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/extractProfile.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/extractEducation.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/extractWorkExperience.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/extractProject.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/extractSkills.js',
-        
-        // Utilities
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines.js',
-        '/static/lib/parse-resume-from-pdf/extract-resume-from-sections/lib/subsection.js',
-        '/static/lib/deepClone.js',
-        '/static/lib/constants.js'
-    ];
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Initializing Resume Parser Loader");
     
-    // Store loaded modules
-    const modules = {};
+    // Global variable to track if scripts are loaded
+    window.resumeParserLoaded = false;
     
-    // Create global resume parser function
-    window.parseResumeFromPdf = async function(fileUrl) {
-        try {
-            // Ensure all components are loaded
-            await loadAllComponents();
-            
-            // Call the parser
-            if (modules['parse-resume-from-pdf/index.js'] && 
-                modules['parse-resume-from-pdf/index.js'].parseResumeFromPdf) {
-                return await modules['parse-resume-from-pdf/index.js'].parseResumeFromPdf(fileUrl);
-            } else {
-                throw new Error('Resume parser library not properly loaded');
+    // Initialize parseAndFillResume function
+    window.parseAndFillResume = async function(fileUrl) {
+        console.log("parseAndFillResume called with URL:", fileUrl);
+        
+        // Ensure scripts are loaded
+        if (!window.resumeParserLoaded) {
+            await loadParserScripts();
+        }
+        
+        if (typeof window.parseResumePdf === 'function') {
+            try {
+                console.log("Starting PDF parsing...");
+                const parsedData = await window.parseResumePdf(fileUrl);
+                console.log("PDF parsed successfully with data:", parsedData);
+                
+                if (typeof window.fillFormWithParsedData === 'function') {
+                    console.log("Filling form with parsed data...");
+                    window.fillFormWithParsedData(parsedData);
+                    console.log("Form filled successfully");
+                } else {
+                    console.error("fillFormWithParsedData function not available");
+                    throw new Error("Form filling function not available");
+                }
+                return parsedData;
+            } catch (error) {
+                console.error("Error in parseAndFillResume:", error);
+                throw error;
             }
-        } catch (error) {
-            console.error('Error in parseResumeFromPdf:', error);
-            throw error;
+        } else {
+            console.error("parseResumePdf function not available");
+            throw new Error("PDF parsing function not available");
         }
     };
     
-    // Load all required components
-    async function loadAllComponents() {
+    // Helper function to load scripts in sequence
+    async function loadParserScripts() {
+        if (window.resumeParserLoaded) {
+            console.log("Resume parser scripts already loaded");
+            return;
+        }
+        
+        console.log("Loading resume parser scripts...");
+        
         try {
-            console.log('Loading resume parser components...');
-            for (const path of components) {
-                await loadScript(path);
-            }
-            console.log('All resume parser components loaded successfully');
+            // Load scripts in the correct order
+            await loadScript("/static/js/uiUtils.js");
+            console.log("uiUtils.js loaded successfully");
+            
+            await loadScript("/static/js/simpleResumeParser.js");
+            console.log("simpleResumeParser.js loaded successfully");
+            
+            await loadScript("/static/js/resumeParserAdapter.js");
+            console.log("resumeParserAdapter.js loaded successfully");
+            
+            window.resumeParserLoaded = true;
+            console.log("All resume parser scripts loaded successfully");
         } catch (error) {
-            console.error('Failed to load resume parser components:', error);
+            console.error("Error loading parser scripts:", error);
+            window.resumeParserLoaded = false;
             throw error;
         }
     }
     
-    // Function to load a script
-    function loadScript(path) {
+    function loadScript(src) {
         return new Promise((resolve, reject) => {
+            // Check if script already exists
+            const existingScript = document.querySelector(`script[src="${src}"]`);
+            if (existingScript) {
+                console.log(`Script ${src} already loaded`);
+                resolve();
+                return;
+            }
+            
             const script = document.createElement('script');
-            script.src = path;
-            script.type = 'module';
+            script.src = src;
+            script.async = false; // Ensure scripts load in sequence
+            
             script.onload = () => {
-                const key = path.split('/').pop();
-                modules[key] = window[key.replace('.js', '')];
-                resolve(path);
+                console.log(`Script ${src} loaded successfully`);
+                resolve();
             };
-            script.onerror = () => reject(new Error(`Failed to load ${path}`));
+            
+            script.onerror = (error) => {
+                console.error(`Error loading script ${src}:`, error);
+                reject(new Error(`Failed to load script: ${src}`));
+            };
+            
             document.head.appendChild(script);
         });
     }
     
-    // Notify that the loader is ready
-    console.log('Resume parser loader initialized');
-})(); 
+    // Attempt to load all parser scripts on page load
+    loadParserScripts().then(() => {
+        console.log("Parser scripts preloaded successfully");
+    }).catch(error => {
+        console.error("Failed to preload parser scripts:", error);
+    });
+    
+    // Add validation for the resume parser form
+    const resumeParserForm = document.getElementById('resumeParserForm');
+    if (resumeParserForm) {
+        resumeParserForm.addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('resumeFile');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                e.preventDefault();
+                
+                // Show notification
+                if (typeof showNotification === 'function') {
+                    showNotification('Please select a file to parse', 'error');
+                } else {
+                    alert('Please select a file to parse');
+                }
+            }
+        });
+    }
+}); 
