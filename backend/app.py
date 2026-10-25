@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, render_template, redirect, url_for, make_response
+from flask import Flask, request, jsonify, send_file, send_from_directory, render_template, redirect, url_for, make_response
 from flask_cors import CORS
 import pdfkit
 import os
@@ -32,17 +32,25 @@ except Exception as e:
     print(f"Warning: Could not configure wkhtmltopdf: {str(e)}")
     config = None
 
-# Directory for storing generated PDFs
-GENERATED_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'generated')
-os.makedirs(GENERATED_FOLDER, exist_ok=True)
+# Directory for storing generated PDFs.
+# Use a writable temp dir because the app bundle is read-only on serverless/Vercel.
+GENERATED_FOLDER = os.path.join(tempfile.gettempdir(), 'resume_generator', 'generated')
+try:
+    os.makedirs(GENERATED_FOLDER, exist_ok=True)
+except OSError as e:
+    print(f"Warning: could not create generated folder {GENERATED_FOLDER}: {e}")
 
-# Configure upload folder for resume files
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
+# Configure upload folder for resume files.
+# Use a writable temp dir because the app bundle is read-only on serverless/Vercel.
+UPLOAD_FOLDER = os.path.join(tempfile.gettempdir(), 'resume_generator', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Ensure upload directory exists
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+try:
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+except OSError as e:
+    print(f"Warning: could not create upload folder {UPLOAD_FOLDER}: {e}")
 
 # Available templates
 TEMPLATES = {
@@ -199,6 +207,12 @@ def generate_resume():
 def get_templates():
     return jsonify(TEMPLATES)
 
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    # Serve user-uploaded files from the writable upload dir
+    # (used by the client-side PDF parser).
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 @app.route('/parse-resume', methods=['POST'])
 def parse_resume():
     try:
@@ -209,7 +223,9 @@ def parse_resume():
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
             
-        # Get file extension
+        # Get file extension (guard against filenames without an extension)
+        if '.' not in file.filename:
+            return jsonify({'error': 'Invalid file format'}), 400
         file_ext = file.filename.rsplit('.', 1)[1].lower()
         
         if file_ext not in ['pdf', 'docx', 'txt']:
@@ -223,7 +239,8 @@ def parse_resume():
         # For PDF files, we'll use the client-side JS parser
         if file_ext == 'pdf':
             # Return the file URL for client-side processing
-            file_url = url_for('static', filename=f'uploads/{filename}')
+            # (served from the writable upload dir via the /uploads route)
+            file_url = url_for('uploaded_file', filename=filename)
             return jsonify({
                 'fileUrl': file_url,
                 'usePdfParser': True
