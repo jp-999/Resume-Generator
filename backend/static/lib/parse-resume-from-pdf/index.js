@@ -1,7 +1,7 @@
-import { readPdf } from "lib/parse-resume-from-pdf/read-pdf";
-import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-items-into-lines";
-import { groupLinesIntoSections } from "lib/parse-resume-from-pdf/group-lines-into-sections";
-import { extractResumeFromSections } from "lib/parse-resume-from-pdf/extract-resume-from-sections";
+import { readPdf } from "./read-Pdf.js";
+import { groupTextItemsIntoLines } from "./group-text-items-into-lines.js";
+import { groupLinesIntoSections } from "./group-lines-into-sections.js";
+import { extractResumeFromSections } from "./extract-resume-from-sections/index.js";
 
 /**
  * Resume parser util that parses a resume from a resume pdf file

@@ -10,6 +10,7 @@ import tempfile
 import PyPDF2
 from docx import Document
 import re
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__,
     template_folder='templates',    # Point to the templates folder
@@ -32,7 +33,15 @@ except Exception as e:
     config = None
 
 # Directory for storing generated PDFs
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'generated')
+GENERATED_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'generated')
+os.makedirs(GENERATED_FOLDER, exist_ok=True)
+
+# Configure upload folder for resume files
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+
+# Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Available templates
@@ -206,18 +215,32 @@ def parse_resume():
         if file_ext not in ['pdf', 'docx', 'txt']:
             return jsonify({'error': 'Invalid file format'}), 400
             
-        # Extract text based on file type
-        text = ''
+        # Save the file temporarily to serve to the client-side parser
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        # For PDF files, we'll use the client-side JS parser
         if file_ext == 'pdf':
-            pdf_reader = PyPDF2.PdfReader(file)
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-        elif file_ext == 'docx':
-            doc = Document(file)
+            # Return the file URL for client-side processing
+            file_url = url_for('static', filename=f'uploads/{filename}')
+            return jsonify({
+                'fileUrl': file_url,
+                'usePdfParser': True
+            })
+        
+        # For non-PDF files, use the server-side parser
+        text = ''
+        
+        # Handle DOCX files
+        if file_ext == 'docx':
+            doc = Document(file_path)
             for para in doc.paragraphs:
                 text += para.text + '\n'
-        else:  # txt file
-            text = file.read().decode('utf-8')
+        # Handle TXT files
+        elif file_ext == 'txt':
+            with open(file_path, 'r', encoding='utf-8') as f:
+                text = f.read()
             
         # Parse the extracted text
         parsed_data = parse_resume_text(text)
@@ -225,7 +248,7 @@ def parse_resume():
         
     except Exception as e:
         print(f"Resume parsing error: {str(e)}")
-        return jsonify({'error': 'Failed to parse resume'}), 500
+        return jsonify({'error': f'Failed to parse resume: {str(e)}'}), 500
 
 def parse_resume_text(text):
     # Initialize parsed data
@@ -235,15 +258,12 @@ def parse_resume_text(text):
         'phone': '',
         'summary': '',
         'skills': [],
-        'experience': '',
-        'education': ''
+        'experience': [],  # Changed from string to array
+        'education': []    # Changed from string to array
     }
     
     # Split text into lines and sections
     lines = text.split('\n')
-    sections = []
-    current_section = []
-    current_section_title = ''
     
     # Common section headers
     section_headers = {
@@ -304,8 +324,26 @@ def parse_resume_text(text):
                     # Process skills section
                     skills_text = ' '.join(current_section)
                     parsed_data['skills'] = extract_skills(skills_text)
+                elif current_type == 'experience':
+                    # Convert experience section to array format with at least one entry
+                    parsed_data['experience'] = [{
+                        'company': '',
+                        'position': '',
+                        'startDate': '',
+                        'endDate': '',
+                        'description': '\n'.join(current_section)
+                    }]
+                elif current_type == 'education':
+                    # Convert education section to array format with at least one entry
+                    parsed_data['education'] = [{
+                        'degree': '',
+                        'institution': '',
+                        'startDate': '',
+                        'endDate': '',
+                        'description': '\n'.join(current_section)
+                    }]
                 else:
-                    parsed_data[current_type] = '\\n'.join(current_section)
+                    parsed_data[current_type] = '\n'.join(current_section)
             
             current_type = section_type
             current_section = []
@@ -317,8 +355,24 @@ def parse_resume_text(text):
         if current_type == 'skills':
             skills_text = ' '.join(current_section)
             parsed_data['skills'] = extract_skills(skills_text)
+        elif current_type == 'experience':
+            parsed_data['experience'] = [{
+                'company': '',
+                'position': '',
+                'startDate': '',
+                'endDate': '',
+                'description': '\n'.join(current_section)
+            }]
+        elif current_type == 'education':
+            parsed_data['education'] = [{
+                'degree': '',
+                'institution': '',
+                'startDate': '',
+                'endDate': '', 
+                'description': '\n'.join(current_section)
+            }]
         else:
-            parsed_data[current_type] = '\\n'.join(current_section)
+            parsed_data[current_type] = '\n'.join(current_section)
     
     # If no explicit summary section found, try to extract it from the beginning
     if not parsed_data['summary']:
@@ -331,12 +385,39 @@ def parse_resume_text(text):
             if len(summary_lines) >= 3:  # Limit to first few lines
                 break
         if summary_lines:
-            parsed_data['summary'] = '\\n'.join(summary_lines)
+            parsed_data['summary'] = '\n'.join(summary_lines)
     
     # If no skills found in skills section, try to extract from whole text
     if not parsed_data['skills']:
         parsed_data['skills'] = extract_skills(text)
     
+    # Ensure experience and education are always arrays
+    if not isinstance(parsed_data['experience'], list):
+        parsed_data['experience'] = []
+    
+    if not isinstance(parsed_data['education'], list):
+        parsed_data['education'] = []
+    
+    # Make sure experience and education have at least one empty entry
+    if not parsed_data['experience']:
+        parsed_data['experience'] = [{
+            'company': '',
+            'position': '',
+            'startDate': '',
+            'endDate': '',
+            'description': ''
+        }]
+    
+    if not parsed_data['education']:
+        parsed_data['education'] = [{
+            'degree': '',
+            'institution': '',
+            'startDate': '',
+            'endDate': '',
+            'description': ''
+        }]
+    
+    print("Parsed resume data:", parsed_data)
     return parsed_data
 
 def extract_skills(text):

@@ -1,33 +1,33 @@
-import { deepClone } from "lib/deep-clone";
-import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
-import { initialFeaturedSkills } from "lib/redux/resumeSlice";
-import {
-  getBulletPointsFromLines,
-  getDescriptionsLineIdx,
-} from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
+import { deepClone } from "../../../deepClone.js";
+import { getSectionLinesByKeywords } from "./lib/get-section-lines.js";
+import { getDescriptionsLineIdx, getBulletPointsFromLines } from "./lib/bullet-points.js";
+
+// Initial featured skills mock (originally from redux/resumeSlice)
+const initialFeaturedSkills = [];
 
 export const extractSkills = (sections) => {
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
-  const descriptionsLineIdx = getDescriptionsLineIdx(lines) ?? 0;
-  const descriptionsLines = lines.slice(descriptionsLineIdx);
-  const descriptions = getBulletPointsFromLines(descriptionsLines);
+
+  let descriptions = [];
+  const descriptionsLineIdx = getDescriptionsLineIdx(lines);
+  if (descriptionsLineIdx !== undefined) {
+    const descriptionsLines = lines.slice(descriptionsLineIdx);
+    descriptions = getBulletPointsFromLines(descriptionsLines);
+  }
 
   const featuredSkills = deepClone(initialFeaturedSkills);
-  if (descriptionsLineIdx !== 0) {
-    const featuredSkillsLines = lines.slice(0, descriptionsLineIdx);
-    const featuredSkillsTextItems = featuredSkillsLines
-      .flat()
-      .filter((item) => item.text.trim())
-      .slice(0, 6);
-    for (let i = 0; i < featuredSkillsTextItems.length; i++) {
-      featuredSkills[i].skill = featuredSkillsTextItems[i].text;
+  // Add skills from descriptions
+  for (const description of descriptions) {
+    // Prevent duplicated skills by checking if it already exists
+    if (!featuredSkills.includes(description)) {
+      featuredSkills.push(description);
     }
   }
 
-  const skills = {
-    featuredSkills,
-    descriptions,
+  return {
+    skills: {
+      featuredSkills,
+    },
+    skillsScores: {},
   };
-
-  return { skills };
 };

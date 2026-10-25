@@ -1,56 +1,50 @@
 import { BULLET_POINTS } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 
 /**
- * Step 2: Group text items into lines. This returns an array where each position
- * contains text items in the same line of the pdf file.
+ * Step 2. Group text items into lines
+ *
+ * To determine which line a text item belongs to, the algorithm compares the y-position
+ * of the text item with the y-position of the previous text item. If the difference is
+ * less than the line height, they are considered to be on the same line.
  */
 export const groupTextItemsIntoLines = (textItems) => {
+  if (textItems.length === 0) {
+    return [];
+  }
+
+  // Extract line height
+  const lineHeights = [];
+  for (let i = 1; i < textItems.length; i++) {
+    const diff = Math.abs(textItems[i - 1].y - textItems[i].y);
+    if (diff > 0) {
+      lineHeights.push(diff);
+    }
+  }
+  const lineHeight = Math.min(...lineHeights) * 1.5;
+
+  // Group text items into lines
   const lines = [];
+  let line = [textItems[0]];
+  let prevY = textItems[0].y;
 
-  // Group text items into lines based on hasEOL
-  let line = [];
-  for (let item of textItems) {
-    // If item is EOL, add current line to lines and start a new empty line
-    if (item.hasEOL) {
-      if (item.text.trim() !== "") {
-        line.push({ ...item });
-      }
-      lines.push(line);
-      line = [];
-    }
-    // Otherwise, add item to current line
-    else if (item.text.trim() !== "") {
-      line.push({ ...item });
+  for (let i = 1; i < textItems.length; i++) {
+    const currY = textItems[i].y;
+    const diff = Math.abs(prevY - currY);
+
+    if (diff < lineHeight) {
+      // Same line
+      line.push(textItems[i]);
+    } else {
+      // New line
+      lines.push([...line].sort((a, b) => a.x - b.x));
+      line = [textItems[i]];
+      prevY = currY;
     }
   }
-  // Add last line if there is item in last line
+
+  // Add the last line
   if (line.length > 0) {
-    lines.push(line);
-  }
-
-  // Many pdf docs are not well formatted, e.g. due to converting from other docs.
-  // This creates many noises, where a single text item is divided into multiple
-  // ones. This step is to merge adjacent text items if their distance is smaller
-  // than a typical char width to filter out those noises.
-  const typicalCharWidth = getTypicalCharWidth(lines.flat());
-  for (let line of lines) {
-    // Start from the end of the line to make things easier to merge and delete
-    for (let i = line.length - 1; i > 0; i--) {
-      const currentItem = line[i];
-      const leftItem = line[i - 1];
-      const leftItemXEnd = leftItem.x + leftItem.width;
-      const distance = currentItem.x - leftItemXEnd;
-      if (distance <= typicalCharWidth) {
-        if (shouldAddSpaceBetweenText(leftItem.text, currentItem.text)) {
-          leftItem.text += " ";
-        }
-        leftItem.text += currentItem.text;
-        // Update leftItem width to include currentItem after merge before deleting current item
-        const currentItemXEnd = currentItem.x + currentItem.width;
-        leftItem.width = currentItemXEnd - leftItem.x;
-        line.splice(i, 1);
-      }
-    }
+    lines.push([...line].sort((a, b) => a.x - b.x));
   }
 
   return lines;

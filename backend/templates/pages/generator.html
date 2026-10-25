@@ -2,14 +2,79 @@
 
 {% block title %}Resume Generator{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resume-parser.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="flex flex-col lg:flex-row gap-8">
-    <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+
+<!-- Add the autosize class to all textareas and initialize the autosize functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add autosize class to all textareas when page loads
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.classList.add('autosize', 'overflow-hidden', 'resize-none');
+            // Initialize autosize functionality
+            if (typeof autosizeTextarea === 'function') {
+                autosizeTextarea(textarea);
+            } else {
+                // Fallback autosize function if the main one isn't loaded yet
+                function adjustHeight() {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = textarea.scrollHeight + 'px';
+                }
+                
+                // Set initial height
+                adjustHeight();
+                
+                // Update on input
+                textarea.addEventListener('input', adjustHeight);
+                
+                // Store the function on the textarea element for possible cleanup later
+                textarea._autosize = adjustHeight;
+            }
+        });
+    });
+</script>
+
+<!-- Original autosize script (keeping for backward compatibility) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add autosize class to all textareas when page loads
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.classList.add('autosize', 'overflow-hidden', 'resize-none');
+        });
+    });
+</script>
+
+<div class="flex flex-col gap-8">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
                 Resume Generator
             </h1>
             <p class="text-gray-600 dark:text-gray-300 mt-2">Fill in your details to create a professional resume</p>
+        </div>
+
+        <!-- Selected Template Display -->
+        <div class="bg-gray-100 dark:bg-gray-700 p-4 mb-8 rounded-xl shadow-sm">
+            <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-gray-800 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                    Selected Template: <span class="ml-2 text-purple-600 dark:text-purple-400">{{ selected_template|title }}</span>
+                </h3>
+                <a href="{{ url_for('templates') }}" class="text-sm text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 flex items-center">
+                    <span>Change Template</span>
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
         </div>
 
         <!-- Resume Parser Section -->
@@ -37,6 +102,13 @@
                         <input id="resumeFile" name="resume" type="file" class="hidden" accept=".pdf,.docx,.txt" />
                     </label>
                 </div>
+                
+                <!-- Loading indicator (hidden by default) -->
+                <div id="parserLoading" class="hidden py-4 text-center relative">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+                    <p class="mt-2 text-purple-700 dark:text-purple-300">Parsing your resume... This may take a moment.</p>
+                </div>
+                
                 <div id="fileInfo" class="text-center text-sm text-gray-500 dark:text-gray-400 hidden">
                     Selected file: <span id="fileName"></span>
                     <button type="button" id="clearFile" class="ml-2 text-red-500 hover:text-red-600">
@@ -312,67 +384,6 @@
             </div>
         </form>
     </div>
-
-    <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-        <h2 class="text-2xl font-semibold text-center mb-8 text-gray-800 dark:text-white">
-            Live Preview
-        </h2>
-        
-        <div class="text-center mb-4 p-4 bg-gray-100 dark:bg-gray-600 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold text-gray-800 dark:text-white">
-                Selected Template: <span class="font-bold text-purple-600">{{ selected_template }}</span>
-            </h2>
-        </div>
-        
-        <div class="space-y-6">
-            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Personal Information
-                </h3>
-                <div class="text-gray-600 dark:text-gray-300">
-                    <p id="preview-name" class="font-semibold">{{ request.form['name'] | default('Your Name') }}</p>
-                    <p id="preview-email">{{ request.form['email'] | default('your.email@example.com') }}</p>
-                    <p id="preview-phone">{{ request.form['phone'] | default('Your Phone Number') }}</p>
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Professional Summary
-                </h3>
-                <div id="preview-summary" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
-                    {{ request.form['summary'] | default('Your professional summary will appear here') }}
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Skills
-                </h3>
-                <div id="preview-skills" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
-                    {{ request.form['skills'] | default('Your skills will appear here') }}
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Work Experience
-                </h3>
-                <div id="preview-experience" class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
-                    {{ request.form['experience'] | default('Your experience will appear here') }}
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                    Education
-                </h3>
-                <p id="preview-education" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                    {{ request.form['education'] | default('Your education will appear here') }}
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -382,6 +393,8 @@
     const fileName = document.getElementById('fileName');
     const clearFile = document.getElementById('clearFile');
     const dropZone = document.querySelector('label[for="resumeFile"]');
+    const parserForm = document.getElementById('resumeParserForm');
+    const parserLoading = document.getElementById('parserLoading');
 
     // Show selected file name
     fileInput.addEventListener('change', function(e) {
@@ -447,12 +460,16 @@
     }
 
     // Handle resume parsing
-    document.getElementById('resumeParserForm').addEventListener('submit', async function(e) {
+    parserForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const file = fileInput.files[0];
         if (file) {
             const formData = new FormData();
             formData.append('resume', file);
+            
+            // Show loading indicator and add the parser-loading class to the form for visual feedback
+            parserLoading.classList.remove('hidden');
+            document.querySelector('.bg-white').classList.add('parser-loading');
 
             try {
                 showNotification('Parsing resume...', 'info');
@@ -462,129 +479,156 @@
                     body: formData
                 });
 
-                const data = await response.json();
-                console.log('Server response:', data); // Debug log
-
                 if (!response.ok) {
-                    throw new Error(data.error || 'Resume parsing failed');
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Server returned an error');
                 }
+
+                const data = await response.json();
+                console.log('Server response:', data);
 
                 if (data.error) {
                     throw new Error(data.error);
                 }
 
-                if (!data || Object.keys(data).length === 0) {
-                    throw new Error('No data was extracted from the resume');
+                // Handle the parsing result
+                if (data.usePdfParser && data.fileUrl) {
+                    showNotification('Parsing PDF with client-side parser...', 'info');
+                    try {
+                        // Use window.parseAndFillResume from our enhanced resumeParserLoader.js
+                        if (typeof window.parseAndFillResume === 'function') {
+                            await window.parseAndFillResume(data.fileUrl);
+                        } else {
+                            throw new Error('PDF parser not available');
+                        }
+                    } catch (pdfError) {
+                        console.error('PDF parsing error:', pdfError);
+                        throw new Error('Failed to parse PDF: ' + pdfError.message);
+                    }
+                } else {
+                    // Server-side parsing result
+                    if (typeof window.fillFormWithParsedData === 'function') {
+                        window.fillFormWithParsedData(data);
+                    } else {
+                        console.warn('Form filling function not available, using fallback');
+                        fillFormWithParsedData(data); // Use the function defined in generator.html
+                    }
                 }
                 
-                fillFormWithParsedData(data);
                 showNotification('Resume parsed successfully!', 'success');
             } catch (error) {
                 console.error('Error:', error);
                 showNotification(error.message || 'Failed to parse resume. Please try again.', 'error');
+            } finally {
+                // Hide loading indicators when done
+                parserLoading.classList.add('hidden');
+                document.querySelector('.bg-white').classList.remove('parser-loading');
             }
         } else {
             showNotification('Please select a file to parse', 'error');
         }
     });
 
+    // Fallback function in case the external one isn't loaded
     function fillFormWithParsedData(data) {
-        console.log('Parsed resume data:', data); // Debug log
+        console.log('Using fallback form filling with parsed data:', data);
 
         try {
             // Basic Information
-            if (data.name) {
-                document.getElementById('name').value = data.name;
-                updatePreviewText('preview-name', data.name);
-            }
-            if (data.email) {
-                document.getElementById('email').value = data.email;
-                updatePreviewText('preview-email', data.email);
-            }
-            if (data.phone) {
-                document.getElementById('phone').value = data.phone;
-                updatePreviewText('preview-phone', data.phone);
-            }
+            if (data.name) document.getElementById('name').value = data.name;
+            if (data.email) document.getElementById('email').value = data.email;
+            if (data.phone) document.getElementById('phone').value = data.phone;
 
             // Professional Summary
-            if (data.summary) {
-                document.getElementById('summary').value = data.summary;
-                updatePreviewText('preview-summary', data.summary);
-            }
+            if (data.summary) document.getElementById('summary').value = data.summary;
 
             // Skills
             if (data.skills) {
                 const skillsContainer = document.getElementById('skills-container');
                 const skillsEntry = skillsContainer.querySelector('.skill-entry textarea');
+                let skillsText = '';
+                
                 if (Array.isArray(data.skills)) {
-                    skillsEntry.value = data.skills.join('\n• ');
+                    skillsText = data.skills.join('\n• ');
+                    if (!skillsText.startsWith('• ')) {
+                        skillsText = '• ' + skillsText;
+                    }
                 } else if (typeof data.skills === 'string') {
-                    skillsEntry.value = data.skills;
+                    skillsText = data.skills;
                 }
-                updatePreviewText('preview-skills', skillsEntry.value);
+                
+                skillsEntry.value = skillsText;
             }
 
             // Work Experience
             if (data.experience && Array.isArray(data.experience)) {
                 const experienceContainer = document.getElementById('experience-container');
+                
                 // Clear existing entries except the first one
                 while (experienceContainer.children.length > 1) {
                     experienceContainer.removeChild(experienceContainer.lastChild);
+                }
+                
+                // Reset the first entry
+                const firstEntry = experienceContainer.querySelector('.experience-entry');
+                if (firstEntry) {
+                    firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                        input.value = '';
+                    });
                 }
                 
                 data.experience.forEach((exp, index) => {
                     if (index > 0) {
                         addEntry('experience');
                     }
-                    const entry = experienceContainer.children[index];
+                    
+                    const entries = experienceContainer.querySelectorAll('.experience-entry');
+                    const entry = entries[index];
+                    
                     if (entry) {
-                        entry.querySelector('[name="experience_company[]"]').value = exp.company || '';
-                        entry.querySelector('[name="experience_position[]"]').value = exp.position || '';
-                        entry.querySelector('[name="experience_start[]"]').value = exp.startDate || '';
-                        entry.querySelector('[name="experience_end[]"]').value = exp.endDate || '';
-                        entry.querySelector('[name="experience_description[]"]').value = exp.description || '';
+                        if (exp.company) entry.querySelector('[name="experience_company[]"]').value = exp.company;
+                        if (exp.position) entry.querySelector('[name="experience_position[]"]').value = exp.position;
+                        if (exp.startDate) entry.querySelector('[name="experience_start[]"]').value = formatDateForInput(exp.startDate);
+                        if (exp.endDate) entry.querySelector('[name="experience_end[]"]').value = formatDateForInput(exp.endDate);
+                        if (exp.description) entry.querySelector('[name="experience_description[]"]').value = exp.description;
                     }
                 });
-                updateExperiencePreview();
             }
 
             // Education
             if (data.education && Array.isArray(data.education)) {
                 const educationContainer = document.getElementById('education-container');
+                
                 // Clear existing entries except the first one
                 while (educationContainer.children.length > 1) {
                     educationContainer.removeChild(educationContainer.lastChild);
+                }
+                
+                // Reset the first entry
+                const firstEntry = educationContainer.querySelector('.education-entry');
+                if (firstEntry) {
+                    firstEntry.querySelectorAll('input, textarea').forEach(input => {
+                        input.value = '';
+                    });
                 }
                 
                 data.education.forEach((edu, index) => {
                     if (index > 0) {
                         addEntry('education');
                     }
-                    const entry = educationContainer.children[index];
+                    
+                    const entries = educationContainer.querySelectorAll('.education-entry');
+                    const entry = entries[index];
+                    
                     if (entry) {
-                        entry.querySelector('[name="education_degree[]"]').value = edu.degree || '';
-                        entry.querySelector('[name="education_institution[]"]').value = edu.institution || '';
-                        entry.querySelector('[name="education_start[]"]').value = edu.startDate || '';
-                        entry.querySelector('[name="education_end[]"]').value = edu.endDate || '';
-                        entry.querySelector('[name="education_description[]"]').value = edu.description || '';
+                        if (edu.degree) entry.querySelector('[name="education_degree[]"]').value = edu.degree;
+                        if (edu.institution) entry.querySelector('[name="education_institution[]"]').value = edu.institution;
+                        if (edu.startDate) entry.querySelector('[name="education_start[]"]').value = formatDateForInput(edu.startDate);
+                        if (edu.endDate) entry.querySelector('[name="education_end[]"]').value = formatDateForInput(edu.endDate);
+                        if (edu.description) entry.querySelector('[name="education_description[]"]').value = edu.description;
                     }
                 });
-                updateEducationPreview();
             }
-
-            // Handle additional sections
-            const standardSections = ['name', 'email', 'phone', 'summary', 'skills', 'experience', 'education'];
-            const additionalSections = Object.keys(data).filter(key => !standardSections.includes(key));
-
-            additionalSections.forEach(sectionKey => {
-                if (data[sectionKey]) {
-                    createDynamicSection(sectionKey, 
-                        Array.isArray(data[sectionKey]) 
-                            ? data[sectionKey].join('\n• ')
-                            : data[sectionKey]
-                    );
-                }
-            });
 
             showNotification('Resume data successfully loaded!', 'success');
         } catch (error) {
@@ -593,149 +637,61 @@
         }
     }
 
-    function updatePreviewText(previewId, text) {
-        const preview = document.getElementById(previewId);
-        if (preview) {
-            preview.innerHTML = text.replace(/\n/g, '<br>');
-            preview.classList.add('preview-update');
-            setTimeout(() => preview.classList.remove('preview-update'), 300);
+    // Helper function to format dates for input elements (YYYY-MM format)
+    function formatDateForInput(dateStr) {
+        if (!dateStr) return '';
+        
+        // Handle 'Present' or 'Current' values
+        if (/present|current|now/i.test(dateStr)) {
+            return '';
         }
-    }
-
-    function createDynamicSection(sectionKey, content) {
-        const formContainer = document.querySelector('form[method="POST"]');
-        const previewContainer = document.querySelector('.live-preview .space-y-6');
-
-        // Create form section
-        const formSection = document.createElement('div');
-        formSection.className = 'bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl space-y-6 cursor-move';
-        formSection.dataset.section = sectionKey;
         
-        const sectionTitle = sectionKey.split('_').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-        
-        formSection.innerHTML = `
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-500 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
-                        <span class="editable-heading" contenteditable="true">${sectionTitle}</span>
-                    </h2>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <textarea id="${sectionKey}" name="${sectionKey}"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 h-32"
-                    placeholder="Enter ${sectionTitle.toLowerCase()} details...">${content}</textarea>
-            </div>
-        `;
-
-        // Create preview section
-        const previewSection = document.createElement('div');
-        previewSection.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
-        previewSection.innerHTML = `
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                ${sectionTitle}
-            </h3>
-            <p id="preview-${sectionKey}" class="text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                ${content || `Your ${sectionTitle.toLowerCase()} will appear here`}
-            </p>
-        `;
-
-        // Insert sections
-        const lastSection = formContainer.querySelector('div.flex.gap-4');
-        formContainer.insertBefore(formSection, lastSection);
-        previewContainer.appendChild(previewSection);
-
-        // Initialize preview update for the new section
-        updatePreview(sectionKey, `preview-${sectionKey}`, `Your ${sectionTitle.toLowerCase()} will appear here`);
-
-        // Make the section draggable
-        if (typeof Sortable !== 'undefined') {
-            new Sortable(formSection.parentElement, {
-                handle: '.cursor-grab',
-                animation: 150
-            });
+        try {
+            // If it's already in YYYY-MM format, return as is
+            if (/^\d{4}-\d{2}$/.test(dateStr)) {
+                return dateStr;
+            }
+            
+            // Try to extract year and month from various formats
+            const yearMatch = dateStr.match(/\b(19|20)\d{2}\b/);
+            if (!yearMatch) return '';
+            
+            const year = yearMatch[0];
+            
+            // Try to find month
+            const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+            let month = '01'; // Default to January
+            
+            for (let i = 0; i < monthNames.length; i++) {
+                if (dateStr.toLowerCase().includes(monthNames[i])) {
+                    // Add 1 to index and pad with leading zero if needed
+                    month = String(i + 1).padStart(2, '0');
+                    break;
+                }
+            }
+            
+            return `${year}-${month}`;
+        } catch (e) {
+            console.error('Error formatting date:', e);
+            return '';
         }
     }
 
     function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 ${
             type === 'error' ? 'bg-red-500' :
             type === 'success' ? 'bg-green-500' :
             'bg-blue-500'
-            }`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
+        }`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
 
-            setTimeout(() => {
-                notification.classList.add('opacity-0');
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
+        setTimeout(() => {
+            notification.classList.add('opacity-0');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
-
-    // Existing preview update code
-    function updatePreview(inputId, previewId, defaultText) {
-        const input = document.getElementById(inputId);
-        const preview = document.getElementById(previewId);
-        
-        if (input && preview) {
-            input.addEventListener('input', function() {
-                let content = '';
-                
-                // Handle multiple entries if they exist
-                const container = input.closest(`#${inputId}-container`);
-                if (container) {
-                    const entries = container.querySelectorAll(`textarea[name="${inputId}[]"]`);
-                    content = Array.from(entries)
-                        .map(entry => entry.value)
-                        .filter(value => value.trim() !== '')
-                        .join('\n\n');
-                } else {
-                    content = this.value;
-                }
-                
-                preview.innerHTML = (content || defaultText)
-                    .replace(/\\n/g, '<br>')
-                    .replace(/\n/g, '<br>');
-            });
-        }
-    }
-
-    // Initialize all preview updates
-    document.addEventListener('DOMContentLoaded', function() {
-        // Personal Information
-        updatePreview('name', 'preview-name', 'Your Name');
-        updatePreview('email', 'preview-email', 'your.email@example.com');
-        updatePreview('phone', 'preview-phone', 'Your Phone Number');
-        
-        // Professional Details
-        updatePreview('summary', 'preview-summary', 'Your professional summary will appear here');
-        updatePreview('skills', 'preview-skills', 'Your skills will appear here');
-        
-        // Experience & Education
-        updatePreview('experience', 'preview-experience', 'Your experience will appear here');
-        updatePreview('education', 'preview-education', 'Your education will appear here');
-
-        // Add animation class to preview sections when they update
-        const inputs = document.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('input', function() {
-                const previewId = 'preview-' + this.id;
-                const preview = document.getElementById(previewId);
-                if (preview) {
-                    preview.classList.add('preview-update');
-                    setTimeout(() => {
-                        preview.classList.remove('preview-update');
-                    }, 300);
-                }
-            });
-        });
-    });
 
     function addEntry(type) {
         const container = document.getElementById(`${type}-container`);
@@ -754,16 +710,17 @@
         template.querySelector('.delete-entry').addEventListener('click', function() {
             if (container.children.length > 1) {
                 template.remove();
-                if (type === 'experience') {
-                    updateExperiencePreview();
-                } else if (type === 'education') {
-                    updateEducationPreview();
-                }
             }
         });
         
         // Add the new entry to the container
         container.appendChild(template);
+        
+        // Apply autosize to any new textareas
+        const newTextareas = template.querySelectorAll('textarea.autosize');
+        if (newTextareas.length > 0 && typeof autosizeTextarea === 'function') {
+            newTextareas.forEach(textarea => autosizeTextarea(textarea));
+        }
     }
 
     // Initialize delete buttons for existing entries
@@ -777,71 +734,9 @@
                     const entry = button.closest(`.${type}-entry`);
                     if (container.children.length > 1) {
                         entry.remove();
-                        updatePreview();
                     }
                 });
             });
-        });
-    });
-
-    // Update the preview update code to handle the new structure
-    function updateExperiencePreview() {
-        const container = document.getElementById('experience-container');
-        const preview = document.getElementById('preview-experience');
-        let content = '';
-
-        container.querySelectorAll('.experience-entry').forEach(entry => {
-            const company = entry.querySelector('[name="experience_company[]"]').value;
-            const position = entry.querySelector('[name="experience_position[]"]').value;
-            const startDate = entry.querySelector('[name="experience_start[]"]').value;
-            const endDate = entry.querySelector('[name="experience_end[]"]').value;
-            const description = entry.querySelector('[name="experience_description[]"]').value;
-
-            if (company || position || description) {
-                content += `${company ? company + ' - ' : ''}${position || ''}\n`;
-                content += `${startDate ? startDate : ''} ${endDate ? '- ' + endDate : ''}\n`;
-                content += `${description}\n\n`;
-            }
-        });
-
-        preview.innerHTML = content || 'Your experience will appear here';
-    }
-
-    function updateEducationPreview() {
-        const container = document.getElementById('education-container');
-        const preview = document.getElementById('preview-education');
-        let content = '';
-
-        container.querySelectorAll('.education-entry').forEach(entry => {
-            const degree = entry.querySelector('[name="education_degree[]"]').value;
-            const institution = entry.querySelector('[name="education_institution[]"]').value;
-            const startDate = entry.querySelector('[name="education_start[]"]').value;
-            const endDate = entry.querySelector('[name="education_end[]"]').value;
-            const description = entry.querySelector('[name="education_description[]"]').value;
-
-            if (degree || institution || description) {
-                content += `${degree ? degree + '\n' : ''}`;
-                content += `${institution ? institution + '\n' : ''}`;
-                content += `${startDate ? startDate : ''} ${endDate ? '- ' + endDate : ''}\n`;
-                content += `${description}\n\n`;
-            }
-        });
-
-        preview.innerHTML = content || 'Your education will appear here';
-    }
-
-    // Add event listeners for the new fields
-    document.addEventListener('DOMContentLoaded', function() {
-        // ... existing initialization code ...
-
-        // Add input event listeners for experience fields
-        document.querySelectorAll('#experience-container input, #experience-container textarea').forEach(input => {
-            input.addEventListener('input', updateExperiencePreview);
-        });
-
-        // Add input event listeners for education fields
-        document.querySelectorAll('#education-container input, #education-container textarea').forEach(input => {
-            input.addEventListener('input', updateEducationPreview);
         });
     });
 </script>
@@ -867,3 +762,65 @@
     }
 </style>
 {% endblock %} 
+
+<!-- Add PDF.js and parser scripts -->
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+    // Configure PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    
+    // Initialize parser scripts after DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM loaded, initializing resume parser scripts");
+        
+        // Define global window.parseAndFillResume function before loading other scripts
+        window.parseAndFillResume = async function(fileUrl) {
+            console.log("parseAndFillResume called with URL:", fileUrl);
+            if (typeof window.parseResumePdf === 'function') {
+                try {
+                    const parsedData = await window.parseResumePdf(fileUrl);
+                    if (typeof window.fillFormWithParsedData === 'function') {
+                        window.fillFormWithParsedData(parsedData);
+                    } else {
+                        console.error("fillFormWithParsedData function not available");
+                    }
+                    return parsedData;
+                } catch (error) {
+                    console.error("Error in parseAndFillResume:", error);
+                    throw error;
+                }
+            } else {
+                console.error("parseResumePdf function not available");
+                throw new Error("parseResumePdf function not available");
+            }
+        };
+        
+        // Helper function to load scripts in sequence
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Load scripts in the correct order
+        loadScript("{{ url_for('static', filename='js/uiUtils.js') }}").then(() => {
+            console.log("uiUtils.js loaded");
+            return loadScript("{{ url_for('static', filename='js/simpleResumeParser.js') }}");
+        }).then(() => {
+            console.log("simpleResumeParser.js loaded");
+            return loadScript("{{ url_for('static', filename='js/resumeParserAdapter.js') }}");
+        }).then(() => {
+            console.log("resumeParserAdapter.js loaded");
+            return loadScript("{{ url_for('static', filename='js/resumeParserLoader.js') }}");
+        }).then(() => {
+            console.log("resumeParserLoader.js loaded");
+            console.log("All resume parser scripts loaded successfully");
+        }).catch(error => {
+            console.error("Error loading resume parser scripts:", error);
+        });
+    });
+</script> 

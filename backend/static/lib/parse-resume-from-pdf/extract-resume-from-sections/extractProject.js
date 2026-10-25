@@ -1,15 +1,15 @@
-import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
-import { divideSectionIntoSubsections } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/subsections";
+import { getSectionLinesByKeywords } from "./lib/get-section-lines.js";
+import { divideSectionIntoSubsections } from "./lib/subsection.js";
 import {
   DATE_FEATURE_SETS,
   getHasText,
   isBold,
-} from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
-import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
+} from "./lib/common-features.js";
+import { getTextWithHighestFeatureScore } from "./lib/feature-scoring-system.js";
 import {
   getBulletPointsFromLines,
   getDescriptionsLineIdx,
-} from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
+} from "./lib/bullet-points.js";
 
 export const extractProject = (sections) => {
   const projects = [];

@@ -1,12 +1,12 @@
-import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
+import { getSectionLinesByKeywords } from "./lib/get-section-lines.js";
 import {
   isBold,
   hasNumber,
   hasComma,
   hasLetter,
   hasLetterAndIsAllUpperCase,
-} from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
-import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
+} from "./lib/common-features.js";
+import { getTextWithHighestFeatureScore } from "./lib/feature-scoring-system.js";
 
 // Name
 export const matchOnlyLetterSpaceOrPeriod = (item) =>
